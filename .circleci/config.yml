@@ -1,0 +1,20 @@
+version: 2
+jobs:
+  test:
+    docker:
+      - image: circleci/clojure:lein-2.7.1
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - .m2-{{checksum "project.clj"}}
+      - run: lein test
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: .m2-{{checksum "project.clj"}}
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test
