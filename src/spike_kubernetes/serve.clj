@@ -2,9 +2,12 @@
   (:require [immutant.web :as web]
             [mount.core :as mount :refer [defstate]]
             [ring.middleware.edn :refer [wrap-edn-params]]
-            [ring.middleware.resource :refer [wrap-resource]]))
+            [ring.middleware.resource :refer [wrap-resource]]
+            [ring.util.response :refer [not-found]]))
 
-(def handler)
+(defn handler
+  [request]
+  (not-found "404"))
 
 (def start
   (partial web/run
