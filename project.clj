@@ -3,7 +3,8 @@
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure "1.8.0"]]
+  :dependencies [[org.clojure/clojure "1.9.0"]]
+  :plugins [[lein-ancient "0.6.15"]]
   :main ^:skip-aot spike-kubernetes.core
   :target-path "target/%s"
   :profiles {:uberjar {:uberjar-name "main.jar"}})
