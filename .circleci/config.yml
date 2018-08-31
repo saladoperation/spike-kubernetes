@@ -13,8 +13,25 @@ jobs:
           paths:
             - ~/.m2
           key: .m2-{{checksum "project.clj"}}
+  uberjar:
+    docker:
+      - image: circleci/clojure:lein-2.7.1
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - .m2-{{checksum "project.clj"}}
+      - run: lein uberjar
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: .m2-{{checksum "project.clj"}}
+      - persist_to_workspace:
+        root: target/uberjar
+        paths: main.jar
 workflows:
   version: 2
-  test:
+  clojure:
     jobs:
       - test
+      - uberjar

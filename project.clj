@@ -6,4 +6,4 @@
   :dependencies [[org.clojure/clojure "1.8.0"]]
   :main ^:skip-aot spike-kubernetes.core
   :target-path "target/%s"
-  :profiles {:uberjar {:aot :all}})
+  :profiles {:uberjar {:uberjar-name "main.jar"}})
