@@ -1,8 +1,8 @@
 version: 2
 jobs:
-  uberjar:
+  build:
     docker:
-      - image: clojure:lein
+      - image: circleci/clojure:lein
     steps:
       - checkout
       - restore_cache:
@@ -13,11 +13,3 @@ jobs:
           paths:
             - ~/.m2
           key: .m2-{{checksum "project.clj"}}
-      - persist_to_workspace:
-          root: .
-          paths: target/uberjar/main.jar
-workflows:
-  version: 2
-  clojure:
-    jobs:
-      - uberjar
