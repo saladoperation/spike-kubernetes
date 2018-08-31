@@ -2,7 +2,7 @@ version: 2
 jobs:
   uberjar:
     docker:
-      - image: circleci/clojure:lein-2.7.1
+      - image: clojure:lein-2.7.1
     steps:
       - checkout
       - restore_cache:
