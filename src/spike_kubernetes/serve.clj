@@ -7,6 +7,7 @@
 
 (defn handler
   [request]
+  ;TODO implement this function
   (not-found "404"))
 
 (def start
