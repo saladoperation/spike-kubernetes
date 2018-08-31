@@ -8,15 +8,14 @@ jobs:
       - restore_cache:
           keys:
           - .m2-{{checksum "project.clj"}}
-      - run: lein test
+      - run: lein test && lein uberjar
       - save_cache:
           paths:
             - ~/.m2
           key: .m2-{{checksum "project.clj"}}
-      - run: lein uberjar
       - persist_to_workspace:
-          root: target/uberjar
-          paths: main.jar
+          root: .
+          paths: target/uberjar/main.jar
 workflows:
   version: 2
   clojure:
