@@ -1,0 +1,17 @@
+version: 2
+jobs:
+  clojure:
+    docker:
+      - image: circleci/clojure:lein@sha256:db71a785f4b39c2fb6802808c0efd4f586172b3ef487ec3af235f57c49320df8
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: lein exec -p script/circleci/clojure.clj
+workflows:
+  version: 2
+  clojure:
+    jobs:
+      - clojure:
+          filters:
+            tags:
+              only: /.+/
