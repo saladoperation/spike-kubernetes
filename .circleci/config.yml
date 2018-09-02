@@ -6,4 +6,4 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run: script/circleci/clojure.sh
+      - run: lein exec -p script/circleci/clojure.clj
