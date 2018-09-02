@@ -6,9 +6,4 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run: |
-         lein test &&
-         lein cljsbuild once prod &&
-         lein uberjar &&
-         docker build -f docker/clojure/Dockerfile -t relationship/spike-kubernetes . &&
-         docker run -d relationship/spike-kubernetes
+      - run: script/circleci/clojure.sh
