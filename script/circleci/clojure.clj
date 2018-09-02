@@ -13,20 +13,18 @@
                                    (str ":"))
                   "")))
 
-(->> (concat (map (partial apply command/lein)
-                  [["test"]
-                   ["cljsbuild" "once" "prod"]
-                   ["uberjar"]])
-             (map (partial apply command/docker)
-                  [["build"
-                    "-f"
-                    "docker/clojure/Dockerfile"
-                    "-t"
-                    image
-                    "."]
-                   ["run"
-                    "-d"
-                    image]])
+(->> (concat (map (partial apply command/lein) [["test"]
+                                                ["cljsbuild" "once" "prod"]
+                                                ["uberjar"]])
+             (map (partial apply command/docker) [["build"
+                                                   "-f"
+                                                   "docker/clojure/Dockerfile"
+                                                   "-t"
+                                                   image
+                                                   "."]
+                                                  ["run"
+                                                   "-d"
+                                                   image]])
              (aid/casep env
                         :circle-tag (map (partial apply command/docker)
                                          [["login"
