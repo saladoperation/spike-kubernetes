@@ -6,4 +6,8 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run: lein test && lein uberjar && docker build -f docker/clojure/Dockerfile .
+      - run: |
+         lein test &&
+         lein cljsbuild once prod &&
+         lein uberjar &&
+         docker build -f docker/clojure/Dockerfile .
