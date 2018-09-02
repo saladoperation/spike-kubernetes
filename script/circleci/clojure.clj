@@ -1,9 +1,15 @@
 (ns clojure
-  (:require [cats.core :as m]
+  (:require [aid.core :as aid]
+            [cats.core :as m]
+            [environ.core :refer [env]]
             [spike-kubernetes.command :as command]))
 
-(def tagged-name
-  "relationship/spike-kubernetes")
+(def image
+  (str "relationship/spike-kubernetes" (aid/casep env
+                                                  :circle-tag (->> env
+                                                                   :circle-tag
+                                                                   (str ":"))
+                                                  "")))
 
 (->> (concat (map (partial apply command/lein)
                   [["test"]
@@ -14,11 +20,21 @@
                     "-f"
                     "docker/clojure/Dockerfile"
                     "-t"
-                    tagged-name
+                    image
                     "."]
                    ["run"
                     "-d"
-                    tagged-name]]))
+                    image]])
+             (aid/casep env
+                        :circle-tag (map (partial apply command/docker)
+                                         [["login"
+                                           "-u"
+                                           (:docker-username env)
+                                           "-p"
+                                           (:docker-password env)]
+                                          ["push"
+                                           image]])
+                        []))
      (apply m/>>)
      println)
 

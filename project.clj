@@ -3,6 +3,7 @@
                  [org.clojure/clojurescript "1.10.339"]
                  [aid "0.1.1"]
                  [com.rpl/specter "1.1.1"]
+                 [environ "1.1.0"]
                  [fogus/ring-edn "0.3.0"]
                  [funcool/cats "2.2.0"]
                  [hiccup "1.0.5"]
