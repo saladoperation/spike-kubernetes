@@ -1,7 +1,8 @@
 (ns spike-kubernetes.core
-  (:gen-class))
+  (:gen-class)
+  (:require [mount.core :as mount]))
 
 (defn -main
-  "I don't do a whole lot ... yet."
-  [& args]
-  (println "Hello, World!"))
+  [command]
+  (require 'spike-kubernetes.serve)
+  (mount/start))
