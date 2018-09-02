@@ -5,11 +5,13 @@
             [spike-kubernetes.command :as command]))
 
 (def image
-  (str "relationship/spike-kubernetes" (aid/casep env
-                                                  :circle-tag (->> env
-                                                                   :circle-tag
-                                                                   (str ":"))
-                                                  "")))
+  (str (:docker-username env)
+       "/spike-kubernetes"
+       (aid/casep env
+                  :circle-tag (->> env
+                                   :circle-tag
+                                   (str ":"))
+                  "")))
 
 (->> (concat (map (partial apply command/lein)
                   [["test"]
