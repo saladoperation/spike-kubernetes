@@ -16,25 +16,25 @@
 (->> (concat (map (partial apply command/lein) [["test"]
                                                 ["cljsbuild" "once" "prod"]
                                                 ["uberjar"]])
-             (map (partial apply command/docker) [["build"
-                                                   "-f"
-                                                   "docker/clojure/Dockerfile"
-                                                   "-t"
-                                                   image
-                                                   "."]
-                                                  ["run"
-                                                   "-d"
-                                                   image]])
-             (aid/casep env
-                        :circle-tag (map (partial apply command/docker)
-                                         [["login"
-                                           "-u"
-                                           (:docker-username env)
-                                           "-p"
-                                           (:docker-password env)]
-                                          ["push"
-                                           image]])
-                        []))
+             (map (partial apply command/docker)
+                  (concat [["build"
+                            "-f"
+                            "docker/clojure/Dockerfile"
+                            "-t"
+                            image
+                            "."]
+                           ["run"
+                            "-d"
+                            image]]
+                          (aid/casep env
+                                     :circle-tag [["login"
+                                                   "-u"
+                                                   (:docker-username env)
+                                                   "-p"
+                                                   (:docker-password env)]
+                                                  ["push"
+                                                   image]]
+                                     []))))
      (apply m/>>)
      println)
 
