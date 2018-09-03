@@ -70,4 +70,4 @@
 
 (->> resources*
      (all! kubectl-apply)
-     println)
+     helpers/emulate)
