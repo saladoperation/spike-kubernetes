@@ -6,7 +6,8 @@
 
 (def image
   (str (:docker-username env)
-       "/spike-kubernetes"
+       "/"
+       (ns-name *ns*)
        (aid/casep env
                   :circle-tag (->> env
                                    :circle-tag
@@ -29,7 +30,6 @@
                           (aid/casep env
                                      :circle-tag [["login"
                                                    "-u"
-                                                   (:docker-username env)
                                                    "-p"
                                                    (:docker-password env)]
                                                   ["push"
