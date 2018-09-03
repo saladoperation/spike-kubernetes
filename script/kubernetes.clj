@@ -34,9 +34,10 @@
 (def service
   {:apiVersion "v1"
    :kind       "Service"
-   :spec       {:type  "NodePort"
-                :ports [{:port       8080
-                         :targetPort clojure-port}]}})
+   :spec       {:ports    [{:port       clojure-port
+                            :targetPort clojure-port}]
+                :selector label
+                :type     "NodePort"}})
 
 (def get-name
   (comp str/lower-case
