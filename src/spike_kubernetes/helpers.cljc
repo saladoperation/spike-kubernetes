@@ -19,6 +19,10 @@
                                            else-function
                                            then))
 
+     (def singleton?
+       (comp (partial = 1)
+             count))
+
      (defn get-image
        [language]
        (str username
@@ -29,8 +33,8 @@
                      (cond (:circle-tag env) (-> env
                                                  :circle-tag
                                                  (subs 1))
-                           (empty? *command-line-args*) ""
-                           :else (first *command-line-args*)))))
+                           (singleton? *command-line-args*) ""
+                           :else (last *command-line-args*)))))
 
      (def clojure-image
        (get-image clojure-name))
