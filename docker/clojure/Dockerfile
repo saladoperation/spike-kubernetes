@@ -1,4 +1,4 @@
-FROM java:8@sha256:c1ff613e8ba25833d2e1940da0940c3824f03f802c449f3d1815a66b7f8c0e9d
+FROM clojure:lein-2.7.1@sha256:2c3fa51b875611e90f68490bc1ea7647edb05c9618420c920ba498f3ed174add
 COPY target/uberjar/main.jar /main.jar
 EXPOSE 8080
-CMD ["java", "-jar", "main.jar" "serve"]
+CMD ["java", "-jar", "/main.jar", "serve"]
