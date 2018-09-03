@@ -2,6 +2,7 @@
   :dependencies [[org.clojure/clojure "1.9.0"]
                  [org.clojure/clojurescript "1.10.339"]
                  [aid "0.1.1"]
+                 [cheshire "5.8.0"]
                  [com.rpl/specter "1.1.1"]
                  [environ "1.1.0"]
                  [fogus/ring-edn "0.3.0"]
