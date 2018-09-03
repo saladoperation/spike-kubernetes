@@ -14,10 +14,9 @@
 
 (def get-container
   (comp (partial (aid/flip dissoc) :port)
-        (helpers/transfer* :ports
-                           (comp vector
-                                 (partial array-map :containerPort)
-                                 :port))
+        (helpers/transfer* :ports (comp vector
+                                        (partial array-map :containerPort)
+                                        :port))
         (helpers/transfer* :image (comp helpers/get-image
                                         :name))))
 
