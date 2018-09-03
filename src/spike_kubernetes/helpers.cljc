@@ -55,5 +55,5 @@
              #(aid/casep %
                          either/right? 0
                          -1)
-             (effect println)
-             (partial apply m/>>)))))
+             (partial apply m/>>)
+             (effect println)))))
