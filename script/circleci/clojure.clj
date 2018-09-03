@@ -9,9 +9,9 @@
        "/"
        (ns-name *ns*)
        (aid/casep env
-                  :circle-tag (->> env
-                                   :circle-tag
-                                   (str ":"))
+                  :circle-tag (str ":" (-> env
+                                           :circle-tag
+                                           (subs 1)))
                   "")))
 
 (->> (concat (map (partial apply command/lein) [["test"]
