@@ -9,25 +9,6 @@
 (def clojure-port
   8080)
 
-(def transfer-name
-  (helpers/transfer* [:metadata :name] (comp str/lower-case
-                                             :kind)))
-
-(def ingress
-  {:apiVersion "extensions/v1beta1"
-   :kind       "Ingress"
-   :metadata   {:annotations {"kubernetes.io/ingress.global-static-ip-name"
-                              "ip"}}
-   :spec       {:backend {:serviceName "backend"
-                          :servicePort clojure-port}}})
-
-(def service
-  {:apiVersion "v1"
-   :kind       "Service"
-   :spec       {:type  "NodePort"
-                :ports [{:port       80
-                         :targetPort clojure-port}]}})
-
 (def label
   {:label "label"})
 
@@ -49,6 +30,28 @@
                                       (map get-container
                                            #{{:name helpers/clojure-name
                                               :port clojure-port}})}}}})
+
+(def service
+  {:apiVersion "v1"
+   :kind       "Service"
+   :spec       {:type  "NodePort"
+                :ports [{:port       8080
+                         :targetPort clojure-port}]}})
+
+(def get-name
+  (comp str/lower-case
+        :kind))
+
+(def ingress
+  {:apiVersion "extensions/v1beta1"
+   :kind       "Ingress"
+   :metadata   {:annotations {"kubernetes.io/ingress.global-static-ip-name"
+                              "ip"}}
+   :spec       {:backend {:serviceName (get-name service)
+                          :servicePort clojure-port}}})
+
+(def transfer-name
+  (helpers/transfer* [:metadata :name] get-name))
 
 (def resources*
   (map transfer-name #{ingress service deployment}))
