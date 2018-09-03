@@ -2,17 +2,8 @@
   (:require [aid.core :as aid]
             [cats.core :as m]
             [environ.core :refer [env]]
-            [spike-kubernetes.command :as command]))
-
-(def image
-  (str (:docker-username env)
-       "/"
-       (ns-name *ns*)
-       (aid/casep env
-                  :circle-tag (str ":" (-> env
-                                           :circle-tag
-                                           (subs 1)))
-                  "")))
+            [spike-kubernetes.command :as command]
+            [spike-kubernetes.helpers :as helpers]))
 
 (->> (concat (map (partial apply command/lein) [["test"]
                                                 ["cljsbuild" "once" "prod"]
@@ -22,18 +13,19 @@
                             "-f"
                             "docker/clojure/Dockerfile"
                             "-t"
-                            image
+                            helpers/clojure-image
                             "."]
                            ["run"
                             "-d"
-                            image]]
+                            helpers/clojure-image]]
                           (aid/casep env
                                      :circle-tag [["login"
                                                    "-u"
+                                                   helpers/username
                                                    "-p"
                                                    (:docker-password env)]
                                                   ["push"
-                                                   image]]
+                                                   helpers/clojure-image]]
                                      []))))
      (apply m/>>)
      println)
