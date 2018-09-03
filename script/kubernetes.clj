@@ -68,4 +68,6 @@
   (comp doall
         map))
 
-(all! kubectl-apply resources*)
+(->> resources*
+     (all! kubectl-apply)
+     println)
