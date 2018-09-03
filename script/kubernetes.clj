@@ -66,4 +66,3 @@
         map))
 
 (all! kubectl-apply resources*)
-
