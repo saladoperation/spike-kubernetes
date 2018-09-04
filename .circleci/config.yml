@@ -7,11 +7,35 @@ jobs:
       - checkout
       - setup_remote_docker
       - run: lein run circleci
+      - persist_to_workspace:
+          root: resources
+          paths:
+            - kubernetes.txt
+  gcloud:
+    docker:
+      - image: google/cloud-sdk
+    steps:
+      - attach_workspace:
+          at: .
+      - run: |
+          gcloud auth activate-service-account --key-file=<(echo $GCLOUD_KEY) &&
+          gcloud -q config set project ${GCLOUD_PROJECT} &&
+          gcloud -q config set compute/zone ${GCLOUD_COMPUTE_ZONE} &&
+          gcloud container clusters get-credentials cluster
+          kubectl apply -f kubernetes.txt
 workflows:
   version: 2
-  clojure:
+  workflow:
     jobs:
       - clojure:
           filters:
             tags:
               only: /.+/
+      - gcloud:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /.+/
+          requires:
+            - clojure

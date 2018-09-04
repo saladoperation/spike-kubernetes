@@ -61,4 +61,4 @@
 (def spit-kubernetes
   #(->> resources*
         get-json-lines
-        (spit "target/kubernetes.txt")))
+        (spit "resources/kubernetes.txt")))

@@ -1,0 +1,13 @@
+["allow" "" "to"]	let
+waking	awake
+been	come	gone
+but me	but I
+but us	but we
+for	["" "" "ago"]
+["for" "ago"]	["" "ago"]
+["let" "to"]	let
+for a longer time	longer
+miss	haven't got	lack
+remind	["remind" "" "of"]
+mine own	my own
+ours own	our own
