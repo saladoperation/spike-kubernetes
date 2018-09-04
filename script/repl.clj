@@ -1,20 +1,22 @@
 (ns repl
-  (:require [figwheel-sidecar.repl-api :as repl-api]))
+  (:require [figwheel-sidecar.repl-api :as repl-api]
+            [spike-kubernetes.helpers :as helpers]))
 
-(def web-id
-  "web")
+(def build-template
+  {:source-paths ["src"]
+   :compiler     {:source-map-timestamp true
+                  :preloads             ['devtools.preload]
+                  :external-config      {:devtools/config
+                                         {:features-to-install :all}}}
+   :figwheel     true})
 
 (def builds
-  [{:id           web-id
-    :source-paths ["src"]
-    :compiler     {:output-to            "dev-resources/public/js/main.js"
-                   :output-dir           "dev-resources/public/js/out"
-                   :main                 "spike_kubernetes.web"
-                   :asset-path           "/js/out"
-                   :source-map-timestamp true
-                   :preloads             ['devtools.preload]
-                   :external-config      {:devtools/config {:features-to-install :all}}}
-    :figwheel     true}])
+  (map (partial helpers/deep-merge build-template)
+       [{:id       "web"
+         :compiler {:output-to  "dev-resources/public/js/main.js"
+                    :output-dir "dev-resources/public/js/out"
+                    :main       "spike_kubernetes.web"
+                    :asset-path "/js/out"}}]))
 
 (repl-api/start-figwheel!
   {:build-ids  (map :id builds)

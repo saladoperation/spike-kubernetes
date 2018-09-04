@@ -42,4 +42,15 @@
 
      (aid/defcurried transfer*
                      [apath f m]
-                     (s/setval apath (f m) m))))
+                     (s/setval apath (f m) m))
+
+     (defn deep-merge-with
+       [f & more]
+       (command/if-then-else (partial every? map?)
+                             (partial apply merge-with (partial deep-merge-with f))
+                             (partial apply f)
+                             more))
+
+     (def deep-merge
+       (partial deep-merge-with (comp last
+                                      vector)))))
