@@ -43,8 +43,8 @@
 (def ingress
   {:apiVersion "extensions/v1beta1"
    :kind       "Ingress"
-   :metadata   {:annotations {"kubernetes.io/ingress.global-static-ip-name"
-                              "ip"}}
+   :metadata   {:annotations
+                {"kubernetes.io/ingress.global-static-ip-name" "ip"}}
    :spec       {:backend {:serviceName (get-name service)
                           :servicePort clojure-port}}})
 
