@@ -20,4 +20,6 @@
   {:build-ids  (map :id builds)
    :all-builds builds})
 
-(repl-api/cljs-repl web-id)
+(-> *command-line-args*
+    second
+    repl-api/cljs-repl)

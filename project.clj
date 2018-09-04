@@ -19,12 +19,12 @@
   :main spike-kubernetes.core
   :target-path "target/%s"
   :uberjar-name "main.jar"
+  :profiles {:dev {:dependencies [[environ "1.1.0"]
+                                  [binaryage/devtools "0.9.10"]
+                                  [figwheel-sidecar "0.5.14"]]}}
   :cljsbuild {:builds
               {:prod
                {:source-paths ["src"]
                 :compiler     {:output-to     "resources/public/js/main.js"
                                :main          spike_kubernetes.web
-                               :optimizations :advanced}}}}
-  :profiles {:dev {:dependencies [[environ "1.1.0"]
-                                  [binaryage/devtools "0.9.10"]
-                                  [figwheel-sidecar "0.5.14"]]}})
+                               :optimizations :advanced}}}})

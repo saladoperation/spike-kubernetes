@@ -1,8 +1,9 @@
 (ns spike-kubernetes.helpers
-  (:require [aid.core :as aid]
-            [com.rpl.specter :as s]
-            [environ.core :refer [env]]
-            [spike-kubernetes.command :as command]))
+  #?(:clj
+     (:require [aid.core :as aid]
+               [com.rpl.specter :as s]
+               [environ.core :refer [env]]
+               [spike-kubernetes.command :as command])))
 
 #?(:clj
    (do
