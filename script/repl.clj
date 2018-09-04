@@ -10,18 +10,27 @@
                                          {:features-to-install :all}}}
    :figwheel     true})
 
-(def builds
-  (map (partial helpers/deep-merge build-template)
-       [{:id       "web"
-         :compiler {:output-to  "dev-resources/public/js/main.js"
-                    :output-dir "dev-resources/public/js/out"
-                    :main       "spike_kubernetes.web"
-                    :asset-path "/js/out"}}]))
+(def id
+  (first *command-line-args*))
 
-(repl-api/start-figwheel!
-  {:build-ids  (map :id builds)
-   :all-builds builds})
+(def compiler
+  ({"web"   {:output-to  "dev-resources/public/js/main.js"
+             :output-dir "dev-resources/public/js/out"
+             :main       "spike_kubernetes.web"
+             :asset-path "/js/out"}
+    "serve" {:output-to "target/main.js"
+             :main      "spike_kubernetes.serve"
+             :target    :nodejs}} id))
 
-(-> *command-line-args*
-    second
-    repl-api/cljs-repl)
+(def build
+  (helpers/deep-merge build-template {:id       id
+                                      :compiler compiler}))
+
+(repl-api/start-figwheel! {:build-ids        [id]
+                           :all-builds       [build]
+                           :figwheel-options {:server-port ((case id
+                                                              "serve" inc
+                                                              identity)
+                                                             3449)}})
+
+(repl-api/cljs-repl id)

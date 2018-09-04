@@ -15,7 +15,8 @@
                  [ring "1.6.3"]]
   :plugins [[lein-ancient "0.6.15"]
             [lein-cljsbuild "1.1.5"]
-            [lein-exec "0.3.7"]]
+            [lein-exec "0.3.7"]
+            [lein-npm "0.6.2"]]
   :main spike-kubernetes.core
   :target-path "target/%s"
   :uberjar-name "main.jar"
@@ -27,4 +28,5 @@
                {:source-paths ["src"]
                 :compiler     {:output-to     "resources/public/js/main.js"
                                :main          spike_kubernetes.web
-                               :optimizations :advanced}}}})
+                               :optimizations :advanced}}}}
+  :npm {:dependencies [[ws "6.0.0"]]})
