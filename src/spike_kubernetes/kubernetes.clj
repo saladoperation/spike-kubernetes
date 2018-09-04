@@ -1,9 +1,7 @@
-(ns kubernetes
+(ns spike-kubernetes.kubernetes
   (:require [clojure.string :as str]
             [aid.core :as aid]
             [cheshire.core :refer :all]
-            [me.raynes.fs :as fs]
-            [spike-kubernetes.command :as command]
             [spike-kubernetes.helpers :as helpers]))
 
 (def clojure-port
@@ -56,18 +54,11 @@
 (def resources*
   (map transfer-name #{ingress service deployment}))
 
-(defn kubectl-apply
-  [m]
-  (let [temporary-file (fs/temp-file "spike-kubernetes")]
-    (->> m
-         generate-string
-         (spit temporary-file))
-    (command/kubectl "apply" "-f" temporary-file)))
+(def get-json-lines
+  (comp (partial str/join "\n")
+        (partial map generate-string)))
 
-(def all!
-  (comp doall
-        map))
-
-(->> resources*
-     (all! kubectl-apply)
-     helpers/emulate)
+(def spit-kubernetes
+  #(->> resources*
+        get-json-lines
+        (spit "target/kubernetes.txt")))

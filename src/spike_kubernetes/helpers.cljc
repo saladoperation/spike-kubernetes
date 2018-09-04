@@ -1,7 +1,5 @@
 (ns spike-kubernetes.helpers
   (:require [aid.core :as aid]
-            [cats.core :as m]
-            [cats.monad.either :as either]
             [com.rpl.specter :as s]
             [environ.core :refer [env]]
             [spike-kubernetes.command :as command]))
@@ -43,17 +41,4 @@
 
      (aid/defcurried transfer*
                      [apath f m]
-                     (s/setval apath (f m) m))
-
-     (aid/defcurried effect
-                     [f x]
-                     (f x)
-                     x)
-
-     (def emulate
-       (comp (aid/functionize System/exit)
-             #(aid/casep %
-                         either/right? 0
-                         -1)
-             (partial apply m/>>)
-             (effect println)))))
+                     (s/setval apath (f m) m))))
