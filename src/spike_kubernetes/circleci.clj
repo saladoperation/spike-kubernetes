@@ -13,8 +13,11 @@
 (def uberjar
   "main.jar")
 
+(def join-lines
+  (partial str/join "\n"))
+
 (def generate-dockerfile
-  (comp (partial str/join "\n")
+  (comp join-lines
         (partial map (partial str/join " "))
         (partial s/transform* [s/ALL s/ALL vector?] generate-string)))
 
