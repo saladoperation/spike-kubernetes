@@ -23,10 +23,15 @@
   :profiles {:dev {:dependencies [[environ "1.1.0"]
                                   [binaryage/devtools "0.9.10"]
                                   [figwheel-sidecar "0.5.14"]]}}
-  :cljsbuild {:builds
-              {:prod
-               {:source-paths ["src"]
-                :compiler     {:output-to     "resources/public/js/main.js"
-                               :main          spike_kubernetes.web
-                               :optimizations :advanced}}}}
+  :cljsbuild
+  {:builds
+   {:clojure       {:source-paths ["src"]
+                    :compiler     {:output-to     "resources/public/js/main.js"
+                                   :optimizations :advanced
+                                   :main          spike_kubernetes.clojure}}
+    :clojurescript {:source-paths ["src"]
+                    :compiler     {:output-to     "target/advanced/main.js"
+                                   :optimizations :advanced
+                                   :main          spike_kubernetes.clojurescript
+                                   :target        :nodejs}}}}
   :npm {:dependencies [[ws "6.0.0"]]})

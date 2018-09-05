@@ -1,4 +1,4 @@
-(ns spike-kubernetes.web
+(ns spike-kubernetes.clojure
   (:require [reagent.core :as r]))
 
 (def app

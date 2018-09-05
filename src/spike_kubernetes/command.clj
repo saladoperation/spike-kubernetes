@@ -29,8 +29,7 @@
        (concat ["source" (fs/expand-home (str "~/." shell "rc")) "&&"])
        (str/join " ")
        (sh/sh shell "-c")
-       (s/transform :err (fn [s]
-                           (str/replace s err "")))
+       (s/transform :err #(str/replace % err ""))
        ((if-then (comp empty?
                        :err)
                  (partial (aid/flip dissoc) :err)))))
@@ -56,22 +55,20 @@
                                      :err))))
         (partial execute shell command)))
 
-(defn make-defcommand
-  [shell]
-  (fn [command]
-    (eval `(def ~(-> command
-                     escape
-                     symbol)
-             (monadify ~shell ~command)))))
+(def make-defcommand
+  #(fn [command]
+     (eval `(def ~(-> command
+                      escape
+                      symbol)
+              (monadify ~% ~command)))))
 
-(defn defcommands
-  [shell]
-  (->> "compgen -bc"
-       (execute shell)
-       :out
-       str/split-lines
-       set
-       (run! (make-defcommand shell))))
+(def defcommands
+  #(->> "compgen -bc"
+        (execute %)
+        :out
+        str/split-lines
+        set
+        (run! (make-defcommand %))))
 
 (def ent
   (->> "user.name"

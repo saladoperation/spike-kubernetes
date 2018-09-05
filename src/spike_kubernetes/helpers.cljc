@@ -10,6 +10,9 @@
      (def clojure-name
        "clojure")
 
+     (def clojurescript-name
+       "clojurescript")
+
      (def username
        "relationship")
 
@@ -36,9 +39,6 @@
                                                  (subs 1))
                            (singleton? *command-line-args*) ""
                            :else (last *command-line-args*)))))
-
-     (def clojure-image
-       (get-image clojure-name))
 
      (aid/defcurried transfer*
                      [apath f m]
