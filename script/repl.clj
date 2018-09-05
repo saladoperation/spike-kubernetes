@@ -1,10 +1,10 @@
 (ns repl
-  (:require [clojure.java.io :as io]
-            [clojure.string :as str]
-            [aid.core :as aid]
-            [com.rpl.specter :as s]
-            [figwheel-sidecar.repl-api :as repl-api]
-            [spike-kubernetes.helpers :as helpers]))
+    (:require [clojure.java.io :as io]
+      [clojure.string :as str]
+      [aid.core :as aid]
+      [com.rpl.specter :as s]
+      [figwheel-sidecar.repl-api :as repl-api]
+      [spike-kubernetes.helpers :as helpers]))
 
 (def build-template
   {:source-paths ["src"]
@@ -36,10 +36,12 @@
                                 :asset-path (helpers/join-paths
                                               js-directory
                                               output-directory)}
-    helpers/clojurescript-name {:output-to (helpers/join-paths "target/none"
-                                                               entry-point)
-                                :target    :nodejs
-                                :npm-deps  {:en-inflectors "1.0.12"}}}
+    helpers/clojurescript-name {:output-to    (helpers/join-paths "target/none"
+                                                                  entry-point)
+                                :target       :nodejs
+                                :npm-deps     {:en-inflectors "1.0.12"
+                                               :ws            "6.0.0"}
+                                :install-deps true}}
     id))
 
 (def build

@@ -84,8 +84,7 @@
          (build-run-docker helpers/clojure-name)))
 
 (def build-clojurescript
-  #(m/>> (command/lein "npm" "install")
-         (build-clojurescript* helpers/clojurescript-name)
+  #(m/>> (build-clojurescript* helpers/clojurescript-name)
          (build-run-docker helpers/clojurescript-name)))
 
 (def push

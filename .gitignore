@@ -118,3 +118,5 @@ typings/
 ### spike-kubernetes
 */public
 figwheel_server.log
+package.json
+package-lock.json

@@ -16,8 +16,7 @@
                  [ring "1.6.3"]]
   :plugins [[lein-ancient "0.6.15"]
             [lein-cljsbuild "1.1.5"]
-            [lein-exec "0.3.7"]
-            [lein-npm "0.6.2"]]
+            [lein-exec "0.3.7"]]
   :main spike-kubernetes.core
   :target-path "target/%s"
   :uberjar-name "main.jar"
@@ -34,6 +33,7 @@
                     :compiler     {:output-to     "target/advanced/main.js"
                                    :optimizations :advanced
                                    :main          spike_kubernetes.clojurescript
-                                   :target        :nodejs}}}}
-  :npm {:dependencies [[en-inflectors "1.0.12"]
-                       [ws "6.0.0"]]})
+                                   :target        :nodejs
+                                   :npm-deps      {:en-inflectors "1.0.12"
+                                                   :ws            "6.0.0"}
+                                   :install-deps  true}}}})
