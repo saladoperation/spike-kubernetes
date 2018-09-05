@@ -1,6 +1,7 @@
 (ns spike-kubernetes.helpers
   #?(:clj
-     (:require [aid.core :as aid]
+     (:require [clojure.string :as str]
+               [aid.core :as aid]
                [com.rpl.specter :as s]
                [environ.core :refer [env]]
                [spike-kubernetes.command :as command])))
@@ -53,4 +54,10 @@
 
      (def deep-merge
        (partial deep-merge-with (comp last
-                                      vector)))))
+                                      vector)))
+     (def join-paths
+       (comp (partial str/join "/")
+             vector))
+
+     (def clojure-port
+       8080)))

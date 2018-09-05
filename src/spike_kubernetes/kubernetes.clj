@@ -4,9 +4,6 @@
             [cheshire.core :refer :all]
             [spike-kubernetes.helpers :as helpers]))
 
-(def clojure-port
-  8080)
-
 (def label
   {:label "label"})
 
@@ -26,13 +23,13 @@
                            :spec     {:containers
                                       (map get-container
                                            #{{:name helpers/clojure-name
-                                              :port clojure-port}})}}}})
+                                              :port helpers/clojure-port}})}}}})
 
 (def service
   {:apiVersion "v1"
    :kind       "Service"
-   :spec       {:ports    [{:port       clojure-port
-                            :targetPort clojure-port}]
+   :spec       {:ports    [{:port       helpers/clojure-port
+                            :targetPort helpers/clojure-port}]
                 :selector label
                 :type     "NodePort"}})
 
@@ -46,7 +43,7 @@
    :metadata   {:annotations
                 {"kubernetes.io/ingress.global-static-ip-name" "ip"}}
    :spec       {:backend {:serviceName (get-name service)
-                          :servicePort clojure-port}}})
+                          :servicePort helpers/clojure-port}}})
 
 (def transfer-name
   (helpers/transfer* [:metadata :name] get-name))

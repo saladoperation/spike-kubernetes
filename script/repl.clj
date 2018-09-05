@@ -17,10 +17,6 @@
 (def id
   (first *command-line-args*))
 
-(def join-paths
-  (comp (partial str/join "/")
-        vector))
-
 (def js-directory
   "js")
 
@@ -37,10 +33,11 @@
 (def compiler*
   ({helpers/clojure-name       {:output-to  (get-public-js entry-point)
                                 :output-dir (get-public-js output-directory)
-                                :asset-path (join-paths js-directory
-                                                        output-directory)}
-    helpers/clojurescript-name {:output-to (join-paths "target/none"
-                                                       entry-point)
+                                :asset-path (helpers/join-paths
+                                              js-directory
+                                              output-directory)}
+    helpers/clojurescript-name {:output-to (helpers/join-paths "target/none"
+                                                               entry-point)
                                 :target    :nodejs}}
     id))
 
