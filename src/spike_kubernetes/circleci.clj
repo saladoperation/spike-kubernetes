@@ -38,12 +38,16 @@
 (def get-target-path
   (partial helpers/join-paths "target"))
 
+(def java
+  "java")
+
 (def clojure-dockerfile
   (get-dockerfile
-    {:image    "clojure:lein-2.7.1@sha256:2c3fa51b875611e90f68490bc1ea7647edb05c9618420c920ba498f3ed174add"
+    {:image    (str java
+                    ":8u111-jdk@sha256:c1ff613e8ba25833d2e1940da0940c3824f03f802c449f3d1815a66b7f8c0e9d")
      :from-tos #{[(get-target-path "uberjar" uberjar) (get-code-path uberjar)]}
      :port     helpers/clojure-port
-     :cmd      ["java" "-jar" uberjar "serve"]}))
+     :cmd      [java "-jar" uberjar "serve"]}))
 
 (def node-modules
   "node_modules")
@@ -51,14 +55,18 @@
 (def get-prod-path
   (partial get-target-path "prod"))
 
+(def node
+  "node")
+
 (def clojurescript-dockerfile
   (get-dockerfile
-    {:image    "node:8.11.4@sha256:fd3c42d91fcf6019eec4e6ccd38168628dd4660992a1550a71c7a7e2b0dc2bdd"
+    {:image    (str node
+                    ":8.11.4@sha256:fd3c42d91fcf6019eec4e6ccd38168628dd4660992a1550a71c7a7e2b0dc2bdd")
      :from-tos (map (comp (partial s/transform* s/LAST get-code-path)
                           (partial repeat 2))
                     #{(get-prod-path) node-modules})
      :port     helpers/clojurescript-port
-     :cmd      ["node" (get-prod-path "main.js")]}))
+     :cmd      [node (get-prod-path "main.js")]}))
 
 (def get-resources-path
   (comp (partial str/join "/")
