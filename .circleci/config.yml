@@ -2,7 +2,7 @@ version: 2
 jobs:
   clojure:
     docker:
-      - image: circleci/clojure:lein-2.8.1-node
+      - image: circleci/clojure:lein-2.8.1-node@sha256:1d232488cb86d9174393202867bb2a4d1229edc7dd602eda69025fb99954c92a
     steps:
       - checkout
       - setup_remote_docker
