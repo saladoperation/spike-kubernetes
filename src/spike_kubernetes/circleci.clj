@@ -21,14 +21,18 @@
         (partial map (partial str/join " "))
         (partial s/transform* [s/ALL s/ALL vector?] generate-string)))
 
+(def get-code-path
+  (partial helpers/join-paths "code"))
+
 (defn get-dockerfile
-  [{:keys [from from-tos port cmd]}]
-  (generate-dockerfile (concat [["FROM" from]]
+  [{:keys [image from-tos port cmd]}]
+  (generate-dockerfile (concat [["FROM" image]]
                                (map (partial s/setval*
                                              s/BEFORE-ELEM
                                              "COPY")
                                     from-tos)
                                [["EXPOSE" port]
+                                ["WORKDIR" (get-code-path)]
                                 ["CMD" cmd]])))
 
 (def get-target-path
@@ -36,24 +40,25 @@
 
 (def clojure-dockerfile
   (get-dockerfile
-    {:from     "clojure:lein-2.7.1@sha256:2c3fa51b875611e90f68490bc1ea7647edb05c9618420c920ba498f3ed174add"
-     :from-tos #{[(get-target-path "uberjar" uberjar) uberjar]}
+    {:image    "clojure:lein-2.7.1@sha256:2c3fa51b875611e90f68490bc1ea7647edb05c9618420c920ba498f3ed174add"
+     :from-tos #{[(get-target-path "uberjar" uberjar) (get-code-path uberjar)]}
      :port     helpers/clojure-port
      :cmd      ["java" "-jar" uberjar "serve"]}))
-
-(def javascript
-  "main.js")
 
 (def node-modules
   "node_modules")
 
+(def get-prod-path
+  (partial get-target-path "prod"))
+
 (def clojurescript-dockerfile
   (get-dockerfile
-    {:from     "node:8.11.4@sha256:fd3c42d91fcf6019eec4e6ccd38168628dd4660992a1550a71c7a7e2b0dc2bdd"
-     :from-tos #{[(get-target-path "prod" javascript) javascript]
-                 (repeat 2 node-modules)}
+    {:image    "node:8.11.4@sha256:fd3c42d91fcf6019eec4e6ccd38168628dd4660992a1550a71c7a7e2b0dc2bdd"
+     :from-tos (map (comp (partial s/transform* s/LAST get-code-path)
+                          (partial repeat 2))
+                    #{(get-prod-path) node-modules})
      :port     helpers/clojurescript-port
-     :cmd      ["node" javascript]}))
+     :cmd      ["node" (get-prod-path "main.js")]}))
 
 (def get-resources-path
   (comp (partial str/join "/")
