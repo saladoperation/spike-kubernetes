@@ -50,7 +50,7 @@
 (def clojurescript-dockerfile
   (get-dockerfile
     {:from     "node:8.11.4@sha256:fd3c42d91fcf6019eec4e6ccd38168628dd4660992a1550a71c7a7e2b0dc2bdd"
-     :from-tos #{[(get-target-path "advanced" javascript) javascript]
+     :from-tos #{[(get-target-path "prod" javascript) javascript]
                  (repeat 2 node-modules)}
      :port     helpers/clojurescript-port
      :cmd      ["node" javascript]}))
@@ -90,7 +90,8 @@
          (build-run-docker helpers/clojure-name)))
 
 (def build-clojurescript
-  #(m/>> (build-clojurescript* helpers/clojurescript-name)
+  #(m/>> (command/lein "npm" "install")
+         (build-clojurescript* helpers/clojurescript-name)
          (build-run-docker helpers/clojurescript-name)))
 
 (def push

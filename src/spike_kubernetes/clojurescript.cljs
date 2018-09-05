@@ -1,10 +1,14 @@
 (ns spike-kubernetes.clojurescript
   (:require [clojure.set :as set]
             [clojure.string :as str]
+            [cljs.tools.reader :as reader]
             [aid.core :as aid]
             [com.rpl.specter :as s]
             [en-inflectors]
-            [oops.core :refer [ocall+]]))
+            [macchiato.server :as server]
+            [macchiato.util.response :as r]
+            [oops.core :refer [ocall+]]
+            [spike-kubernetes.helpers :as helpers]))
 
 (def inflectors
   (.-Inflectors en-inflectors))
@@ -38,3 +42,23 @@
   {lemma (->> lm-tags
               (mapcat (juxt identity (inflect lemma)))
               (apply array-map))})
+
+(defn index
+  [req res raise]
+  (let [data (atom "")]
+    (-> req
+        :body
+        (.on "data" (partial swap! data str)))
+    (-> req
+        :body
+        (.on "end" #(->> @data
+                         reader/read-string
+                         pr-str
+                         r/ok
+                         res)))))
+
+(def start
+  #(server/start {:handler index
+                  :port    helpers/clojurescript-port}))
+
+(set! *main-cli-fn* start)

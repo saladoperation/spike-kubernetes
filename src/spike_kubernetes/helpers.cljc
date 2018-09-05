@@ -6,6 +6,9 @@
                [environ.core :refer [env]]
                [spike-kubernetes.command :as command])))
 
+(def clojurescript-port
+  3000)
+
 #?(:clj
    (do
      (def clojure-name
@@ -60,7 +63,4 @@
              vector))
 
      (def clojure-port
-       8080)
-
-     (def clojurescript-port
-       3000)))
+       8080)))
