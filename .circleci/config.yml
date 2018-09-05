@@ -8,7 +8,7 @@ jobs:
       - setup_remote_docker
       - run: lein run circleci
       - persist_to_workspace:
-          root: resources
+          root: .
           paths:
             - kubernetes.txt
   gcloud:
