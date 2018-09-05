@@ -21,7 +21,9 @@
                            :spec     {:containers
                                       (map (partial apply get-container)
                                            {helpers/clojure-name
-                                            helpers/clojure-port})}}}})
+                                            helpers/clojure-port
+                                            helpers/clojurescript-name
+                                            helpers/clojurescript-port})}}}})
 
 (def service
   {:apiVersion "v1"

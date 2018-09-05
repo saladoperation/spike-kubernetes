@@ -60,4 +60,7 @@
              vector))
 
      (def clojure-port
-       8080)))
+       8080)
+
+     (def clojurescript-port
+       3000)))
