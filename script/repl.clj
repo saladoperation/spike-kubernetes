@@ -25,7 +25,7 @@
 
 (def get-public-js
   (comp str
-        (partial join-paths "dev-resources/public" js-directory)))
+        (partial helpers/join-paths "dev-resources/public" js-directory)))
 
 (def entry-point
   "main.js")
@@ -38,7 +38,8 @@
                                               output-directory)}
     helpers/clojurescript-name {:output-to (helpers/join-paths "target/none"
                                                                entry-point)
-                                :target    :nodejs}}
+                                :target    :nodejs
+                                :npm-deps  {:en-inflectors "1.0.12"}}}
     id))
 
 (def build

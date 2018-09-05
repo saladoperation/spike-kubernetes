@@ -84,7 +84,8 @@
          (build-run-docker helpers/clojure-name)))
 
 (def build-clojurescript
-  #(m/>> (build-clojurescript* helpers/clojurescript-name)
+  #(m/>> (command/lein "npm" "install")
+         (build-clojurescript* helpers/clojurescript-name)
          (build-run-docker helpers/clojurescript-name)))
 
 (def push
@@ -127,9 +128,9 @@
                                        helpers/username
                                        "-p"
                                        (:docker-password env))
-                       (command/lein "test")
                        (build-clojure)
-                       (build-clojurescript))
+                       (build-clojurescript)
+                       (command/lein "test"))
                  #(aid/casep env
                              :circle-tag (->> [helpers/clojure-name
                                                helpers/clojurescript-name]

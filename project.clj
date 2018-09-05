@@ -2,6 +2,7 @@
   :dependencies [[org.clojure/clojure "1.9.0"]
                  [org.clojure/clojurescript "1.10.339"]
                  [aid "0.1.1"]
+                 [binaryage/oops "0.6.2"]
                  [cheshire "5.8.0"]
                  [com.rpl/specter "1.1.1"]
                  [environ "1.1.0"]
@@ -34,4 +35,5 @@
                                    :optimizations :advanced
                                    :main          spike_kubernetes.clojurescript
                                    :target        :nodejs}}}}
-  :npm {:dependencies [[ws "6.0.0"]]})
+  :npm {:dependencies [[en-inflectors "1.0.12"]
+                       [ws "6.0.0"]]})
