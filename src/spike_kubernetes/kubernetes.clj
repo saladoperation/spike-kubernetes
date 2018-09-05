@@ -7,13 +7,11 @@
 (def label
   {:label "label"})
 
-(def get-container
-  (comp (partial (aid/flip dissoc) :port)
-        (helpers/transfer* :ports (comp vector
-                                        (partial array-map :containerPort)
-                                        :port))
-        (helpers/transfer* :image (comp helpers/get-image
-                                        :name))))
+(defn get-container
+  [k v]
+  {:image (helpers/get-image k)
+   :name  k
+   :ports [{:containerPort v}]})
 
 (def deployment
   {:apiVersion "apps/v1"
@@ -21,9 +19,9 @@
    :spec       {:selector {:matchLabels label}
                 :template {:metadata {:labels label}
                            :spec     {:containers
-                                      (map get-container
-                                           #{{:name helpers/clojure-name
-                                              :port helpers/clojure-port}})}}}})
+                                      (map (partial apply get-container)
+                                           {helpers/clojure-name
+                                            helpers/clojure-port})}}}})
 
 (def service
   {:apiVersion "v1"
