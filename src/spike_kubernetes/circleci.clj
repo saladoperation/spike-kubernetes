@@ -10,7 +10,7 @@
             [com.rpl.specter :as s]
             [me.raynes.fs :as fs]))
 
-(def uberjar
+(def jar
   "main.jar")
 
 (def join-lines
@@ -41,13 +41,16 @@
 (def java
   "java")
 
+(def uberjar
+  "uberjar")
+
 (def clojure-dockerfile
   (get-dockerfile
     {:image    (str java
                     ":8u111-jdk@sha256:c1ff613e8ba25833d2e1940da0940c3824f03f802c449f3d1815a66b7f8c0e9d")
-     :from-tos #{[(get-target-path "uberjar" uberjar) (get-code-path uberjar)]}
+     :from-tos #{[(get-target-path uberjar jar) (get-code-path jar)]}
      :port     helpers/clojure-port
-     :cmd      [java "-jar" uberjar "serve"]}))
+     :cmd      [java "-jar" jar "serve"]}))
 
 (def node-modules
   "node_modules")
@@ -99,7 +102,7 @@
 
 (def build-clojure
   #(m/>> (build-clojurescript* helpers/clojure-name)
-         (command/lein "uberjar")
+         (command/lein uberjar)
          (build-run-docker helpers/clojure-name)))
 
 (def build-clojurescript
