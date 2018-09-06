@@ -69,9 +69,6 @@
        "parse")
 
      (def port
-       {clojure-name
-        clojure-port
-        clojurescript-name
-        clojurescript-port
-        parse-name
-        8000})))
+       {clojure-name       clojure-port
+        clojurescript-name clojurescript-port
+        parse-name         8000})))
