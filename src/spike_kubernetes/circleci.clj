@@ -57,6 +57,23 @@
   (partial map (comp (partial s/transform* s/LAST get-code-path)
                      (partial repeat 2))))
 
+(def node-modules
+  "node_modules")
+
+(def get-prod-path
+  (partial get-target-path "prod"))
+
+(def node
+  "node")
+
+(def clojurescript-dockerfile
+  (get-dockerfile
+    {:image    (str node
+                    ":8.11.4@sha256:fd3c42d91fcf6019eec4e6ccd38168628dd4660992a1550a71c7a7e2b0dc2bdd")
+     :from-tos (get-from-tos #{(get-prod-path) node-modules})
+     :port     helpers/clojurescript-port
+     :cmd      [node (get-prod-path "main.js")]}))
+
 (def python
   "python")
 
@@ -78,23 +95,6 @@
      :port     8000
      :cmd      [(helpers/join-paths script "flask" entrypoint "prod.sh")]}))
 
-(def node-modules
-  "node_modules")
-
-(def get-prod-path
-  (partial get-target-path "prod"))
-
-(def node
-  "node")
-
-(def clojurescript-dockerfile
-  (get-dockerfile
-    {:image    (str node
-                    ":8.11.4@sha256:fd3c42d91fcf6019eec4e6ccd38168628dd4660992a1550a71c7a7e2b0dc2bdd")
-     :from-tos (get-from-tos #{(get-prod-path) node-modules})
-     :port     helpers/clojurescript-port
-     :cmd      [node (get-prod-path "main.js")]}))
-
 (def get-resources-path
   (comp (partial str/join "/")
         (partial vector "dev-resources")))
@@ -107,19 +107,18 @@
 (def get-dockerfile-path
   #(get-resources-path "docker" % "Dockerfile"))
 
-(defn get-build-run-command
+(defn get-build-command
   [language]
-  [["build"
-    "-f"
-    (get-dockerfile-path language)
-    "-t"
-    (helpers/get-image language) "."]
-   ["run" "-d" (helpers/get-image language)]])
+  ["build"
+   "-f"
+   (get-dockerfile-path language)
+   "-t"
+   (helpers/get-image language)
+   "."])
 
-(def build-run-docker
-  (comp (partial apply m/>>)
-        (partial map (partial apply command/docker))
-        get-build-run-command))
+(def build-docker
+  (comp (partial apply command/docker)
+        get-build-command))
 
 (def build-clojurescript*
   (partial command/lein "cljsbuild" "once"))
@@ -127,12 +126,12 @@
 (def build-clojure
   #(m/>> (build-clojurescript* helpers/clojure-name)
          (command/lein uberjar)
-         (build-run-docker helpers/clojure-name)))
+         (build-docker helpers/clojure-name)))
 
 (def build-clojurescript
   #(m/>> (command/lein "npm" "install")
          (build-clojurescript* helpers/clojurescript-name)
-         (build-run-docker helpers/clojurescript-name)))
+         (build-docker helpers/clojurescript-name)))
 
 (def push
   (comp (partial command/docker "push")
@@ -159,7 +158,7 @@
   (make-+ first spit))
 
 (def spit-dockerfiles+
-  #(->> #{"parse"}
+  #(->> #{helpers/parse-name}
         (mapcat (comp (partial s/transform* s/LAST get-python-dockerfile)
                       (partial repeat 2)))
         (apply array-map)
@@ -180,10 +179,11 @@
                                        (:docker-password env))
                        (build-clojure)
                        (build-clojurescript)
+                       (build-docker helpers/parse-name)
                        (command/lein "test"))
                  #(aid/casep env
-                             :circle-tag (->> [helpers/clojure-name
-                                               helpers/clojurescript-name]
+                             :circle-tag (->> helpers/port
+                                              keys
                                               (all! push)
                                               (apply m/>>))
                              (m/pure %)))))

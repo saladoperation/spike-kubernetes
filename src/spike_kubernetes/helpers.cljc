@@ -63,4 +63,15 @@
              vector))
 
      (def clojure-port
-       8080)))
+       8080)
+
+     (def parse-name
+       "parse")
+
+     (def port
+       {clojure-name
+        clojure-port
+        clojurescript-name
+        clojurescript-port
+        parse-name
+        8000})))

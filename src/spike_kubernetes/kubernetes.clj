@@ -20,10 +20,7 @@
                 :template {:metadata {:labels label}
                            :spec     {:containers
                                       (map (partial apply get-container)
-                                           {helpers/clojure-name
-                                            helpers/clojure-port
-                                            helpers/clojurescript-name
-                                            helpers/clojurescript-port})}}}})
+                                           helpers/port)}}}})
 
 (def service
   {:apiVersion "v1"
