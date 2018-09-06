@@ -17,6 +17,7 @@
                  [ring "1.6.3"]]
   :plugins [[lein-ancient "0.6.15"]
             [lein-cljsbuild "1.1.5"]
+            [lein-doo "0.1.10"]
             [lein-exec "0.3.7"]
             [lein-npm "0.6.2"]]
   :main spike-kubernetes.core
@@ -40,6 +41,12 @@
                                    :target     :nodejs
                                    ;Not using lein npm install gives the following error.
                                    ;Error: Cannot find module 'cookies'
+                                   :npm-deps   {:en-inflectors "1.0.12"}}}
+    :test          {:source-paths ["src" "test"]
+                    :compiler     {:output-to  "target/test/main.js"
+                                   :output-dir "target/test/out"
+                                   :main       spike_kubernetes.test.core
+                                   :target     :nodejs
                                    :npm-deps   {:en-inflectors "1.0.12"}}}}}
   :npm {:dependencies [[en-inflectors "1.0.12"]
                        [ws "6.0.0"]]})
