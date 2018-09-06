@@ -25,14 +25,15 @@
   (partial helpers/join-paths "code"))
 
 (defn get-dockerfile
-  [{:keys [image from-tos port cmd]}]
+  [{:keys [image from-tos run port cmd] :or {run ":"}}]
   (generate-dockerfile (concat [["FROM" image]]
                                (map (partial s/setval*
                                              s/BEFORE-ELEM
                                              "COPY")
                                     from-tos)
-                               [["EXPOSE" port]
-                                ["WORKDIR" (get-code-path)]
+                               [["WORKDIR" (get-code-path)]
+                                ["RUN" ["/bin/bash" "-c" run]]
+                                ["EXPOSE" port]
                                 ["CMD" cmd]])))
 
 (def get-target-path
@@ -52,6 +53,31 @@
      :port     helpers/clojure-port
      :cmd      [java "-jar" jar "serve"]}))
 
+(def get-from-tos
+  (partial map (comp (partial s/transform* s/LAST get-code-path)
+                     (partial repeat 2))))
+
+(def python
+  "python")
+
+(def script
+  "script")
+
+(defn get-python-dockerfile
+  [entrypoint]
+  (get-dockerfile
+    {:image    "continuumio/miniconda:4.5.4@sha256:19d3eedab8b6301a0e1819476cfc50d53399881612183cf65208d7d43db99cd9"
+     :from-tos (get-from-tos #{python script})
+     :run      (str/join " && " (map (partial str/join " ") [["conda"
+                                                              "env"
+                                                              "create"
+                                                              "-f"
+                                                              (helpers/join-paths python "environments/cpu.yml")]
+                                                             ["source" "activate" "spike-kubernetes"]
+                                                             [python "-m" "spacy" "download" "en"]]))
+     :port     8000
+     :cmd      [(helpers/join-paths script "flask" entrypoint "prod.sh")]}))
+
 (def node-modules
   "node_modules")
 
@@ -65,9 +91,7 @@
   (get-dockerfile
     {:image    (str node
                     ":8.11.4@sha256:fd3c42d91fcf6019eec4e6ccd38168628dd4660992a1550a71c7a7e2b0dc2bdd")
-     :from-tos (map (comp (partial s/transform* s/LAST get-code-path)
-                          (partial repeat 2))
-                    #{(get-prod-path) node-modules})
+     :from-tos (get-from-tos #{(get-prod-path) node-modules})
      :port     helpers/clojurescript-port
      :cmd      [node (get-prod-path "main.js")]}))
 
@@ -135,8 +159,12 @@
   (make-+ first spit))
 
 (def spit-dockerfiles+
-  #(->> {helpers/clojure-name       clojure-dockerfile
-         helpers/clojurescript-name clojurescript-dockerfile}
+  #(->> #{"parse"}
+        (mapcat (comp (partial s/transform* s/LAST get-python-dockerfile)
+                      (partial repeat 2)))
+        (apply array-map)
+        (merge {helpers/clojure-name       clojure-dockerfile
+                helpers/clojurescript-name clojurescript-dockerfile})
         (s/transform s/MAP-KEYS get-dockerfile-path)
         (run! (partial apply spit+))))
 

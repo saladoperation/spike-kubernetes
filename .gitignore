@@ -118,3 +118,4 @@ typings/
 ### spike-kubernetes
 */public
 figwheel_server.log
+dev-resources/docker
