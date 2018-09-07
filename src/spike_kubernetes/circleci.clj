@@ -103,7 +103,7 @@
                     (map (partial str/join " "))
                     (str/join " && "))
      :port     8000
-     :cmd      [(helpers/join-paths script "flask" entrypoint "prod.sh")]}))
+     :cmd      [(helpers/join-paths script python entrypoint "prod.sh")]}))
 
 (def get-resources-path
   (comp (partial str/join "/")
