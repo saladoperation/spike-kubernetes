@@ -5,4 +5,6 @@
   [:div
    [:textarea]])
 
-(r/render app (js/document.getElementById "app"))
+(->> "app"
+     js/document.getElementById
+     (r/render app))
