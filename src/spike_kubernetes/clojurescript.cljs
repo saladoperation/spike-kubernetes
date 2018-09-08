@@ -34,8 +34,11 @@
                                inflectors.
                                (ocall+ (name k)))))
 
+(def atives
+  #{:comparative :superlative})
+
 (def lm-tags
-  (set/union verb-tags #{:comparative :superlative}))
+  (set/union verb-tags atives))
 
 (defn get-lm-alternative
   [lemma]
