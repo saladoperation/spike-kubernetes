@@ -26,7 +26,8 @@
   :uberjar-name "main.jar"
   :profiles {:dev {:dependencies [[environ "1.1.0"]
                                   [binaryage/devtools "0.9.10"]
-                                  [figwheel-sidecar "0.5.14"]]}}
+                                  [figwheel-sidecar "0.5.14"]]}
+             :prod {}}
   :cljsbuild
   {:builds
    {:clojure       {:source-paths ["src"]
