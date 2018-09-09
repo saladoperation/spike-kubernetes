@@ -52,7 +52,9 @@
      (defn deep-merge-with
        [f & more]
        (command/if-then-else (partial every? map?)
-                             (partial apply merge-with (partial deep-merge-with f))
+                             (partial apply
+                                      merge-with
+                                      (partial deep-merge-with f))
                              (partial apply f)
                              more))
 
