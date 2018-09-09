@@ -50,11 +50,11 @@
     :tag_   "NN"}])
 
 (aid/defcurried test-arrangement
-                [sentence k values]
+                [sentence k vs]
                 (->> sentence
                      helpers/arrange-tokens
                      (map k)
-                     (= values)
+                     (= vs)
                      test/is))
 
 (def test-article-sentence
