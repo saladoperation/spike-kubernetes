@@ -65,8 +65,7 @@
                          ["it" "'re" "state" "-" "of" "-" "art" "algorithm"]))
 
 (test/deftest aritcle-reference-arrangement
-  (test-article-sentence :reference
-                         [0 1 4 0 0 0 2 0]))
+  (test-article-sentence :reference [0 1 4 0 0 0 2 0]))
 
 (test/deftest aritcle-hyphen-arrangement
   (test-article-sentence :hyphen
