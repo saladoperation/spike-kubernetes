@@ -6,6 +6,7 @@
             [cheshire.core :refer :all]
             [com.rpl.specter :as s]
             [me.raynes.fs :as fs]
+            [taoensso.timbre :as timbre]
             [spike-kubernetes.command :as command]
             [spike-kubernetes.helpers :as helpers]
             [spike-kubernetes.kubernetes :as kubernetes]))
@@ -147,11 +148,6 @@
   (comp (partial command/docker "push")
         helpers/get-image))
 
-(aid/defcurried effect
-                [f x]
-                (f x)
-                x)
-
 (defn make-+
   [f g]
   (comp (juxt (comp fs/mkdirs
@@ -188,16 +184,19 @@
   []
   (spit-dockerfiles+)
   (kubernetes/spit-kubernetes)
-  (effect println
-          (m/>>= (m/>> (->> env
-                            :docker-password
-                            (command/docker "login" "-u" helpers/username "-p"))
-                       (build-clojure)
-                       (build-clojurescript)
-                       (map->> build-docker python-names)
-                       (run-tests))
-                 #(aid/casep env
-                             :circle-tag (->> helpers/port
-                                              keys
-                                              (map->> push))
-                             (m/pure %)))))
+  (timbre/with-level :trace
+                     (m/>>= (m/>> (->> env
+                                       :docker-password
+                                       (command/docker "login"
+                                                       "-u"
+                                                       helpers/username
+                                                       "-p"))
+                                  (build-clojure)
+                                  (build-clojurescript)
+                                  (map->> build-docker python-names)
+                                  (run-tests))
+                            #(aid/casep env
+                                        :circle-tag (->> helpers/port
+                                                         keys
+                                                         (map->> push))
+                                        (m/pure %)))))

@@ -4,7 +4,8 @@
             [aid.core :as aid]
             [cats.monad.either :as either]
             [com.rpl.specter :as s]
-            [me.raynes.fs :as fs]))
+            [me.raynes.fs :as fs]
+            [taoensso.timbre :as timbre]))
 
 (aid/defcurried if-then-else
                 ;TODO move this function to aid
@@ -53,6 +54,7 @@
                          (juxt out
                                (comp str/trim-newline
                                      :err))))
+        #(timbre/spy :trace %)
         (partial execute shell command)))
 
 (def make-defcommand
