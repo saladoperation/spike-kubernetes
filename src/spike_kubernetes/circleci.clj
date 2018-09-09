@@ -176,11 +176,13 @@
         (s/transform s/MAP-KEYS get-dockerfile-path)
         (run! (partial apply spit+))))
 
+(def map->>
+  (comp (partial apply m/>>)
+        map))
+
 (def run-tests
-  #(->> [["test"]
-         ["doo" node "test" "once"]]
-        (map (partial apply command/lein))
-        (apply m/>>)))
+  #(map->> (partial apply command/lein) [["test"]
+                                         ["doo" node "test" "once"]]))
 
 (defn run-circleci
   []
@@ -192,13 +194,10 @@
                             (command/docker "login" "-u" helpers/username "-p"))
                        (build-clojure)
                        (build-clojurescript)
-                       (->> python-names
-                            (map build-docker)
-                            (apply m/>>))
+                       (map->> build-docker python-names)
                        (run-tests))
                  #(aid/casep env
                              :circle-tag (->> helpers/port
                                               keys
-                                              (map push)
-                                              (apply m/>>))
+                                              (map->> push))
                              (m/pure %)))))
