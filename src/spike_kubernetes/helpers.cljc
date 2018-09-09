@@ -86,5 +86,147 @@
              generate-string))
 
      (def parse-remotely
-       (comp (partial client/post (get-origin 8000))
-             get-json-request))))
+       (comp :body
+             (partial client/post (get-origin 8000))
+             get-json-request))
+
+     (def set-starts
+       (comp (partial s/setval* [s/FIRST :start] true)
+             (partial map (transfer* :start :is_sent_start))))
+
+     (def quotation-mark?*
+       (comp (partial = "\"")
+             :lower_))
+
+     (defn make-quotation-mark?
+       [tag]
+       (aid/build and
+                  (comp (partial = tag)
+                        :tag_)
+                  quotation-mark?*))
+
+     (def opening?
+       (make-quotation-mark? "``"))
+
+     (def closing?
+       (make-quotation-mark? "''"))
+
+     (defn last?
+       [pred coll]
+       (and (-> coll
+                empty?
+                not)
+            (-> coll
+                last
+                pred)))
+
+     (defn set-quote
+       [tokens token]
+       (->> token
+            (s/setval :quote
+                      (last? (aid/build or
+                                        opening?
+                                        (aid/build and
+                                                   :quote
+                                                   (complement closing?)))
+                             tokens))
+            (conj tokens)))
+
+     (def set-quotes
+       (partial reduce set-quote []))
+
+     (def reverse-reduce
+       (comp reverse
+             (partial apply reduce)
+             (partial s/transform* s/LAST reverse)
+             vector))
+
+     (def proper-tags
+       #{"NNP" "NNPS"})
+
+     (defn set-proper
+       [tokens token]
+       (->> token
+            (s/setval :proper (and (->> token
+                                        :tag_
+                                        (contains? proper-tags))
+                                   (or (-> token
+                                           :dep_
+                                           (not= "compound"))
+                                       (last? :proper tokens))))
+            (conj tokens)))
+
+     (def set-propers
+       (partial reverse-reduce set-proper []))
+
+     (def hyphen?
+       (comp (partial = "-")
+             :lower_))
+
+     (def article-code
+       {"the" 1
+        "a"   2
+        "an"  2})
+
+     (def articles
+       (-> article-code
+           keys
+           set))
+
+     (def article-removal?
+       (comp articles
+             :lower_))
+
+     (def hyphen-removal?
+       (aid/build and
+                  hyphen?
+                  (comp pos?
+                        :article)))
+
+     (def get-diff
+       (partial command/if-then-else
+                article-removal?
+                (comp (partial zipmap
+                               [:article :article-title])
+                      (juxt (comp article-code
+                                  :lower_)
+                            :is_title))
+                (comp (partial s/setval* :hyphen true)
+                      (partial (aid/flip select-keys)
+                               #{:article :article-title}))))
+
+     (def removable?
+       (complement (aid/build or
+                              :proper
+                              :quote)))
+
+     (defn set-remove-token
+       [tokens token]
+       (cond (empty? tokens) [token]
+             (and ((aid/build or
+                              article-removal?
+                              hyphen-removal?)
+                    (last tokens))
+                  (removable? token))
+             (s/transform s/LAST
+                          (comp (partial merge token)
+                                get-diff)
+                          tokens)
+             :else (->> token
+                        (s/setval :hyphen (-> tokens
+                                              last
+                                              hyphen?))
+                        (conj tokens))))
+
+
+     (def set-remove-tokens
+       (comp (partial reduce set-remove-token [])
+             (partial map (partial merge {:article       0
+                                          :article-title false
+                                          :hyphen        false}))))
+
+     (def arrange-tokens*
+       (comp set-remove-tokens
+             set-propers
+             set-quotes
+             set-starts))))
