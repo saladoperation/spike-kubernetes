@@ -71,10 +71,17 @@
      (def parse-name
        "parse")
 
+     (def document-name
+       "document")
+
+     (def parse-port
+       8000)
+
      (def port
        {clojure-name       clojure-port
         clojurescript-name clojurescript-port
-        parse-name         8000})
+        parse-name         parse-port
+        document-name      8001})
 
      (def get-origin
        (partial str "http://localhost:"))
@@ -88,7 +95,7 @@
 
      (def parse-remotely
        (comp :body
-             (partial client/post (get-origin 8000))
+             (partial client/post (get-origin parse-port))
              get-json-request))
 
      (def set-starts

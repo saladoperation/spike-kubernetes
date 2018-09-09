@@ -167,8 +167,11 @@
 (def spit+
   (make-+ first spit))
 
+(def python-names
+  #{helpers/parse-name helpers/document-name})
+
 (def spit-dockerfiles+
-  #(->> #{helpers/parse-name}
+  #(->> python-names
         (mapcat (comp (partial s/transform* s/LAST get-python-dockerfile)
                       (partial repeat 2)))
         (apply array-map)
@@ -193,7 +196,9 @@
                             (command/docker "login" "-u" helpers/username "-p"))
                        (build-clojure)
                        (build-clojurescript)
-                       (build-docker helpers/parse-name)
+                       (->> python-names
+                            (map build-docker)
+                            (apply m/>>))
                        (run-tests))
                  #(aid/casep env
                              :circle-tag (->> helpers/port
