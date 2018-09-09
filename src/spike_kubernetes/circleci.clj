@@ -1,14 +1,14 @@
 (ns spike-kubernetes.circleci
-  (:require [aid.core :as aid]
+  (:require [clojure.string :as str]
+            [aid.core :as aid]
+            [environ.core :refer [env]]
             [cats.core :as m]
             [cheshire.core :refer :all]
-            [environ.core :refer [env]]
-            [spike-kubernetes.helpers :as helpers]
-            [spike-kubernetes.kubernetes :as kubernetes]
-            [spike-kubernetes.command :as command]
-            [clojure.string :as str]
             [com.rpl.specter :as s]
-            [me.raynes.fs :as fs]))
+            [me.raynes.fs :as fs]
+            [spike-kubernetes.command :as command]
+            [spike-kubernetes.helpers :as helpers]
+            [spike-kubernetes.kubernetes :as kubernetes]))
 
 (def jar
   "main.jar")
