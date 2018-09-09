@@ -279,15 +279,15 @@
        (transfer* :source get-document-source))
 
      (def set-document-reference
-       (transfer* :reference (aid/build +
-                                        (comp {true  1
-                                               false 0}
-                                              (partial apply not=)
-                                              (partial s/select*
-                                                       (s/multi-path :source
-                                                                     :lower_)))
-                                        (comp (partial * 2)
-                                              :article))))
+       (transfer* :reference
+                  (aid/build +
+                             (comp {true  1
+                                    false 0}
+                                   (partial apply not=)
+                                   (partial s/select*
+                                            (s/multi-path :source :lower_)))
+                             (comp (partial * 2)
+                                   :article))))
 
      (def set-mask
        (transfer* :mask (aid/build or
