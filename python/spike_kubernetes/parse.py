@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify, request
 import spacy
 from spike_kubernetes.clojure.core import *
 import spike_kubernetes.clojure.set as set_
@@ -32,3 +32,8 @@ nlp = spacy.load("en")
 parse = comp(tuple,
              partial(map, get_token),
              nlp)
+
+
+@app.route("/", methods=["POST"])
+def index():
+    return jsonify(parse(request.get_json()))
