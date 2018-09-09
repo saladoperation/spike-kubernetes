@@ -147,10 +147,6 @@
   (comp (partial command/docker "push")
         helpers/get-image))
 
-(def all!
-  (comp doall
-        map))
-
 (aid/defcurried effect
                 [f x]
                 (f x)
@@ -203,6 +199,6 @@
                  #(aid/casep env
                              :circle-tag (->> helpers/port
                                               keys
-                                              (all! push)
+                                              (map push)
                                               (apply m/>>))
                              (m/pure %)))))
