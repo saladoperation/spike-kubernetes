@@ -33,18 +33,17 @@
        (comp (partial = 1)
              count))
 
-     (defn get-image
-       [language]
-       (str username
-            "/"
-            language
-            (if-else empty?
-                     (partial str ":")
-                     (cond (:circle-tag env) (-> env
-                                                 :circle-tag
-                                                 (subs 1))
-                           (singleton? *command-line-args*) ""
-                           :else (last *command-line-args*)))))
+     (def get-image
+       #(str username
+             "/"
+             %
+             (if-else empty?
+                      (partial str ":")
+                      (cond (:circle-tag env) (-> env
+                                                  :circle-tag
+                                                  (subs 1))
+                            (singleton? *command-line-args*) ""
+                            :else (last *command-line-args*)))))
 
      (aid/defcurried transfer*
                      [apath f m]
@@ -98,12 +97,11 @@
        (comp (partial = "\"")
              :lower_))
 
-     (defn make-quotation-mark?
-       [tag]
-       (aid/build and
-                  (comp (partial = tag)
-                        :tag_)
-                  quotation-mark?*))
+     (def make-quotation-mark?
+       #(aid/build and
+                   (comp (partial = %)
+                         :tag_)
+                   quotation-mark?*))
 
      (def opening?
        (make-quotation-mark? "``"))
@@ -229,4 +227,75 @@
        (comp set-remove-tokens
              set-propers
              set-quotes
-             set-starts))))
+             set-starts))
+
+     (def uncountable
+       {"few"    "little"
+        "fewer"  "less"
+        "fewest" "least"
+        "many"   "much"})
+
+     (def be
+       {"is"  "are"
+        "was" "were"})
+
+     (def bijective-singular
+       {"these" "this"
+        "those" "that"})
+
+     (def bijection
+       (merge uncountable be bijective-singular))
+
+     (def it
+       "it")
+
+     (def its
+       "its")
+
+     (def surjection
+       {"they"   it
+        "their"  its
+        "them"   it
+        "theirs" its})
+
+     (def altering-tags
+       #{"NNS" "VBZ"})
+
+     (def get-document-source
+       #(->> %
+             (command/if-then-else (comp altering-tags
+                                         :tag_)
+                                   :lemma_
+                                   :lower_)
+             (get (merge bijection
+                         surjection
+                         {"'s" (case (:lemma_ %)
+                                 "'s" "'s"
+                                 "be" "'re"
+                                 "'ve")})
+                  (:lower_ %))))
+
+     (def set-document-source
+       (transfer* :source get-document-source))
+
+     (def set-document-reference
+       (transfer* :reference (aid/build +
+                                        (comp {true  1
+                                               false 0}
+                                              (partial apply not=)
+                                              (partial s/select*
+                                                       (s/multi-path :source
+                                                                     :lower_)))
+                                        (comp (partial * 2)
+                                              :article))))
+
+     (def set-mask
+       (transfer* :mask (aid/build or
+                                   :quote
+                                   :proper)))
+
+     (def arrange-tokens
+       (comp (partial map (comp set-mask
+                                set-document-reference
+                                set-document-source))
+             arrange-tokens*))))
