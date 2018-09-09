@@ -2,6 +2,8 @@
   #?(:clj
      (:require [clojure.string :as str]
                [aid.core :as aid]
+               [cheshire.core :refer :all]
+               [clj-http.client :as client]
                [com.rpl.specter :as s]
                [environ.core :refer [env]]
                [spike-kubernetes.command :as command])))
@@ -71,4 +73,18 @@
      (def port
        {clojure-name       clojure-port
         clojurescript-name clojurescript-port
-        parse-name         8000})))
+        parse-name         8000})
+
+     (def get-origin
+       (partial str "http://localhost:"))
+
+     (def get-json-request
+       (comp (partial assoc
+                      {:as           :json
+                       :content-type :json}
+                      :body)
+             generate-string))
+
+     (def parse-remotely
+       (comp (partial client/post (get-origin 8000))
+             get-json-request))))
