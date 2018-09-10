@@ -6,14 +6,6 @@
             [figwheel-sidecar.repl-api :as repl-api]
             [spike-kubernetes.helpers :as helpers]))
 
-(def build-template
-  {:compiler {:main                 "spike_kubernetes.core"
-              :source-map-timestamp true
-              :preloads             ['devtools.preload]
-              :external-config      {:devtools/config
-                                     {:features-to-install :all}}}
-   :figwheel true})
-
 (def id
   (first *command-line-args*))
 

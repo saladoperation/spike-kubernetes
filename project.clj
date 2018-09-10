@@ -25,8 +25,8 @@
             [lein-exec "0.3.7"]
             [lein-npm "0.6.2"]]
   :main spike-kubernetes.core
-  :source-paths ["src/clojure"]
-  :test-paths ["test/clojure"]
+  :source-paths ["src/orchestration"]
+  :test-paths ["test/orchestration"]
   :target-path "target/%s"
   :uberjar-name "main.jar"
   :profiles {:dev  {:dependencies [[binaryage/devtools "0.9.10"]
