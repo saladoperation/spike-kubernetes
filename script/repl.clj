@@ -30,12 +30,12 @@
   "main.js")
 
 (def compiler*
-  ({helpers/clojure-name       {:output-to  (get-public-js entry-point)
+  ({helpers/orchestration-name {:output-to  (get-public-js entry-point)
                                 :output-dir (get-public-js output-directory)
                                 :asset-path (helpers/join-paths
                                               js-directory
                                               output-directory)}
-    helpers/clojurescript-name {:output-to (helpers/join-paths "target/dev"
+    helpers/alteration-name    {:output-to (helpers/join-paths "target/dev"
                                                                entry-point)
                                 :target    :nodejs
                                 :npm-deps  {:en-inflectors "1.0.12"}}}
@@ -66,7 +66,7 @@
    :all-builds       [build]
    :figwheel-options {:server-port
                       ((aid/case-eval id
-                                      helpers/clojurescript-name inc
+                                      helpers/alteration-name inc
                                       identity)
                         3449)}})
 

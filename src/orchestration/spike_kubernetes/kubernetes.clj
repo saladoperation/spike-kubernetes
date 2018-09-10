@@ -25,8 +25,8 @@
 (def service
   {:apiVersion "v1"
    :kind       "Service"
-   :spec       {:ports    [{:port       helpers/clojure-port
-                            :targetPort helpers/clojure-port}]
+   :spec       {:ports    [{:port       helpers/orchestration-port
+                            :targetPort helpers/orchestration-port}]
                 :selector label
                 :type     "NodePort"}})
 
@@ -40,7 +40,7 @@
    :metadata   {:annotations
                 {"kubernetes.io/ingress.global-static-ip-name" "ip"}}
    :spec       {:backend {:serviceName (get-name service)
-                          :servicePort helpers/clojure-port}}})
+                          :servicePort helpers/orchestration-port}}})
 
 (def transfer-name
   (helpers/transfer* [:metadata :name] get-name))

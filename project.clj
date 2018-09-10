@@ -36,11 +36,11 @@
              :prod {}}
   :cljsbuild
   {:builds
-   {:clojure       {:source-paths ["src/clojure"]
+   {:orchestration {:source-paths ["src/orchestration"]
                     :compiler     {:output-to     "resources/public/js/main.js"
                                    :optimizations :advanced
                                    :main          spike_kubernetes.core}}
-    :clojurescript {:source-paths ["src/clojure" "src/clojurescript"]
+    :alteration    {:source-paths ["src/orchestration" "src/alteration"]
                     :compiler     {:output-to  "target/prod/main.js"
                                    ;deleting :output-dir and setting :optimizations :advanced gives the following error.
                                    ;Error: Cannot find module 'react'
@@ -50,7 +50,7 @@
                                    ;Not using lein npm install gives the following error.
                                    ;Error: Cannot find module 'cookies'
                                    :npm-deps   {:en-inflectors "1.0.12"}}}
-    :test          {:source-paths ["src/clojure" "src/clojurescript" "test"]
+    :test          {:source-paths ["src/orchestration" "src/alteration" "test"]
                     :compiler     {:output-to  "target/test/main.js"
                                    :output-dir "target/test/out"
                                    :main       spike_kubernetes.test.core

@@ -8,16 +8,16 @@
                [environ.core :refer [env]]
                [spike-kubernetes.command :as command])))
 
-(def clojurescript-port
+(def alteration-port
   3000)
 
 #?(:clj
    (do
-     (def clojure-name
-       "clojure")
+     (def orchestration-name
+       "orchestration")
 
-     (def clojurescript-name
-       "clojurescript")
+     (def alteration-name
+       "alteration")
 
      (def username
        "relationship")
@@ -65,7 +65,7 @@
        (comp (partial str/join "/")
              vector))
 
-     (def clojure-port
+     (def orchestration-port
        8080)
 
      (def parse-name
@@ -78,8 +78,8 @@
        8000)
 
      (def port
-       {clojure-name       clojure-port
-        clojurescript-name clojurescript-port
+       {orchestration-name orchestration-port
+        alteration-name    alteration-port
         parse-name         parse-port
         document-name      8001})
 

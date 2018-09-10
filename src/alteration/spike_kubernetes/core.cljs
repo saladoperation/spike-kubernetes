@@ -62,6 +62,6 @@
 
 (def start
   #(server/start {:handler index
-                  :port    helpers/clojurescript-port}))
+                  :port    helpers/alteration-port}))
 
 (set! *main-cli-fn* start)

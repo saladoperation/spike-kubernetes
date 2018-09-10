@@ -54,7 +54,7 @@
 (def clojure-dockerfile
   (get-dockerfile {:image    java-image
                    :from-tos #{[(get-target-path uberjar jar) (get-code-path jar)]}
-                   :port     helpers/clojure-port
+                   :port     helpers/orchestration-port
                    :cmd      [java "-jar" jar "serve"]}))
 
 (def get-from-tos
@@ -79,7 +79,7 @@
   (get-dockerfile
     {:image    node-image
      :from-tos (get-from-tos #{(get-prod-path) node-modules})
-     :port     helpers/clojurescript-port
+     :port     helpers/alteration-port
      :cmd      [node (get-prod-path "main.js")]}))
 
 (def python
@@ -137,14 +137,14 @@
   (partial command/lein "cljsbuild" "once"))
 
 (def build-clojure
-  #(m/>> (build-clojurescript* helpers/clojure-name)
+  #(m/>> (build-clojurescript* helpers/orchestration-name)
          (command/lein uberjar)
-         (build-docker helpers/clojure-name)))
+         (build-docker helpers/orchestration-name)))
 
 (def build-clojurescript
   #(m/>> (command/lein "npm" "install")
-         (build-clojurescript* helpers/clojurescript-name)
-         (build-docker helpers/clojurescript-name)))
+         (build-clojurescript* helpers/alteration-name)
+         (build-docker helpers/alteration-name)))
 
 (def push
   (comp (partial command/docker "push")
@@ -169,8 +169,8 @@
         (mapcat (comp (partial s/transform* s/LAST get-python-dockerfile)
                       (partial repeat 2)))
         (apply array-map)
-        (merge {helpers/clojure-name       clojure-dockerfile
-                helpers/clojurescript-name clojurescript-dockerfile})
+        (merge {helpers/orchestration-name clojure-dockerfile
+                helpers/alteration-name    clojurescript-dockerfile})
         (s/transform s/MAP-KEYS get-dockerfile-path)
         (run! (partial apply spit+))))
 
