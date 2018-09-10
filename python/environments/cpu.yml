@@ -1,7 +1,8 @@
 name: spike-kubernetes
 channels:
-  - conda-forge
+  - pytorch
   - anaconda
+  - conda-forge
   - defaults
 dependencies:
   - ca-certificates=2018.03.07=0
@@ -48,6 +49,7 @@ dependencies:
   - msgpack-python=0.5.6=py37h6bb024c_1
   - murmurhash=0.28.0=py37hf484d3e_0
   - ncurses=6.1=hf484d3e_0
+  - ninja=1.8.2=py37h6bb024c_1
   - numpy=1.15.1=py37h1d66e8a_0
   - numpy-base=1.15.1=py37h81de0dd_0
   - pip=10.0.1=py37_0
@@ -64,7 +66,9 @@ dependencies:
   - wrapt=1.10.11=py37h14c3975_2
   - xz=5.2.4=h14c3975_4
   - zlib=1.2.11=ha838bed_2
+  - pytorch-cpu=0.4.1=py37_cpu_1
   - pip:
     - funcy==1.10.3
     - msgpack==0.5.6
+    - torch==0.4.1
 
