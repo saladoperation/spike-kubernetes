@@ -188,22 +188,22 @@
   (kubernetes/spit-kubernetes)
   (timbre/with-level
     :trace
-    (m/>>= (m/>> (->> env
-                      :docker-password
-                      (command/docker "login"
-                                      "-u"
-                                      helpers/username
-                                      "-p"))
-                 (build-clojure)
-                 (build-clojurescript)
-                 ;This conditional reduces the bandwidth usage.
-                 (aid/casep env
-                            :circle-tag (install/install-word2vecf)
-                            (either/right ""))
-                 (map->> build-docker python-names)
-                 (run-tests))
-           #(aid/casep env
-                       :circle-tag (->> helpers/port
-                                        keys
-                                        (map->> push))
-                       (m/pure %)))))
+    (timbre/spy (m/>>= (m/>> (->> env
+                                  :docker-password
+                                  (command/docker "login"
+                                                  "-u"
+                                                  helpers/username
+                                                  "-p"))
+                             (build-clojure)
+                             (build-clojurescript)
+                             ;This conditional reduces the bandwidth usage.
+                             (aid/casep env
+                                        :circle-tag (install/install-word2vecf)
+                                        (either/right ""))
+                             (map->> build-docker python-names)
+                             (run-tests))
+                       #(aid/casep env
+                                   :circle-tag (->> helpers/port
+                                                    keys
+                                                    (map->> push))
+                                   (m/pure %))))))
