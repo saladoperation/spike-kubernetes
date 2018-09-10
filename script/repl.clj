@@ -24,8 +24,7 @@
   "out")
 
 (def get-public-js
-  (comp str
-        (partial helpers/join-paths "dev-resources/public" js-directory)))
+  (partial helpers/join-paths "dev-resources/public" js-directory))
 
 (def entry-point
   "main.js")

@@ -9,6 +9,7 @@
       <sourceFolder url="file://$MODULE_DIR$/resources" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/script" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/resources/public/js" />
       <excludeFolder url="file://$MODULE_DIR$/target/advanced" />
       <excludeFolder url="file://$MODULE_DIR$/target/base+system+user+dev" />
@@ -183,6 +184,7 @@
     <orderEntry type="library" name="Leiningen: org.slf4j/slf4j-api:1.7.7" level="project" />
     <orderEntry type="library" name="Leiningen: org.tukaani/xz:1.5" level="project" />
     <orderEntry type="library" name="Leiningen: potemkin:0.4.3" level="project" />
+    <orderEntry type="library" name="Leiningen: reagent-forms:0.5.42" level="project" />
     <orderEntry type="library" name="Leiningen: reagent:0.8.1" level="project" />
     <orderEntry type="library" name="Leiningen: riddley:0.1.12" level="project" />
     <orderEntry type="library" name="Leiningen: ring-cors:0.1.11" level="project" />

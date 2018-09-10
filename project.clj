@@ -16,6 +16,7 @@
                  [mount "0.1.13"]
                  [org.immutant/immutant "2.1.10"]
                  [reagent "0.8.1"]
+                 [reagent-forms "0.5.42"]
                  [ring "1.6.3"]]
   :plugins [[com.jakemccrary/lein-test-refresh "0.23.0"]
             [lein-ancient "0.6.15"]
