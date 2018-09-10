@@ -1,6 +1,7 @@
 (ns spike-kubernetes.install
   (:require [clojure.java.io :as io]
             [clojure.java.shell :as sh]
+            [aid.core :as aid]
             [buddy.core.codecs :refer :all]
             [buddy.core.hash :as hash]
             [cats.core :as m]
@@ -30,11 +31,11 @@
 (def install-word2vecf
   #(with-sh-dir+ cache-path
                  (m/>> (command/wget word2vecf-url)
-                       (case (->> word2vecf-filename
-                                  (helpers/join-paths cache-path)
-                                  io/input-stream
-                                  hash/sha256
-                                  bytes->hex)
-                         word2vecf-sha (either/right "")
-                         (either/left "Checksums don't match."))
+                       (aid/case-eval (->> word2vecf-filename
+                                           (helpers/join-paths cache-path)
+                                           io/input-stream
+                                           hash/sha256
+                                           bytes->hex)
+                                      word2vecf-sha (either/right "")
+                                      (either/left "Checksums don't match."))
                        (command/bzip2 "-df" word2vecf-filename))))
