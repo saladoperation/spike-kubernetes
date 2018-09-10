@@ -21,4 +21,5 @@
 
 (def install-word2vecf
   #(with-sh-dir+ cache-path (m/>> (command/wget word2vecf-url)
+                                  ;TODO check checksum
                                   (command/bzip2 "-df" word2vecf-filename))))
