@@ -2,6 +2,7 @@
   (:require [clojure.string :as str]
             [aid.core :as aid]
             [cats.core :as m]
+            [cats.monad.either :as either]
             [cheshire.core :refer :all]
             [com.rpl.specter :as s]
             [environ.core :refer [env]]
@@ -10,8 +11,7 @@
             [spike-kubernetes.command :as command]
             [spike-kubernetes.helpers :as helpers]
             [spike-kubernetes.install :as install]
-            [spike-kubernetes.kubernetes :as kubernetes]
-            [cats.monad.either :as either]))
+            [spike-kubernetes.kubernetes :as kubernetes]))
 
 (def jar
   "main.jar")
