@@ -1,10 +1,10 @@
 (ns spike-kubernetes.circleci
   (:require [clojure.string :as str]
             [aid.core :as aid]
-            [environ.core :refer [env]]
             [cats.core :as m]
             [cheshire.core :refer :all]
             [com.rpl.specter :as s]
+            [environ.core :refer [env]]
             [me.raynes.fs :as fs]
             [taoensso.timbre :as timbre]
             [spike-kubernetes.command :as command]
