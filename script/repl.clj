@@ -7,12 +7,12 @@
             [spike-kubernetes.helpers :as helpers]))
 
 (def build-template
-  {:source-paths ["src"]
-   :compiler     {:source-map-timestamp true
-                  :preloads             ['devtools.preload]
-                  :external-config      {:devtools/config
-                                         {:features-to-install :all}}}
-   :figwheel     true})
+  {:compiler {:main                 "spike_kubernetes.core"
+              :source-map-timestamp true
+              :preloads             ['devtools.preload]
+              :external-config      {:devtools/config
+                                     {:features-to-install :all}}}
+   :figwheel true})
 
 (def id
   (first *command-line-args*))
@@ -44,11 +44,22 @@
     id))
 
 (def build
-  (helpers/deep-merge build-template
-                      {:id       id
-                       :compiler (s/setval :main
-                                           (str "spike_kubernetes." id)
-                                           compiler*)}))
+  {:id           id
+   ;Having the code that targets node.js in the :source-paths for the code that targets browsers gives the following error.
+   ;----  Could not Analyze  dev-resources/public/js/out/macchiato/fs.cljs  ----
+   ;
+   ;  No such namespace: fs, could not locate fs.cljs, fs.cljc, or JavaScript source providing "fs"
+   ;
+   ;----  Analysis Error : Please see dev-resources/public/js/out/macchiato/fs.cljs  ----
+   :source-paths [(helpers/join-paths "src" id)]
+   :compiler     (helpers/deep-merge
+                   {:main                 "spike_kubernetes.core"
+                    :source-map-timestamp true
+                    :preloads             ['devtools.preload]
+                    :external-config      {:devtools/config
+                                           {:features-to-install :all}}}
+                   compiler*)
+   :figwheel     true})
 
 (repl-api/start-figwheel!
   {:build-ids        [id]

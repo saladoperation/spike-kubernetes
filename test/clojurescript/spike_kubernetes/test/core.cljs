@@ -1,7 +1,8 @@
-(ns spike-kubernetes.test.clojurescript
+(ns spike-kubernetes.test.core
   (:require [cljs.test :as test]
             [aid.core :as aid]
-            [spike-kubernetes.clojurescript :as clojurescript]))
+            [doo.runner :refer-macros [doo-all-tests]]
+            [spike-kubernetes.core :as clojurescript]))
 
 (aid/defcurried test-alternative
                 [tags lemma alternative]
@@ -31,3 +32,5 @@
 (test/deftest much
   (test-alternative clojurescript/atives "much" {:comparative "more"
                                                  :superlative "most"}))
+
+(doo-all-tests #"spike-kubernetes\.+")

@@ -1,4 +1,4 @@
-(ns spike-kubernetes.clojure
+(ns spike-kubernetes.core
   (:require [reagent.core :as r]
             [reagent-forms.core :refer [bind-fields]]))
 

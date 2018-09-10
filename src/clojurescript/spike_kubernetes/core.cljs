@@ -1,4 +1,4 @@
-(ns spike-kubernetes.clojurescript
+(ns spike-kubernetes.core
   (:require [clojure.set :as set]
             [clojure.string :as str]
             [cljs.tools.reader :as reader]
