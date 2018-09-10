@@ -54,6 +54,9 @@
                          (juxt out
                                (comp str/trim-newline
                                      :err))))
+        ;(partial (aid/functionize timbre/spy) :trace)
+        ;aid/functionize gives the following error.
+        ;Exception in thread "main" java.lang.RuntimeException: No such namespace: timbre
         #(timbre/spy :trace %)
         (partial execute shell command)))
 

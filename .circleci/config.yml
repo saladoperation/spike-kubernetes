@@ -6,11 +6,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run:
-          command: lein run circleci
-          #no_output_timeout works around the following error.
-          #Too long with no output (exceeded 10m0s)
-          no_output_timeout: 1200
+      - run: lein run circleci
       - persist_to_workspace:
           root: .
           paths:
