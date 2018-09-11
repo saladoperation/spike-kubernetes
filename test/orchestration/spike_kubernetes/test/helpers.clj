@@ -101,3 +101,34 @@
 
 (test/deftest alternative-reference
   (test-alternative-sentence :reference [0 0 1 1 0]))
+
+(def proper-sentence
+  [{:dep_   "nsubj"
+    :lemma_ "-PRON-"
+    :lower_ "it"
+    :tag_   "PRP"}
+   {:dep_   "ROOT"
+    :lemma_ "be"
+    :lower_ "'s"
+    :tag_   "VBZ"}
+   {:dep_   "det"
+    :lemma_ "a"
+    :lower_ "a"
+    :tag_   "DT"}
+   {:dep_   "attr"
+    :lemma_ "lisp"
+    :lower_ "lisp"
+    :tag_   "NNP"}
+   {:dep_   "punct"
+    :lemma_ "."
+    :lower_ "."
+    :tag_   "."}])
+
+(def test-proper-sentence
+  (test-arrangement proper-sentence))
+
+(test/deftest proper-mask
+  (test-proper-sentence :mask [false false false true false]))
+
+(test/deftest proper-source
+  (test-proper-sentence :source ["it" "'re" "a" "lisp" "."]))
