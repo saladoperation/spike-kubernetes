@@ -45,8 +45,8 @@
     :lower_ "art"
     :tag_   "NN"}
    {:dep_   "attr"
-    :lemma_ "algorithm"
-    :lower_ "algorithm"
+    :lemma_ "model"
+    :lower_ "model"
     :tag_   "NN"}])
 
 (aid/defcurried test-arrangement
@@ -62,7 +62,7 @@
 
 (test/deftest aritcle-source
   (test-article-sentence :source
-                         ["it" "'re" "state" "-" "of" "-" "art" "algorithm"]))
+                         ["it" "'re" "state" "-" "of" "-" "art" "model"]))
 
 (test/deftest aritcle-reference
   (test-article-sentence :reference [0 1 4 0 0 0 2 0]))
