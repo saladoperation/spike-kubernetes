@@ -1,6 +1,9 @@
 (ns spike-kubernetes.test.helpers
   (:require [clojure.test :as test]
             [aid.core :as aid]
+            [cats.builtin]
+            [cats.core :as m]
+            [com.rpl.specter :as s]
             [spike-kubernetes.helpers :as helpers]))
 
 (def article-sentence
@@ -167,3 +170,50 @@
 
 (test/deftest compound-proper-source
   (test-compound-proper-sentence :source ["i" "'m" "lisp" "programmer" "."]))
+
+(def quote-sentence
+  [{:dep_   "punct"
+    :lemma_ "\""
+    :lower_ "\""
+    :tag_   "``"}
+   {:dep_   "ROOT"
+    :lemma_ "bring"
+    :lower_ "bring"
+    :tag_   "VB"}
+   {:dep_   "det"
+    :lemma_ "the"
+    :lower_ "the"
+    :tag_   "DT"}
+   {:dep_   "dobj"
+    :lemma_ "pain"
+    :lower_ "pain"
+    :tag_   "NN"}
+   {:dep_   "advmod"
+    :lemma_ "forward"
+    :lower_ "forward"
+    :tag_   "RB"}
+   {:dep_   "punct"
+    :lemma_ "."
+    :lower_ "."
+    :tag_   "."}
+   {:dep_   "punct"
+    :lemma_ "\""
+    :lower_ "\""
+    :tag_   "''"}])
+
+(defn test-quote-sentence
+  [k f]
+  (->> quote-sentence
+       f
+       (test-arrangement quote-sentence k)))
+
+(defn <$
+  [v fv]
+  (m/<$> (constantly v) fv))
+
+(test/deftest quote-mask
+  (test-quote-sentence :mask (comp (partial s/setval* s/FIRST false)
+                                   (partial <$ true))))
+
+(test/deftest quote-source
+  (test-quote-sentence :source (partial map :lower_)))
