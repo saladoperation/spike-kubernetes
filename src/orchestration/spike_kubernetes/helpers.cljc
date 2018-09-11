@@ -307,4 +307,12 @@
        (comp (partial map (comp set-mask
                                 set-document-reference
                                 set-document-source))
-             arrange-tokens*))))
+             arrange-tokens*))
+
+     (def arrange-evaluation-sentences
+       ;TODO implement this function
+       (comp arrange-tokens*))
+
+     (def structure-evaluation-sentences
+       (comp arrange-evaluation-sentences
+             parse-remotely))))
