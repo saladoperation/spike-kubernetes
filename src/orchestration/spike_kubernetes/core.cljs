@@ -1,8 +1,8 @@
 (ns spike-kubernetes.core
   (:require [ajax.core :refer [POST]]
+            [com.rpl.specter :as s]
             [reagent.core :as r]
-            [reagent-forms.core :refer [bind-fields]]
-            [com.rpl.specter :as s]))
+            [reagent-forms.core :refer [bind-fields]]))
 
 (def doc
   (r/atom {:source    ""
