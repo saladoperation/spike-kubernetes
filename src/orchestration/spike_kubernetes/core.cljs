@@ -1,6 +1,8 @@
 (ns spike-kubernetes.core
-  (:require [reagent.core :as r]
-            [reagent-forms.core :refer [bind-fields]]))
+  (:require [ajax.core :refer [POST]]
+            [reagent.core :as r]
+            [reagent-forms.core :refer [bind-fields]]
+            [com.rpl.specter :as s]))
 
 (def doc
   (r/atom {:source    ""
@@ -10,11 +12,17 @@
   [:textarea {:field :text
               :id    :source}])
 
+(def handler
+  (partial swap! doc (comp (partial apply s/setval* :reference)
+                           reverse
+                           vector)))
+
 (defn app
   []
   [:div
    [bind-fields form-template doc]
-   [:button]
+   [:button {:on-click #(POST "/" {:body    (:source @doc)
+                                   :handler handler})}]
    [:p (:reference @doc)]])
 
 (->> "app"

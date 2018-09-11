@@ -5,6 +5,7 @@
                  [binaryage/oops "0.6.2"]
                  [cheshire "5.8.0"]
                  [clj-http "3.9.1"]
+                 [cljs-ajax "0.7.4"]
                  [com.rpl/specter "1.1.1"]
                  [com.taoensso/timbre "4.10.0"]
                  [environ "1.1.0"]
