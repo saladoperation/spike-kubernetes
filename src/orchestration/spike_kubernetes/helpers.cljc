@@ -309,9 +309,15 @@
                                 set-document-source))
              arrange-tokens*))
 
+     (def partition-sentences
+       (comp (partial map flatten)
+             (partial partition 2)
+             (partial partition-by :start)))
+
      (def arrange-evaluation-sentences
        ;TODO implement this function
-       (comp arrange-tokens*))
+       (comp partition-sentences
+             arrange-tokens*))
 
      (def structure-evaluation-sentences
        (comp arrange-evaluation-sentences
