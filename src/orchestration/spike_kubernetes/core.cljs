@@ -21,8 +21,8 @@
   []
   [:div
    [bind-fields form-template doc]
-   [:button {:on-click #(POST "/" {:body    (:source @doc)
-                                   :handler handler})}]
+   [:button {:on-click #(POST "/" {:handler handler
+                                   :body    (:source @doc)})}]
    [:p (:reference @doc)]])
 
 (->> "app"
