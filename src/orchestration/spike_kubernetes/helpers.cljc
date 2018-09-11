@@ -267,6 +267,9 @@
      (def altering-tags
        #{"NNS" "VBZ"})
 
+     (def possessive-s
+       "'s")
+
      (def get-source
        #(->> %
              (command/if-then-else (comp altering-tags
@@ -275,10 +278,10 @@
                                    :lower_)
              (get (merge bijection
                          surjection
-                         {"'s" (case (:lemma_ %)
-                                 "'s" "'s"
-                                 "be" "'re"
-                                 "'ve")})
+                         {possessive-s (aid/case-eval (:lemma_ %)
+                                                      possessive-s possessive-s
+                                                      "be" "'re"
+                                                      "'ve")})
                   (:lower_ %))))
 
      (def set-source
