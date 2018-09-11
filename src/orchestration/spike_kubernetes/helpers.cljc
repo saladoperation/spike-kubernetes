@@ -34,16 +34,13 @@
              count))
 
      (def get-image
-       #(str username
-             "/"
-             %
-             (if-else empty?
-                      (partial str ":")
-                      (cond (:circle-tag env) (-> env
-                                                  :circle-tag
-                                                  (subs 1))
-                            (singleton? *command-line-args*) ""
-                            :else (last *command-line-args*)))))
+       #(str username "/" % (if-else empty?
+                                     (partial str ":")
+                                     (cond (:circle-tag env) (-> env
+                                                                 :circle-tag
+                                                                 (subs 1))
+                                           (singleton? *command-line-args*) ""
+                                           :else (last *command-line-args*)))))
 
      (aid/defcurried transfer*
                      [apath f m]
