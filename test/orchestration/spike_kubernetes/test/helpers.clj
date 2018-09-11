@@ -132,3 +132,38 @@
 
 (test/deftest proper-source
   (test-proper-sentence :source ["it" "'re" "a" "lisp" "."]))
+
+(def compound-proper-sentence
+  [{:dep_   "nsubj"
+    :lemma_ "-PRON-"
+    :lower_ "i"
+    :tag_   "PRP"}
+   {:dep_   "ROOT"
+    :lemma_ "be"
+    :lower_ "'m"
+    :tag_   "VBP"}
+   {:dep_   "det"
+    :lemma_ "a"
+    :lower_ "a"
+    :tag_   "DT"}
+   {:dep_   "compound"
+    :lemma_ "lisp"
+    :lower_ "lisp"
+    :tag_   "NNP"}
+   {:dep_   "attr"
+    :lemma_ "programmer"
+    :lower_ "programmer"
+    :tag_   "NN"}
+   {:dep_   "punct"
+    :lemma_ "."
+    :lower_ "."
+    :tag_   "."}])
+
+(def test-compound-proper-sentence
+  (test-arrangement compound-proper-sentence))
+
+(test/deftest compound-proper-mask
+  (test-compound-proper-sentence :mask [false false false false false]))
+
+(test/deftest compound-proper-source
+  (test-compound-proper-sentence :source ["i" "'m" "lisp" "programmer" "."]))
