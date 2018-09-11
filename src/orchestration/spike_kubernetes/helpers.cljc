@@ -270,7 +270,7 @@
      (def altering-tags
        #{"NNS" "VBZ"})
 
-     (def get-document-source
+     (def get-source
        #(->> %
              (command/if-then-else (comp altering-tags
                                          :tag_)
@@ -284,10 +284,10 @@
                                  "'ve")})
                   (:lower_ %))))
 
-     (def set-document-source
-       (transfer* :source get-document-source))
+     (def set-source
+       (transfer* :source get-source))
 
-     (def set-document-reference
+     (def set-reference
        (transfer* :reference
                   (aid/build +
                              (comp {true  1
@@ -305,8 +305,8 @@
 
      (def arrange-tokens
        (comp (partial map (comp set-mask
-                                set-document-reference
-                                set-document-source))
+                                set-reference
+                                set-source))
              arrange-tokens*))
 
      (def partition-sentences
@@ -314,9 +314,27 @@
              (partial partition 2)
              (partial partition-by :start)))
 
+     (def set-sos
+       (partial s/setval* s/BEFORE-ELEM {:proper       false
+                                         :quote        false
+                                         :forth        {:source "sos"}
+                                         :text_with_ws ""}))
+
+     (def set-forth-source
+       (transfer* [:forth :source] get-source))
+
+     (def set-original
+       (partial s/setval* :original true))
+
+     (def arrange-original-sentence
+       (comp (partial map set-original)
+             set-sos
+             (partial map set-forth-source)))
+
      (def arrange-evaluation-sentences
        ;TODO implement this function
-       (comp partition-sentences
+       (comp (partial map arrange-original-sentence)
+             partition-sentences
              arrange-tokens*))
 
      (def structure-evaluation-sentences
