@@ -145,15 +145,12 @@
              (partial s/transform* s/LAST reverse)
              vector))
 
-     (def proper-tags
-       #{"NNP" "NNPS"})
-
      (defn set-proper
        [tokens token]
        (->> token
-            (s/setval :proper (and (->> token
-                                        :tag_
-                                        (contains? proper-tags))
+            (s/setval :proper (and (-> token
+                                       :tag_
+                                       (str/starts-with? "NNP"))
                                    (or (-> token
                                            :dep_
                                            (not= "compound"))
