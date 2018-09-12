@@ -361,13 +361,18 @@
                                                             :proper
                                                             :quote)
                                               false)
-                                     (transfer* [:forth :source] get-source)))
-                      parse-remotely)))
+                                     (transfer* [:forth
+                                                 :source]
+                                                get-source))))))
 
      (def get-nodes
        (comp (partial map (comp arrange-line
+                                (partial s/transform*
+                                         [s/ALL s/ALL]
+                                         parse-remotely)
                                 parse-line))
-             (partial mapcat str/split-lines)))
+             (partial mapcat str/split-lines)
+             (partial map slurp)))
 
      (def directed-files
        (get-graph-files "directed"))
