@@ -1,11 +1,13 @@
 (ns spike-kubernetes.helpers
   #?(:clj
-     (:require [clojure.string :as str]
+     (:require [clojure.java.io :as io]
+               [clojure.string :as str]
                [aid.core :as aid]
                [cheshire.core :refer :all]
                [clj-http.client :as client]
                [com.rpl.specter :as s]
                [environ.core :refer [env]]
+               [me.raynes.fs :as fs]
                [spike-kubernetes.command :as command])))
 
 (def alteration-port
@@ -327,6 +329,14 @@
        (comp (partial map set-original)
              set-sos
              (partial map set-forth-source)))
+
+     (def get-files
+       (partial (aid/flip fs/find-files*) fs/file?))
+
+     (def get-graph-files
+       (comp get-files
+             io/resource
+             (partial join-paths "lm" "confusions")))
 
      (def arrange-evaluation-sentences
        ;TODO implement this function
