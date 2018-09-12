@@ -334,14 +334,6 @@
      (def get-files
        (partial (aid/flip fs/find-files*) fs/file?))
 
-     (def get-graph-files
-       (comp get-files
-             io/resource
-             (partial join-paths "lm" "confusions")))
-
-     (def undirected-files
-       (get-graph-files "undirected"))
-
      (def parse-cell
        (command/if-then-else (partial (aid/flip str/starts-with?) "[")
                              edn/read-string
@@ -370,10 +362,10 @@
                                          parse-remotely)
                                 parse-line))
              (partial mapcat str/split-lines)
-             (partial map slurp)))
-
-     (def directed-files
-       (get-graph-files "directed"))
+             (partial map slurp)
+             get-files
+             io/resource
+             (partial join-paths "lm" "confusions")))
 
      (def arrange-evaluation-sentences
        ;TODO implement this function
