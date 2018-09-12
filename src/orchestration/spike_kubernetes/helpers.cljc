@@ -369,6 +369,9 @@
                                 parse-line))
              (partial mapcat str/split-lines)))
 
+     (def directed-files
+       (get-graph-files "directed"))
+
      (def arrange-evaluation-sentences
        ;TODO implement this function
        (comp (partial map arrange-original-sentence)
