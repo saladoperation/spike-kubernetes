@@ -345,7 +345,8 @@
 
      (def arrange-line
        (partial s/transform*
-                [s/ALL s/ALL]
+                [s/ALL
+                 s/ALL]
                 (comp set-remove-tokens
                       (partial map
                                (comp (partial s/setval*
@@ -358,7 +359,8 @@
      (def get-nodes
        (comp (partial map (comp arrange-line
                                 (partial s/transform*
-                                         [s/ALL s/ALL]
+                                         [s/ALL
+                                          s/ALL]
                                          parse-remotely)
                                 parse-line))
              (partial mapcat str/split-lines)
