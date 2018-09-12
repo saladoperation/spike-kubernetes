@@ -361,9 +361,7 @@
                                                             :proper
                                                             :quote)
                                               false)
-                                     (transfer* [:forth
-                                                 :source]
-                                                get-source))))))
+                                     set-forth-source)))))
 
      (def get-nodes
        (comp (partial map (comp arrange-line
