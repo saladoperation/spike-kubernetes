@@ -2,6 +2,7 @@
   :dependencies [[org.clojure/clojure "1.9.0"]
                  [org.clojure/clojurescript "1.10.339"]
                  [aid "0.1.1"]
+                 [aysylu/loom "1.0.2"]
                  [binaryage/oops "0.6.2"]
                  [cheshire "5.8.0"]
                  [clj-http "3.9.1"]

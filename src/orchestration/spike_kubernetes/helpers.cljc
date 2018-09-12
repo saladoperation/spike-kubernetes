@@ -8,6 +8,7 @@
                [clj-http.client :as client]
                [com.rpl.specter :as s]
                [environ.core :refer [env]]
+               [loom.graph :as graph]
                [me.raynes.fs :as fs]
                [spike-kubernetes.command :as command])))
 
@@ -356,18 +357,27 @@
                                               false)
                                      set-forth-source)))))
 
-     (def get-nodes
-       (comp (partial map (comp arrange-line
-                                (partial s/transform*
-                                         [s/ALL
-                                          s/ALL]
-                                         parse-remotely)
-                                parse-line))
-             (partial mapcat str/split-lines)
-             (partial map slurp)
-             get-files
-             io/resource
-             (partial join-paths "lm" "confusions")))
+     (defn get-graph
+       [f coll]
+       (->> coll
+            (map (partial apply f))
+            (apply f)))
+
+     (def get-confusion
+       #(->> ["directed" "undirected"]
+             (map (comp (partial map (comp arrange-line
+                                           (partial s/transform*
+                                                    [s/ALL
+                                                     s/ALL]
+                                                    parse-remotely)
+                                           parse-line))
+                        (partial mapcat str/split-lines)
+                        (partial map slurp)
+                        get-files
+                        io/resource
+                        (partial join-paths "lm" "confusions")))
+             (map get-graph [graph/graph graph/digraph])
+             (apply graph/digraph)))
 
      (def arrange-evaluation-sentences
        ;TODO implement this function
