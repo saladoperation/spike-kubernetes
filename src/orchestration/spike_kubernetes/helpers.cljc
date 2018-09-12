@@ -6,11 +6,13 @@
                [aid.core :as aid]
                [cheshire.core :refer :all]
                [clj-http.client :as client]
+               [clojure.math.combinatorics :as combo]
                [com.rpl.specter :as s]
                [environ.core :refer [env]]
                [loom.graph :as graph]
                [me.raynes.fs :as fs]
-               [spike-kubernetes.command :as command])))
+               [spike-kubernetes.command :as command]
+               [compliment.utils :as utils])))
 
 (def alteration-port
   3000)
@@ -376,8 +378,43 @@
                         get-files
                         io/resource
                         (partial join-paths "lm" "confusions")))
+             (map aid/funcall [(comp (partial apply combo/cartesian-product)
+                                     (partial split-at 1))
+                               combo/permutations])
              (map get-graph [graph/graph graph/digraph])
              (apply graph/digraph)))
+
+     (def minimum-n
+       1)
+
+     (utils/defmemoized get-ns
+                        []
+                        (->> (get-confusion)
+                             graph/nodes
+                             (map (comp count
+                                        first))
+                             (apply max)
+                             inc
+                             (range minimum-n)))
+
+     (utils/defmemoized get-confusions
+                        []
+                        (->> (get-confusion)
+                             graph/edges
+                             (map (aid/build array-map
+                                             (comp (partial map :lemma_)
+                                                   first
+                                                   first)
+                                             vector))
+                             (apply merge-with concat)))
+
+     (defn screen
+       [sentence]
+       (->> (get-ns)
+            (mapcat #(->> sentence
+                          (map :lemma_)
+                          (partition % 1)))
+            (mapcat (get-confusions))))
 
      (def arrange-evaluation-sentences
        ;TODO implement this function
