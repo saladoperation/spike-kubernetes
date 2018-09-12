@@ -1,13 +1,8 @@
-["allow" "" "to"]	let
-waking	awake
-been	come	gone
-but me	but I
-but us	but we
+accept	agree
+["do" "fear"]	["be" "afraid"]
 for	["" "" "ago"]
-["for" "ago"]	["" "ago"]
-["let" "to"]	let
-for a longer time	longer
-miss	haven't got	lack
-remind	["remind" "" "of"]
-mine own	my own
-ours own	our own
+["allow" "" "to"]	let
+["marry" "with"]	marry
+["nice" "with"]	["nice" "to"]
+open	untie	undo	["turn" "" "on"]	["switch" "" "on"]	turned on
+see	["see" "about"]

@@ -1,9 +1,1 @@
-near	by
-also	, too,
-at	on	in
-fairly	quite	rather	pretty
-well	good
-close	shut
-expect	["hope" "for"]	["wait" "for"]	["look forward" "to"]
 know	["find" "" "out"]
-like	as
