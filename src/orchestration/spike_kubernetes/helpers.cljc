@@ -2,6 +2,7 @@
   #?(:clj
      (:require [clojure.java.io :as io]
                [clojure.string :as str]
+               [clojure.tools.reader.edn :as edn]
                [aid.core :as aid]
                [cheshire.core :refer :all]
                [clj-http.client :as client]
@@ -337,6 +338,36 @@
        (comp get-files
              io/resource
              (partial join-paths "lm" "confusions")))
+
+     (def undirected-files
+       (get-graph-files "undirected"))
+
+     (def parse-cell
+       (command/if-then-else (partial (aid/flip str/starts-with?) "[")
+                             edn/read-string
+                             vector))
+
+     (def parse-line
+       (comp (partial map parse-cell)
+             (partial (aid/flip str/split) #"\t")))
+
+     (def arrange-line
+       (partial s/transform*
+                [s/ALL s/ALL]
+                (comp set-remove-tokens
+                      (partial map
+                               (comp (partial s/setval*
+                                              (s/multi-path :original
+                                                            :proper
+                                                            :quote)
+                                              false)
+                                     (transfer* [:forth :source] get-source)))
+                      parse-remotely)))
+
+     (def get-nodes
+       (comp (partial map (comp arrange-line
+                                parse-line))
+             (partial mapcat str/split-lines)))
 
      (def arrange-evaluation-sentences
        ;TODO implement this function
