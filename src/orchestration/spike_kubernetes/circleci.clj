@@ -105,10 +105,10 @@
                       [python "-m" "spacy" "download" "en"]]
                      (map (partial str/join " "))
                      (str/join " && "))
-      :port     8000
+      :port     %
       :cmd      [(helpers/join-paths script
                                      python
-                                     %
+                                     (helpers/image-name %)
                                      "prod.sh")]}))
 
 (def get-resources-path
@@ -159,13 +159,13 @@
 (def spit+
   (make-+ first spit))
 
-(def python-names
-  #{helpers/parse-name helpers/document-name})
+(def python-ports
+  #{helpers/parse-port helpers/document-port})
 
 (def spit-dockerfiles+
-  #(->> python-names
-        (mapcat (comp (partial s/transform* s/LAST get-python-dockerfile)
-                      (partial repeat 2)))
+  #(->> python-ports
+        (mapcat (juxt helpers/image-name
+                      get-python-dockerfile))
         (apply array-map)
         (merge {helpers/orchestration-name clojure-dockerfile
                 helpers/alteration-name    clojurescript-dockerfile})
@@ -197,7 +197,7 @@
                              (aid/casep env
                                         :circle-tag (install/install-word2vecf)
                                         (either/right ""))
-                             (map->> build-docker python-names)
+                             (map->> build-docker python-ports)
                              (run-tests))
                        #(aid/casep env
                                    :circle-tag (->> helpers/image-name

@@ -71,20 +71,17 @@
      (def orchestration-port
        8080)
 
-     (def parse-name
-       "parse")
-
-     (def document-name
-       "document")
-
      (def parse-port
        8000)
+
+     (def document-port
+       8001)
 
      (def image-name
        {orchestration-port orchestration-name
         alteration-port    alteration-name
-        parse-port         parse-name
-        8001               document-name})
+        parse-port         "parse"
+        document-port      "document"})
 
      (def get-origin
        (partial str "http://localhost:"))
