@@ -91,22 +91,21 @@
 (def conda-image
   "continuumio/miniconda:4.5.4@sha256:19d3eedab8b6301a0e1819476cfc50d53399881612183cf65208d7d43db99cd9")
 
-(defn get-python-dockerfile
-  [entrypoint]
-  (get-dockerfile
-    {:image    conda-image
-     :from-tos (get-from-tos #{python script})
-     :run      (->> [["conda"
-                      "env"
-                      "create"
-                      "-f"
-                      (helpers/join-paths python "environments/cpu.yml")]
-                     ["source" "activate" "spike-kubernetes"]
-                     [python "-m" "spacy" "download" "en"]]
-                    (map (partial str/join " "))
-                    (str/join " && "))
-     :port     8000
-     :cmd      [(helpers/join-paths script python entrypoint "prod.sh")]}))
+(def get-python-dockerfile
+  #(get-dockerfile
+     {:image    conda-image
+      :from-tos (get-from-tos #{python script})
+      :run      (->> [["conda"
+                       "env"
+                       "create"
+                       "-f"
+                       (helpers/join-paths python "environments/cpu.yml")]
+                      ["source" "activate" "spike-kubernetes"]
+                      [python "-m" "spacy" "download" "en"]]
+                     (map (partial str/join " "))
+                     (str/join " && "))
+      :port     8000
+      :cmd      [(helpers/join-paths script python % "prod.sh")]}))
 
 (def get-resources-path
   (comp (partial str/join "/")
