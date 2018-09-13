@@ -20,7 +20,7 @@
                 :template {:metadata {:labels label}
                            :spec     {:containers
                                       (map (partial apply get-container)
-                                           helpers/image)}}}})
+                                           helpers/image-name)}}}})
 
 (def service
   {:apiVersion "v1"
