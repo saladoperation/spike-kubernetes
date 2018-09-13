@@ -18,14 +18,15 @@
            require)
        ((resolve ~qualified))))
 
-(def -main
-  #(case %
-     "serve" (do (require 'spike-kubernetes.serve)
-                 (mount/start))
-     "kubernetes"
-     (do (require-call 'spike-kubernetes.kubernetes/spit-kubernetes)
-         (shutdown-agents))
-     (System/exit
-       (aid/casep (require-call 'spike-kubernetes.circleci/run-circleci)
-                  either/right? 0
-                  1))))
+(defn -main
+  [command & more]
+  (case command
+    "serve" (do (require 'spike-kubernetes.serve)
+                (mount/start))
+    "kubernetes"
+    (do (require-call 'spike-kubernetes.kubernetes/spit-kubernetes)
+        (shutdown-agents))
+    (System/exit
+      (aid/casep (require-call 'spike-kubernetes.circleci/run-circleci)
+                 either/right? 0
+                 1))))
