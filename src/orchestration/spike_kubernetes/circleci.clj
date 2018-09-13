@@ -135,14 +135,14 @@
   (partial command/lein "cljsbuild" "once"))
 
 (def build-clojure
-  #(m/>> (build-clojurescript* helpers/orchestration-name)
+  #(m/>> (build-clojurescript* helpers/orchestration-image)
          (command/lein uberjar)
-         (build-docker helpers/orchestration-name)))
+         (build-docker helpers/orchestration-image)))
 
 (def build-clojurescript
   #(m/>> (command/lein "npm" "install")
-         (build-clojurescript* helpers/alteration-name)
-         (build-docker helpers/alteration-name)))
+         (build-clojurescript* helpers/alteration-image)
+         (build-docker helpers/alteration-image)))
 
 (def push
   (comp (partial command/docker "push")
@@ -160,15 +160,15 @@
   (make-+ first spit))
 
 (def python-names
-  #{helpers/parse-name helpers/document-name})
+  #{helpers/parse-image helpers/document-image})
 
 (def spit-dockerfiles+
   #(->> python-names
         (mapcat (comp (partial s/transform* s/LAST get-python-dockerfile)
                       (partial repeat 2)))
         (apply array-map)
-        (merge {helpers/orchestration-name clojure-dockerfile
-                helpers/alteration-name    clojurescript-dockerfile})
+        (merge {helpers/orchestration-image clojure-dockerfile
+                helpers/alteration-image    clojurescript-dockerfile})
         (s/transform s/MAP-KEYS get-dockerfile-path)
         (run! (partial apply spit+))))
 

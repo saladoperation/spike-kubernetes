@@ -19,10 +19,10 @@
 
 #?(:clj
    (do
-     (def orchestration-name
+     (def orchestration-image
        "orchestration")
 
-     (def alteration-name
+     (def alteration-image
        "alteration")
 
      (def username
@@ -71,20 +71,20 @@
      (def orchestration-port
        8080)
 
-     (def parse-name
+     (def parse-image
        "parse")
 
-     (def document-name
+     (def document-image
        "document")
 
      (def parse-port
        8000)
 
      (def image
-       {orchestration-port orchestration-name
-        alteration-port    alteration-name
-        parse-port         parse-name
-        8001               document-name})
+       {orchestration-port orchestration-image
+        alteration-port    alteration-image
+        parse-port         parse-image
+        8001               document-image})
 
      (def get-origin
        (partial str "http://localhost:"))
