@@ -191,16 +191,15 @@
                         :article)))
 
      (def get-diff
-       (partial command/if-then-else
-                article-removal?
-                (comp (partial zipmap
-                               [:article :article-title])
-                      (juxt (comp article-code
-                                  :lower_)
-                            :is_title))
-                (comp (partial s/setval* :hyphen true)
-                      (partial (aid/flip select-keys)
-                               #{:article :article-title}))))
+       (command/if-then-else article-removal?
+                             (comp (partial zipmap
+                                            [:article :article-title])
+                                   (juxt (comp article-code
+                                               :lower_)
+                                         :is_title))
+                             (comp (partial s/setval* :hyphen true)
+                                   (partial (aid/flip select-keys)
+                                            #{:article :article-title}))))
 
      (def removable?
        (complement (aid/build or
