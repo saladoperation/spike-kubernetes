@@ -125,7 +125,7 @@
 
 (defn get-build-command
   [s]
-  ["build" "-f" (get-dockerfile-path s) "-t" (helpers/get-identifier s) "."])
+  ["build" "-f" (get-dockerfile-path s) "-t" (helpers/get-image s) "."])
 
 (def build-docker
   (comp (partial apply command/docker)
@@ -146,7 +146,7 @@
 
 (def push
   (comp (partial command/docker "push")
-        helpers/get-identifier))
+        helpers/get-image))
 
 (defn make-+
   [f g]
