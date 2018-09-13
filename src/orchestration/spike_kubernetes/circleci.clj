@@ -53,7 +53,8 @@
 
 (def clojure-dockerfile
   (get-dockerfile {:image    java-image
-                   :from-tos #{[(get-target-path uberjar jar) (get-code-path jar)]}
+                   :from-tos #{[(get-target-path uberjar jar)
+                                (get-code-path jar)]}
                    :port     helpers/orchestration-port
                    :cmd      [java "-jar" jar "serve"]}))
 
