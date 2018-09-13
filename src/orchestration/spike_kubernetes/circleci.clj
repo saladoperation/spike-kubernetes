@@ -122,12 +122,7 @@
 
 (defn get-build-command
   [s]
-  ["build"
-   "-f"
-   (get-dockerfile-path s)
-   "-t"
-   (helpers/get-image s)
-   "."])
+  ["build" "-f" (get-dockerfile-path s) "-t" (helpers/get-image s) "."])
 
 (def build-docker
   (comp (partial apply command/docker)
