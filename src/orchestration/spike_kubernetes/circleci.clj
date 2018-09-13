@@ -121,12 +121,12 @@
   #(get-resources-path "docker" % "Dockerfile"))
 
 (defn get-build-command
-  [language]
+  [s]
   ["build"
    "-f"
-   (get-dockerfile-path language)
+   (get-dockerfile-path s)
    "-t"
-   (helpers/get-image language)
+   (helpers/get-image s)
    "."])
 
 (def build-docker
