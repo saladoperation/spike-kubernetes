@@ -173,6 +173,21 @@
 (def run-tests
   #(map->> (partial apply command/lein) [["test"] ["doo" node "test" "once"]]))
 
+(def get-forwarding
+  (comp (partial str/join ":")
+        (partial repeat 2)))
+
+(def get-run-command
+  (comp (partial concat ["run" "-d" "-p"])
+        (partial map aid/funcall [get-forwarding (comp helpers/get-image
+                                                       helpers/image-name)])
+        (partial repeat 2)))
+
+(def run-commands
+  (->> helpers/python-name
+       keys
+       (map get-run-command)))
+
 (defn run-circleci
   []
   (spit-dockerfiles+)
@@ -186,16 +201,18 @@
                                         "-u"
                                         helpers/username
                                         "-p"))
-                   (build-clojure)
                    (build-clojurescript)
-                   ;This conditional reduces the bandwidth usage.
                    (aid/casep env
                               :circle-tag (install/install-word2vecf)
                               (either/right ""))
+                   ;This conditional reduces the bandwidth usage.
                    (->> helpers/python-name
                         vals
                         (map->> (comp (partial apply command/docker)
                                       get-build-command)))
+                   (->> run-commands
+                        (map->> (partial apply command/docker)))
+                   (build-clojure)
                    (run-tests))
              #(aid/casep env
                          :circle-tag (->> helpers/image-name
