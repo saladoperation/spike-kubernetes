@@ -76,11 +76,10 @@
     ":8.11.4@sha256:fd3c42d91fcf6019eec4e6ccd38168628dd4660992a1550a71c7a7e2b0dc2bdd"))
 
 (def clojurescript-dockerfile
-  (get-dockerfile
-    {:image    node-image
-     :from-tos (get-from-tos #{(get-prod-path) node-modules})
-     :port     helpers/alteration-port
-     :cmd      [node (get-prod-path "main.js")]}))
+  (get-dockerfile {:image    node-image
+                   :from-tos (get-from-tos #{(get-prod-path) node-modules})
+                   :port     helpers/alteration-port
+                   :cmd      [node (get-prod-path "main.js")]}))
 
 (def python
   "python")
@@ -196,7 +195,7 @@
                              (map->> build-docker python-names)
                              (run-tests))
                        #(aid/casep env
-                                   :circle-tag (->> helpers/port
-                                                    keys
+                                   :circle-tag (->> helpers/image
+                                                    vals
                                                     (map->> push))
                                    (m/pure %))))))

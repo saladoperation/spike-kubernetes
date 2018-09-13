@@ -9,9 +9,9 @@
 
 (defn get-container
   [k v]
-  {:image (helpers/get-identifier k)
-   :name  k
-   :ports [{:containerPort v}]})
+  {:image (helpers/get-identifier v)
+   :name  v
+   :ports [{:containerPort k}]})
 
 (def deployment
   {:apiVersion "apps/v1"
@@ -20,7 +20,7 @@
                 :template {:metadata {:labels label}
                            :spec     {:containers
                                       (map (partial apply get-container)
-                                           helpers/port)}}}})
+                                           helpers/image)}}}})
 
 (def service
   {:apiVersion "v1"
