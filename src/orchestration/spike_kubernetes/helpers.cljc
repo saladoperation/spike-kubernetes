@@ -8,11 +8,11 @@
                [clj-http.client :as client]
                [clojure.math.combinatorics :as combo]
                [com.rpl.specter :as s]
+               [compliment.utils :as utils]
                [environ.core :refer [env]]
                [loom.graph :as graph]
                [me.raynes.fs :as fs]
-               [spike-kubernetes.command :as command]
-               [compliment.utils :as utils])))
+               [spike-kubernetes.command :as command])))
 
 (def alteration-port
   3000)
