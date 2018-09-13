@@ -127,26 +127,22 @@
   [s]
   ["build" "-f" (get-dockerfile-path s) "-t" (helpers/get-image s) "."])
 
-(def build-docker
-  (comp (partial apply command/docker)
-        get-build-command))
-
 (def build-clojurescript*
   (partial command/lein "cljsbuild" "once"))
 
 (def build-clojure
   #(m/>> (build-clojurescript* helpers/orchestration-name)
          (command/lein uberjar)
-         (build-docker helpers/orchestration-name)))
+         (->> helpers/orchestration-name
+              get-build-command
+              (apply command/docker))))
 
 (def build-clojurescript
   #(m/>> (command/lein "npm" "install")
          (build-clojurescript* helpers/alteration-name)
-         (build-docker helpers/alteration-name)))
-
-(def push
-  (comp (partial command/docker "push")
-        helpers/get-image))
+         (->> helpers/alteration-name
+              get-build-command
+              (apply command/docker))))
 
 (defn make-+
   [f g]
@@ -183,24 +179,28 @@
   (kubernetes/spit-kubernetes)
   (timbre/with-level
     :trace
-    (timbre/spy (m/>>= (m/>> (->> env
-                                  :docker-password
-                                  (command/docker "login"
-                                                  "-u"
-                                                  helpers/username
-                                                  "-p"))
-                             (build-clojure)
-                             (build-clojurescript)
-                             ;This conditional reduces the bandwidth usage.
-                             (aid/casep env
-                                        :circle-tag (install/install-word2vecf)
-                                        (either/right ""))
-                             (->> helpers/python-name
-                                  vals
-                                  (map->> build-docker))
-                             (run-tests))
-                       #(aid/casep env
-                                   :circle-tag (->> helpers/image-name
-                                                    vals
-                                                    (map->> push))
-                                   (m/pure %))))))
+    (timbre/spy
+      (m/>>= (m/>> (->> env
+                        :docker-password
+                        (command/docker "login"
+                                        "-u"
+                                        helpers/username
+                                        "-p"))
+                   (build-clojure)
+                   (build-clojurescript)
+                   ;This conditional reduces the bandwidth usage.
+                   (aid/casep env
+                              :circle-tag (install/install-word2vecf)
+                              (either/right ""))
+                   (->> helpers/python-name
+                        vals
+                        (map->> (comp (partial apply command/docker)
+                                      get-build-command)))
+                   (run-tests))
+             #(aid/casep env
+                         :circle-tag (->> helpers/image-name
+                                          vals
+                                          (map->> (comp (partial command/docker
+                                                                 "push")
+                                                        helpers/get-image)))
+                         (m/pure %))))))
