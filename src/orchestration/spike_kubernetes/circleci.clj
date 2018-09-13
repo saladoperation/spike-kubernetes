@@ -99,13 +99,17 @@
                        "env"
                        "create"
                        "-f"
-                       (helpers/join-paths python "environments/cpu.yml")]
+                       (helpers/join-paths python
+                                           "environments/cpu.yml")]
                       ["source" "activate" "spike-kubernetes"]
                       [python "-m" "spacy" "download" "en"]]
                      (map (partial str/join " "))
                      (str/join " && "))
       :port     8000
-      :cmd      [(helpers/join-paths script python % "prod.sh")]}))
+      :cmd      [(helpers/join-paths script
+                                     python
+                                     %
+                                     "prod.sh")]}))
 
 (def get-resources-path
   (comp (partial str/join "/")
