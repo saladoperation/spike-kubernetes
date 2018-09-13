@@ -77,11 +77,14 @@
      (def document-port
        8001)
 
+     (def python-name
+       {parse-port    "parse"
+        document-port "document"})
+
      (def image-name
-       {orchestration-port orchestration-name
-        alteration-port    alteration-name
-        parse-port         "parse"
-        document-port      "document"})
+       (merge {orchestration-port orchestration-name
+               alteration-port    alteration-name}
+              python-name))
 
      (def get-origin
        (partial str "http://localhost:"))

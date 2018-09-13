@@ -159,12 +159,10 @@
 (def spit+
   (make-+ first spit))
 
-(def python-ports
-  #{helpers/parse-port helpers/document-port})
-
 (def spit-dockerfiles+
-  #(->> python-ports
-        (mapcat (juxt helpers/image-name
+  #(->> helpers/python-name
+        keys
+        (mapcat (juxt helpers/python-name
                       get-python-dockerfile))
         (apply array-map)
         (merge {helpers/orchestration-name clojure-dockerfile
@@ -197,7 +195,9 @@
                              (aid/casep env
                                         :circle-tag (install/install-word2vecf)
                                         (either/right ""))
-                             (map->> build-docker python-ports)
+                             (->> helpers/python-name
+                                  vals
+                                  (map->> build-docker))
                              (run-tests))
                        #(aid/casep env
                                    :circle-tag (->> helpers/image-name
