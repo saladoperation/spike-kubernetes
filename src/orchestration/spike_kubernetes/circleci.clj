@@ -174,8 +174,7 @@
         map))
 
 (def run-tests
-  #(map->> (partial apply command/lein) [["test"]
-                                         ["doo" node "test" "once"]]))
+  #(map->> (partial apply command/lein) [["test"] ["doo" node "test" "once"]]))
 
 (defn run-circleci
   []
