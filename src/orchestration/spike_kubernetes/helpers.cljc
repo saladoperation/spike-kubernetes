@@ -39,7 +39,7 @@
        (comp (partial = 1)
              count))
 
-     (def get-image
+     (def get-identifier
        #(str username "/" % (if-else empty?
                                      (partial str ":")
                                      (cond (:circle-tag env) (-> env

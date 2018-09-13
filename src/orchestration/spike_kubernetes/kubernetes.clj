@@ -9,7 +9,7 @@
 
 (defn get-container
   [k v]
-  {:image (helpers/get-image k)
+  {:image (helpers/get-identifier k)
    :name  k
    :ports [{:containerPort v}]})
 
