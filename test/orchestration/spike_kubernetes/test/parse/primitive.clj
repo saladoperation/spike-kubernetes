@@ -33,15 +33,15 @@
 
 (def monad-identity
   #(identity* (comp primitive/join
-                    %)))
+                    (% primitive/pure))))
 
 (clojure-test/defspec monad-left
                       num-tests
-                      (monad-identity primitive/pure))
+                      (monad-identity identity))
 
 (clojure-test/defspec monad-right
                       num-tests
-                      (monad-identity (partial m/<$> primitive/pure)))
+                      (monad-identity (m/curry 2 m/<$>)))
 
 (clojure-test/defspec
   monad-associativity
