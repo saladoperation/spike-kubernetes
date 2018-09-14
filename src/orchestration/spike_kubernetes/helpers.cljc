@@ -152,12 +152,15 @@
              (partial s/transform* s/LAST reverse)
              vector))
 
+     (def noun-prefix
+       "NN")
+
      (defn set-proper
        [tokens token]
        (->> token
             (s/setval :proper (and (-> token
                                        :tag_
-                                       (str/starts-with? "NNP"))
+                                       (str/starts-with? (str noun-prefix "P")))
                                    (or (-> token
                                            :dep_
                                            (not= "compound"))
@@ -267,8 +270,11 @@
         "them"   it
         "theirs" its})
 
+     (def verb-prefix
+       "VB")
+
      (def altering-tags
-       #{"NNS" "VBZ"})
+       #{(str noun-prefix "S") (str verb-prefix "Z")})
 
      (def possessive-s
        "'s")
@@ -537,7 +543,7 @@
                                 :original))
 
      (def noun?
-       (partial (aid/flip str/starts-with?) "NN"))
+       (partial (aid/flip str/starts-with?) noun-prefix))
 
      (def get-replaceable
        #(comp parse/satisfy
