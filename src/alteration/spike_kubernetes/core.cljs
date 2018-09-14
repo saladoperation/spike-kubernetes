@@ -48,7 +48,8 @@
 
 (def act
   ;TODO implement this function
-  {:get-alternatives (partial map get-lm-alternative)})
+  {:get-alternative (comp (partial apply merge)
+                          (partial map get-lm-alternative))})
 
 (def handle
   (aid/build aid/funcall

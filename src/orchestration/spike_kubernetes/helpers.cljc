@@ -1,9 +1,11 @@
 (ns spike-kubernetes.helpers
   #?(:clj
      (:require [clojure.java.io :as io]
+               [clojure.set :as set]
                [clojure.string :as str]
                [clojure.tools.reader.edn :as edn]
                [aid.core :as aid]
+               [cats.core :as m]
                [cheshire.core :refer :all]
                [clj-http.client :as client]
                [clojure.math.combinatorics :as combo]
@@ -12,7 +14,8 @@
                [environ.core :refer [env]]
                [loom.graph :as graph]
                [me.raynes.fs :as fs]
-               [spike-kubernetes.command :as command])))
+               [spike-kubernetes.command :as command]
+               [spike-kubernetes.parse.core :as parse])))
 
 (def alteration-port
   3000)
@@ -413,6 +416,22 @@
                           (partition % 1)))
             (mapcat (get-confusions))))
 
+     (def many-any
+       (parse/many parse/any))
+
+     (def verb?
+       (partial (aid/flip str/starts-with?) "VB"))
+
+     (def starts-with-verb?
+       (comp verb?
+             :tag_
+             first))
+
+     (def get-discriminative-token
+       (command/if-then-else starts-with-verb?
+                             first
+                             last))
+
      (def get-edn-request
        (comp (partial array-map :as :clojure :body)
              pr-str))
@@ -427,17 +446,358 @@
              flatten
              (map :lower_)
              set
-             (array-map :action :get-alternatives :data)
+             (array-map :action :get-alternative :data)
              get-edn-request
              post-macchiato
              :body))
 
+     (def condense-tag
+       #(if (and (or (str/starts-with? % "J")
+                     (str/starts-with? % "R"))
+                 (-> %
+                     count
+                     (= 3)))
+          (if (str/ends-with? % "R")
+            :comparative
+            :superlative)
+          (-> %
+              str/lower-case
+              keyword)))
+
+     (def ambiguous-endings
+       #{"D" "N"})
+
+     (aid/defcurried ends-with-one-of?
+                     [s substrs]
+                     (->> substrs
+                          (map (partial str/ends-with? s))
+                          (some true?)))
+
+     (def make-verb-ending?
+       #(aid/build and
+                   verb?
+                   ((aid/flip ends-with-one-of?) %)))
+
+     (def ambiguous-tag?
+       (make-verb-ending? ambiguous-endings))
+
+     (def get-priority-tag
+       #(command/if-then-else
+          (aid/build and
+                     (comp ambiguous-tag?
+                           :tag_)
+                     (aid/build =
+                                :lemma_
+                                (aid/build aid/funcall
+                                           (comp condense-tag
+                                                 :tag_)
+                                           (comp (get-alternative)
+                                                 :lemma_))))
+          (constantly "VB")
+          :tag_
+          %))
+
+     (def pronoun?
+       (partial (aid/flip str/starts-with?) "PR"))
+
+     (def unalterable-tag?
+       (aid/build or
+                  pronoun?
+                  (make-verb-ending? (set/union #{"G" "Z"} ambiguous-endings))
+                  (comp (partial (aid/flip str/ends-with?) "e")
+                        str
+                        condense-tag)))
+
+     (def unalterable-tags?
+       (comp (partial some true?)
+             (partial map (aid/build or
+                                     empty?
+                                     (comp unalterable-tag?
+                                           get-priority-tag
+                                           get-discriminative-token)))
+             vector))
+
+     (def conjunction?
+       (aid/build or
+                  (aid/build and
+                             (comp (partial = "mark")
+                                   :dep_)
+                             (comp (partial = "IN")
+                                   :tag_))
+                  (comp (partial = "CC")
+                        :tag_)))
+
+     (aid/defcurried make-replaceable?
+                     [k x]
+                     (aid/build and
+                                (comp (partial = x)
+                                      k)
+                                (complement conjunction?)
+                                removable?
+                                :original))
+
+     (def noun?
+       (partial (aid/flip str/starts-with?) "NN"))
+
+     (def get-replaceable
+       #(comp parse/satisfy
+              (make-replaceable? %)
+              %))
+
+     (def replaceable-lower
+       (get-replaceable :lower_))
+
+     (def replaceable-lemma
+       (get-replaceable :lemma_))
+
+     (def replaceable-tokens
+       (partial map (command/if-then-else noun?
+                                          replaceable-lemma
+                                          replaceable-lower)))
+
+     (aid/defcurried get-candidate-source
+                     [original replacement-source]
+                     (get ((get-alternative) replacement-source)
+                          (-> original
+                              :tag_
+                              condense-tag)
+                          replacement-source))
+
+     (defn make-parse-b
+       [originals replacements]
+       (let [starts-with-verb (-> originals
+                                  first
+                                  starts-with-verb?)]
+         (->> originals
+              first
+              ((aid/build (partial s/setval* (if starts-with-verb
+                                               s/BEFORE-ELEM
+                                               s/AFTER-ELEM))
+                          (comp (if (->> [originals replacements]
+                                         (map first)
+                                         (apply unalterable-tags?))
+                                  replaceable-lower
+                                  replaceable-lemma)
+                                (if starts-with-verb
+                                  first
+                                  last))
+                          (comp replaceable-tokens
+                                (if starts-with-verb
+                                  rest
+                                  drop-last))))
+              (apply (aid/lift-a vector)))))
+
+     (def non-particle-adverb-tag?
+       (comp (partial (aid/flip str/starts-with?)
+                      "RB")
+             :tag_))
+
+     (aid/defcurried if-else
+                     [if-function else-function then]
+                     (command/if-then-else if-function
+                                           identity
+                                           else-function
+                                           then))
+
+     (def whitespace
+       " ")
+
+     (def ensure-whitespace
+       (if-else empty?
+                (partial s/transform*
+                         [s/LAST :text_with_ws]
+                         (if-else (partial (aid/flip str/ends-with?) whitespace)
+                                  (partial (aid/flip str) whitespace)))))
+
+     (defn make-parse-singleton-c
+       [child? originals replacements]
+       (m/mlet [xs (-> non-particle-adverb-tag?
+                       parse/satisfy
+                       parse/many)
+                ys (-> child?
+                       complement
+                       parse/satisfy
+                       parse/many)
+                z (parse/satisfy
+                    (aid/build and
+                               child?
+                               (complement :quote)
+                               (aid/build or
+                                          (constantly (empty? xs))
+                                          (comp (partial = (-> xs
+                                                               last
+                                                               :head_i))
+                                                :i))
+                               (comp not
+                                     (->> ys
+                                          (filter non-particle-adverb-tag?)
+                                          (map :head_i)
+                                          set)
+                                     :i)
+                               (comp (partial not= "punct")
+                                     :dep_)))]
+               (if (-> replacements
+                       last
+                       empty?)
+                 (m/pure (concat xs
+                                 (-> replacements
+                                     second
+                                     ensure-whitespace)
+                                 ys
+                                 [z]))
+                 ((if (-> replacements
+                          first
+                          empty?)
+                    identity
+                    (partial m/<> (m/pure (concat (-> replacements
+                                                      last
+                                                      ensure-whitespace)
+                                                  xs
+                                                  ys
+                                                  [z]))))
+                   (m/pure (concat xs
+                                   ys
+                                   (ensure-whitespace [z])
+                                   (->> replacements
+                                        last
+                                        (s/setval* [s/LAST
+                                                    :text_with_ws
+                                                    s/END]
+                                                   (:whitespace_ z)))))))))
+
+     (def non-empty-last
+       (comp last
+             (partial remove empty?)))
+
+     (defn append-whitespace
+       [original replacement]
+       (s/setval [s/LAST :text_with_ws s/END]
+                 (-> original
+                     last
+                     :whitespace_)
+                 replacement))
+
+     (defn make-parse-multiton-c
+       [originals replacements]
+       ((aid/lift-a concat)
+         many-any
+         (->>
+           originals
+           non-empty-last
+           replaceable-tokens
+           (apply
+             (aid/lift-a (fn [& original]
+                           (aid/casep replacements
+                                      singleton? []
+                                      (->> replacements
+                                           non-empty-last
+                                           (append-whitespace original)))))))))
+
+     (defn make-parse-c
+       [child? originals replacements]
+       (aid/casep originals
+                  singleton? (aid/casep replacements
+                                        singleton? (m/pure [])
+                                        (make-parse-singleton-c child?
+                                                                originals
+                                                                replacements))
+                  (make-parse-multiton-c originals replacements)))
+
+     (def trim-tags
+       #{"," "." "-"})
+
+     (def trim?
+       (comp trim-tags
+             :tag_
+             first))
+
+     (def trim-last
+       (partial s/transform* [s/LAST :text_with_ws] str/trimr))
+
+     (aid/defcurried set-a-text-with-wss
+                     [original replacement]
+                     ((aid/casep replacement
+                                 trim? trim-last
+                                 identity)
+                       (command/if-then (comp (partial < 1)
+                                              count)
+                                        ensure-whitespace
+                                        original)))
+
+     (aid/defcurried set-b-text-with-wss
+                     [original replacement]
+                     (->> replacement
+                          (map (transfer* :text_with_ws
+                                          (aid/build str
+                                                     (comp :source
+                                                           :forth)
+                                                     :whitespace_)))
+                          (append-whitespace original)
+                          ((if (-> original
+                                   first
+                                   :start)
+                             (partial s/transform*
+                                      [s/FIRST
+                                       :text_with_ws]
+                                      str/capitalize)
+                             identity))))
+
+     (defn make-set-candidate-source
+       [original]
+       (partial s/transform*
+                [(aid/casep original
+                            starts-with-verb? s/FIRST
+                            s/LAST)
+                 :forth
+                 :source]
+                (-> original
+                    get-discriminative-token
+                    get-candidate-source)))
+
+     (defn get-candidate-parser
+       [originals replacements]
+       ;TODO optimize this function
+       (m/mlet [a many-any
+                b (make-parse-b originals replacements)
+                c (make-parse-c (comp (partial = (-> b
+                                                     first
+                                                     :i))
+                                      :head_i)
+                                originals
+                                replacements)
+                d many-any]
+               (-> (conj ((juxt (set-a-text-with-wss a)
+                                (comp (set-b-text-with-wss b)
+                                      (if-else (partial unalterable-tags?
+                                                        (first originals))
+                                               (make-set-candidate-source b))))
+                           (first replacements))
+                         ((aid/casep d
+                                     trim? trim-last
+                                     identity)
+                           c)
+                         d)
+                   m/pure)))
+
+     (defn get-candidates*
+       [originals replacements sentence]
+       (-> (get-candidate-parser originals replacements)
+           (parse/parse sentence)))
+
+     (def get-candidates
+       (aid/build mapcat
+                  (aid/curriedfn [sentence [originals replacements]]
+                                 ;TODO implement this function
+                                 (get-candidates* originals
+                                                  replacements
+                                                  sentence))
+                  screen))
+
      (def arrange-evaluation-sentences
        ;TODO implement this function
-       (comp (partial map arrange-original-sentence)
+       (comp (partial map (comp (aid/build cons
+                                           identity
+                                           get-candidates)
+                                arrange-original-sentence))
              partition-sentences
-             arrange-tokens*))
-
-     (def structure-evaluation-sentences
-       (comp arrange-evaluation-sentences
-             parse-remotely))))
+             arrange-tokens*))))
