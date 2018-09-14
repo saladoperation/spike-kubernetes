@@ -16,11 +16,12 @@
 
 (def parser
   (gen/bind gen/any
-            #(gen/elements (conj (map (comp primitive/satisfy
-                                            constantly)
-                                      [true false])
-                                 (primitive/pure %)
-                                 primitive/mempty))))
+            #(-> (map (comp primitive/satisfy
+                            constantly)
+                      [true false])
+                 (conj (primitive/pure %)
+                       primitive/mempty)
+                 (gen/elements))))
 
 (defn identity*
   [f]
