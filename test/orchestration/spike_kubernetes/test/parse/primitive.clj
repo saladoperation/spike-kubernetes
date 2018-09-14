@@ -66,12 +66,15 @@
                      (map (partial (aid/flip aid/funcall) as))
                      (apply =))))
 
+(def monoid-identity
+  #(identity* (partial (% m/<>) primitive/mempty)))
+
 (clojure-test/defspec
   monoid-left
   num-tests
-  (prop/for-all [parser* parser
-                 as (gen/vector gen/any)]
-                (->> [(partial m/<> primitive/mempty)
-                      identity]
-                     (map #((% parser*) as))
-                     (apply =))))
+  (monoid-identity identity))
+
+(clojure-test/defspec
+  monoid-right
+  num-tests
+  (monoid-identity aid/flip))
