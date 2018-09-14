@@ -46,6 +46,16 @@
               (mapcat (juxt identity (inflect lemma)))
               (apply array-map))})
 
+(def act
+  ;TODO implement this function
+  {:get-alternatives (partial map get-lm-alternative)})
+
+(def handle
+  (aid/build aid/funcall
+             (comp act
+                   :action)
+             :data))
+
 (defn index
   [req res raise]
   (let [data (atom "")]
@@ -56,6 +66,7 @@
         :body
         (.on "end" #(->> @data
                          reader/read-string
+                         handle
                          pr-str
                          r/ok
                          res)))))
