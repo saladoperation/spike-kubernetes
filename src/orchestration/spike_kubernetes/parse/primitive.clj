@@ -61,9 +61,6 @@
 
 (util/make-printable Parser)
 
-(def mempty
-  (pure '()))
-
 (def satisfy
   #(->Parser (command/if-then-else (aid/build and
                                               not-empty
@@ -73,3 +70,5 @@
                                          (juxt first
                                                rest))
                                    (constantly []))))
+(def mempty
+  (satisfy (constantly false)))

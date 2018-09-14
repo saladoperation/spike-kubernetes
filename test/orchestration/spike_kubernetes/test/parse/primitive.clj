@@ -22,15 +22,18 @@
                                  (primitive/pure %)
                                  primitive/mempty))))
 
-(defn monad-identity
+(defn identity*
   [f]
   (prop/for-all [parser* parser
                  as (gen/vector gen/any)]
-                (->> [(comp primitive/join
-                            f)
+                (->> [f
                       identity]
                      (map #((% parser*) as))
                      (apply =))))
+
+(def monad-identity
+  #(identity* (comp primitive/join
+                    %)))
 
 (clojure-test/defspec monad-left
                       num-tests
@@ -61,4 +64,14 @@
                       (m/<> left-parser
                             (m/<> middle-parser right-parser))]
                      (map (partial (aid/flip aid/funcall) as))
+                     (apply =))))
+
+(clojure-test/defspec
+  monoid-left
+  num-tests
+  (prop/for-all [parser* parser
+                 as (gen/vector gen/any)]
+                (->> [(partial m/<> primitive/mempty)
+                      identity]
+                     (map #((% parser*) as))
                      (apply =))))
