@@ -414,9 +414,7 @@
             (mapcat (get-confusions))))
 
      (def get-edn-request
-       (comp (partial assoc
-                      {:as :clojure}
-                      :body)
+       (comp (partial array-map :as :clojure :body)
              pr-str))
 
      (def post-macchiato
