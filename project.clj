@@ -61,4 +61,6 @@
                                    :target     :nodejs
                                    :npm-deps   {:en-inflectors "1.0.12"}}}}}
   :npm {:dependencies [[en-inflectors "1.0.12"]
-                       [ws "6.0.0"]]})
+                       [nodemon "1.18.4"]
+                       [ws "6.0.0"]]
+        :package      {:scripts {:nodemon "nodemon"}}})
