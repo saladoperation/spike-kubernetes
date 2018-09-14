@@ -50,3 +50,15 @@
                       (ncall 2 primitive/join)]
                      (map #((% (ncall 2 primitive/pure parser*)) as))
                      (apply =))))
+
+(clojure-test/defspec
+  semigroup
+  num-tests
+  (prop/for-all [[left-parser middle-parser right-parser] (gen/vector parser 3)
+                 as (gen/vector gen/any)]
+                (->> [(m/<> (m/<> left-parser middle-parser)
+                            right-parser)
+                      (m/<> left-parser
+                            (m/<> middle-parser right-parser))]
+                     (map (partial (aid/flip aid/funcall) as))
+                     (apply =))))
