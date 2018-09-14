@@ -130,6 +130,7 @@
     <orderEntry type="library" name="Leiningen: org.clojure/java.classpath:0.2.3" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/math.combinatorics:0.1.4" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/spec.alpha:0.1.143" level="project" />
+    <orderEntry type="library" name="Leiningen: org.clojure/test.check:0.9.0" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/tools.analyzer.jvm:0.7.0" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/tools.analyzer:0.6.9" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/tools.namespace:0.2.11" level="project" />

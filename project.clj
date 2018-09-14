@@ -1,6 +1,7 @@
 (defproject spike-kubernetes "0.1.0-SNAPSHOT"
   :dependencies [[org.clojure/clojure "1.9.0"]
                  [org.clojure/clojurescript "1.10.339"]
+                 [org.clojure/test.check "0.9.0"]
                  [aid "0.1.1"]
                  [aysylu/loom "1.0.2"]
                  [binaryage/oops "0.6.2"]
