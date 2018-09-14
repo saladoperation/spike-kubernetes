@@ -74,12 +74,9 @@
      (def parse-port
        8000)
 
-     (def document-port
-       8001)
-
      (def python-name
-       {parse-port    "parse"
-        document-port "document"})
+       {parse-port "parse"
+        8001       "document"})
 
      (def image-name
        (merge {orchestration-port orchestration-name
