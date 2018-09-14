@@ -415,6 +415,27 @@
                           (partition % 1)))
             (mapcat (get-confusions))))
 
+     (def get-edn-request
+       (comp (partial assoc
+                      {:as :clojure}
+                      :body)
+             pr-str))
+
+     (def post-macchiato
+       (partial client/post (get-origin alteration-port)))
+
+     (def get-alternative
+       #(->> (get-confusion)
+             graph/nodes
+             vec
+             flatten
+             (map :lower_)
+             set
+             (array-map :action :get-alternatives :data)
+             get-edn-request
+             post-macchiato
+             :body))
+
      (def arrange-evaluation-sentences
        ;TODO implement this function
        (comp (partial map arrange-original-sentence)
