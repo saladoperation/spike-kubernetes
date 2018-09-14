@@ -426,7 +426,7 @@
        (parse/many parse/any))
 
      (def verb?
-       (partial (aid/flip str/starts-with?) "VB"))
+       (partial (aid/flip str/starts-with?) verb-prefix))
 
      (def starts-with-verb?
        (comp verb?
@@ -499,7 +499,7 @@
                                                  :tag_)
                                            (comp (get-alternative)
                                                  :lemma_))))
-          (constantly "VB")
+          (constantly verb-prefix)
           :tag_
           %))
 
