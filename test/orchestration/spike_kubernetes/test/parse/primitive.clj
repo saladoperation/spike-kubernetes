@@ -26,8 +26,7 @@
   [f]
   (prop/for-all [parser* parser
                  as (gen/vector gen/any)]
-                (->> [f
-                      identity]
+                (->> [f identity]
                      (map #((% parser*) as))
                      (apply =))))
 
@@ -69,12 +68,10 @@
 (def monoid-identity
   #(identity* (partial (% m/<>) primitive/mempty)))
 
-(clojure-test/defspec
-  monoid-left
-  num-tests
-  (monoid-identity identity))
+(clojure-test/defspec monoid-left
+                      num-tests
+                      (monoid-identity identity))
 
-(clojure-test/defspec
-  monoid-right
-  num-tests
-  (monoid-identity aid/flip))
+(clojure-test/defspec monoid-right
+                      num-tests
+                      (monoid-identity aid/flip))
