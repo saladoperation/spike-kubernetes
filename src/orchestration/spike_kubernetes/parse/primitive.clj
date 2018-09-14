@@ -34,7 +34,8 @@
                    %)))
 
 (def context
-  (reify p/Context
+  (reify
+    p/Context
     p/Functor
     (-fmap [_ f fa]
       (->Parser (comp (partial s/transform* [s/ALL s/FIRST] f)
