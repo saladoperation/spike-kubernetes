@@ -14,19 +14,39 @@
                 [n f x]
                 (nth (iterate f x) n))
 
+(def parser
+  (gen/bind gen/any
+            #(gen/elements (conj (map (comp primitive/satisfy
+                                            constantly)
+                                      [true false])
+                                 (primitive/pure %)
+                                 primitive/mempty))))
+
+(defn monad-identity
+  [f]
+  (prop/for-all [parser* parser
+                 as (gen/vector gen/any)]
+                (->> [(comp primitive/join
+                            f)
+                      identity]
+                     (map #((% parser*) as))
+                     (apply =))))
+
+(clojure-test/defspec monad-left
+                      num-tests
+                      (monad-identity primitive/pure))
+
+(clojure-test/defspec monad-right
+                      num-tests
+                      (monad-identity (partial m/<$> primitive/pure)))
+
 (clojure-test/defspec
   monad-associativity
   num-tests
-  (gen/let [a gen/any
-            as (gen/vector gen/any)
-            parser (gen/elements (conj (map (comp primitive/satisfy
-                                                  constantly)
-                                            [true false])
-                                       (primitive/pure a)
-                                       primitive/mempty))]
-           (prop/for-all []
-                         (->> [(comp primitive/join
-                                     (partial m/<$> primitive/join))
-                               (ncall 2 primitive/join)]
-                              (map #((% (ncall 2 primitive/pure parser)) as))
-                              (apply =)))))
+  (prop/for-all [parser* parser
+                 as (gen/vector gen/any)]
+                (->> [(comp primitive/join
+                            (partial m/<$> primitive/join))
+                      (ncall 2 primitive/join)]
+                     (map #((% (ncall 2 primitive/pure parser*)) as))
+                     (apply =))))
