@@ -886,7 +886,7 @@
        (aid/curry 2 (comp vals
                           group-by)))
 
-     (def arrange-evaluation-sentences
+     (def structure-evaluation-sentences
        (comp (group-by-vals (comp count
                                   :lemma_))
              (partial mapcat-indexed set-index)
@@ -896,4 +896,5 @@
                                            get-variants)
                                 arrange-original-sentence))
              partition-sentences
-             arrange-tokens*))))
+             arrange-tokens*
+             parse-remotely))))
