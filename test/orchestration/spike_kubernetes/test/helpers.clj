@@ -246,6 +246,9 @@
 (test/deftest two-one
   (test-structure "I married with you." "I married you."))
 
+(test/deftest two-two
+  (test-structure "Do you fear?" "Are you afraid?"))
+
 (test/deftest three-one
   (test-structure "I'll allow you to know." "I'll let you know."))
 
