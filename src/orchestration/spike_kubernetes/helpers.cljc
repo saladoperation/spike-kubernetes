@@ -831,9 +831,45 @@
                                                        str/join))
              consolidate-into-vector))
 
+     (def eos
+       "<eos>")
+
+     (def get-key-map
+       (comp (partial apply array-map)
+             (aid/build concat
+                        identity
+                        reverse)))
+
+     (aid/defcurried flip-keys
+                     [m ks]
+                     (->> ks
+                          get-key-map
+                          (set/rename-keys m)))
+
+     (def set-character
+       (transfer* :character :source))
+
+     (def set-back
+       (transfer* :back (comp set-character
+                              (partial s/transform* s/MAP-VALS reverse)
+                              ((aid/flip flip-keys) #{:source :reference})
+                              :forth)))
+
+     (def augment-forth
+       (partial s/transform* :forth (comp (transfer* :reference
+                                                     (comp (partial s/setval*
+                                                                    s/AFTER-ELEM
+                                                                    eos)
+                                                           rest
+                                                           :source))
+                                          set-character
+                                          consolidate-into-vector)))
+
      (def arrange-evaluation-sentences
        ;TODO implement this function
-       (comp (partial map (comp (partial map consolidate-into-sentence)
+       (comp (partial map (comp (partial map (comp set-back
+                                                   augment-forth
+                                                   consolidate-into-sentence))
                                 (aid/build cons
                                            identity
                                            get-variants)
