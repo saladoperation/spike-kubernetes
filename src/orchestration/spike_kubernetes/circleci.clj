@@ -160,9 +160,11 @@
         keys
         (mapcat (juxt helpers/python-name
                       get-python-dockerfile))
-        (apply array-map)
-        (merge {helpers/orchestration-name clojure-dockerfile
-                helpers/alteration-name    clojurescript-dockerfile})
+        (apply array-map
+               helpers/orchestration-name
+               clojure-dockerfile
+               helpers/alteration-name
+               clojurescript-dockerfile)
         (s/transform s/MAP-KEYS get-dockerfile-path)
         (run! (partial apply spit+))))
 
