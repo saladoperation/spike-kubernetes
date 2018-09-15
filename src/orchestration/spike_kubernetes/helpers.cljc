@@ -754,17 +754,16 @@
                                       str/capitalize)
                              identity))))
 
-     (defn make-set-variant-source
-       [original]
-       (partial s/transform*
-                [(aid/casep original
-                            starts-with-verb? s/FIRST
-                            s/LAST)
-                 :forth
-                 :source]
-                (-> original
-                    get-discriminative-token
-                    get-variant-source)))
+     (def make-set-variant-source
+       #(partial s/transform*
+                 [(aid/casep %
+                             starts-with-verb? s/FIRST
+                             s/LAST)
+                  :forth
+                  :source]
+                 (-> %
+                     get-discriminative-token
+                     get-variant-source)))
 
      (defn get-variant-parser
        [originals replacements]
