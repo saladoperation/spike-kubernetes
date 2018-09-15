@@ -58,6 +58,15 @@
                    :port     helpers/orchestration-port
                    :cmd      [java "-jar" jar "serve"]}))
 
+(def clojure-image
+  "circleci/clojure:lein-2.8.1-node@sha256:1d232488cb86d9174393202867bb2a4d1229edc7dd602eda69025fb99954c92a")
+
+(def integration-dockerfile
+  (get-dockerfile {:image    clojure-image
+                   :from-tos #{["." (get-code-path)]}
+                   :port     helpers/orchestration-port
+                   :cmd      ["lein" "test"]}))
+
 (def get-from-tos
   (partial map (comp (partial s/transform* s/LAST get-code-path)
                      (partial repeat 2))))
@@ -91,20 +100,22 @@
 (def conda-image
   "continuumio/miniconda:4.5.4@sha256:19d3eedab8b6301a0e1819476cfc50d53399881612183cf65208d7d43db99cd9")
 
+(def get-shell-script
+  (comp (partial str/join " && ")
+        (partial map (partial str/join " "))))
+
 (def get-python-dockerfile
   #(get-dockerfile
      {:image    conda-image
       :from-tos (get-from-tos #{python script})
-      :run      (->> [["conda"
-                       "env"
-                       "create"
-                       "-f"
-                       (helpers/join-paths python
-                                           "environments/cpu.yml")]
-                      ["source" "activate" "spike-kubernetes"]
-                      [python "-m" "spacy" "download" "en"]]
-                     (map (partial str/join " "))
-                     (str/join " && "))
+      :run      (get-shell-script [["conda"
+                                    "env"
+                                    "create"
+                                    "-f"
+                                    (helpers/join-paths python
+                                                        "environments/cpu.yml")]
+                                   ["source" "activate" "spike-kubernetes"]
+                                   [python "-m" "spacy" "download" "en"]])
       :port     %
       :cmd      [(helpers/join-paths script
                                      python
@@ -120,8 +131,11 @@
 ;(def get-file
 ;  #(str "<(echo \"" % "\")"))
 
+(def get-docker-path
+  (partial get-resources-path "docker"))
+
 (def get-dockerfile-path
-  #(get-resources-path "docker" % "Dockerfile"))
+  (partial (aid/flip get-docker-path) "Dockerfile"))
 
 (defn get-build-command
   [s]
@@ -149,6 +163,9 @@
 (def spit+
   (make-+ first spit))
 
+(def integration-name
+  "integration")
+
 (def spit-dockerfiles+
   #(->> helpers/python-name
         keys
@@ -157,17 +174,60 @@
         (apply array-map
                helpers/orchestration-name
                orchestration-dockerfile
+               integration-name
+               integration-dockerfile
                helpers/alteration-name
                alteration-dockerfile)
         (s/transform s/MAP-KEYS get-dockerfile-path)
         (run! (partial apply spit+))))
 
+(def get-docker-image-path
+  (partial (aid/flip get-docker-path) "image.tar"))
+
+(def integration-image-name
+  (s/setval helpers/orchestration-port integration-name helpers/image-name))
+
+(def get-load
+  (comp (partial vector "docker" "load" "<")
+        get-docker-image-path
+        integration-image-name))
+
+(def get-forwarding
+  (comp (partial str/join ":")
+        (partial repeat 2)))
+
+(def get-run
+  (aid/build (partial vector "docker" "run" "-d" "-p")
+             get-forwarding
+             integration-image-name))
+
+(def integration-ports
+  [helpers/alteration-port helpers/parse-port helpers/orchestration-port])
+
+(def docker-script-path
+  "script/docker.sh")
+
+(defn spit-docker-script
+  []
+  (->> integration-ports
+       (mapcat (juxt get-load
+                     get-run))
+       get-shell-script
+       (spit docker-script-path))
+  (command/chmod "+x" docker-script-path))
+
 (def map->>
   (comp (partial apply m/>>)
         map))
 
-(def run-tests
-  #(map->> (partial apply command/lein) [["test"] ["doo" node "test" "once"]]))
+(def get-save-command
+  (comp (partial interleave ["save" ">"])
+        (juxt helpers/get-image
+              get-docker-image-path)
+        integration-image-name))
+
+(def save-commands
+  (map get-save-command integration-ports))
 
 (defn run-circleci
   []
@@ -176,7 +236,8 @@
   (timbre/with-level
     :trace
     (timbre/spy
-      (m/>>= (m/>> (->> env
+      (m/>>= (m/>> (spit-docker-script)
+                   (->> env
                         :docker-password
                         (command/docker "login"
                                         "-u"
@@ -190,9 +251,11 @@
                               (either/right ""))
                    (->> helpers/image-name
                         vals
+                        (cons integration-name)
                         (map->> (comp (partial apply command/docker)
                                       get-build-command)))
-                   (run-tests))
+                   (command/lein "doo" node "test" "once")
+                   (map->> command/docker save-commands))
              #(aid/casep env
                          :circle-tag (->> helpers/image-name
                                           vals

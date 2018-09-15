@@ -15,6 +15,15 @@ jobs:
           root: .
           paths:
             - kubernetes.txt
+            - dev-resources/docker
+  machine:
+    machine:
+      image: circleci/classic:latest
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run: script/docker.sh
   gcloud:
     docker:
       - image: google/cloud-sdk
@@ -31,6 +40,12 @@ workflows:
           filters:
             tags:
               only: /.+/
+      - machine:
+          filters:
+            tags:
+              only: /.+/
+          requires:
+            - clojure
       - gcloud:
           filters:
             branches:
@@ -39,3 +54,4 @@ workflows:
               only: /.+/
           requires:
             - clojure
+            - machine

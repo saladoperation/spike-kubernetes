@@ -77,8 +77,11 @@
      (def parse-port
        8000)
 
+     (def parse-name
+       "parse")
+
      (def python-name
-       {parse-port "parse"
+       {parse-port parse-name
         8001       "document"
         8002       "lm"})
 
