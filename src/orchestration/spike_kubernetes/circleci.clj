@@ -58,15 +58,6 @@
                    :port     helpers/orchestration-port
                    :cmd      [java "-jar" jar "serve"]}))
 
-(def clojure-image
-  "circleci/clojure:lein-2.8.1-node@sha256:1d232488cb86d9174393202867bb2a4d1229edc7dd602eda69025fb99954c92a")
-
-(def integration-dockerfile
-  (get-dockerfile {:image    clojure-image
-                   :from-tos #{["." (get-code-path)]}
-                   :port     helpers/orchestration-port
-                   :cmd      ["lein" "test"]}))
-
 (def get-from-tos
   (partial map (comp (partial s/transform* s/LAST get-code-path)
                      (partial repeat 2))))
@@ -163,9 +154,6 @@
 (def spit+
   (make-+ first spit))
 
-(def integration-name
-  "integration")
-
 (def spit-dockerfiles+
   #(->> helpers/python-name
         keys
@@ -174,15 +162,10 @@
         (apply array-map
                helpers/orchestration-name
                orchestration-dockerfile
-               integration-name
-               integration-dockerfile
                helpers/alteration-name
                alteration-dockerfile)
         (s/transform s/MAP-KEYS get-dockerfile-path)
         (run! (partial apply spit+))))
-
-(def integration-image-name
-  (s/setval helpers/orchestration-port integration-name helpers/image-name))
 
 (def get-forwarding
   (comp (partial str/join ":")
@@ -201,11 +184,10 @@
    "-p"
    (get-forwarding port)
    (-> port
-       integration-image-name
        helpers/get-image)])
 
 (def integration-ports
-  [helpers/alteration-port helpers/parse-port helpers/orchestration-port])
+  [helpers/alteration-port helpers/parse-port])
 
 (def docker-script-path
   "script/docker.sh")
@@ -215,9 +197,9 @@
 
 (defn spit-docker-script
   []
-  (->> integration-ports
-       (map get-run)
-       (cons [docker "load" "<" docker-image-path])
+  (->> (concat [[docker "load" "<" docker-image-path]]
+               (map get-run integration-ports)
+               [["lein" "test"]])
        get-shell-script
        (spit docker-script-path))
   (command/chmod "+x" docker-script-path))
@@ -229,7 +211,7 @@
 (def save-command
   (concat ["save"]
           (map (comp helpers/get-image
-                     integration-image-name)
+                     helpers/image-name)
                integration-ports)
           [">" docker-image-path]))
 
@@ -255,7 +237,6 @@
                               (either/right ""))
                    (->> helpers/image-name
                         vals
-                        (cons integration-name)
                         (map->> (comp (partial apply command/docker)
                                       get-build-command)))
                    (command/lein "doo" node "test" "once")
