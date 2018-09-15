@@ -217,3 +217,19 @@
 
 (test/deftest quote-source
   (test-quote-sentence :source (partial map :lower_)))
+
+(defn test-structure
+  [original candidate]
+  (-> candidate
+      ((->> original
+            helpers/structure-evaluation-sentences
+            flatten
+            (mapcat :text_with_ws)
+            set))
+      test/is))
+
+(test/deftest one-one
+  (test-structure "I accept." "I agree."))
+
+(test/deftest one-two
+  (test-structure "I'll see that." "I'll see about that."))
