@@ -323,10 +323,14 @@
              (partial partition 2)
              (partial partition-by :start)))
 
+     (def sos
+       "<sos>")
+
      (def set-sos
-       (partial s/setval* s/BEFORE-ELEM {:proper       false
+       (partial s/setval* s/BEFORE-ELEM {:forth        {:source sos}
+                                         :lemma_       sos
+                                         :proper       false
                                          :quote        false
-                                         :forth        {:source "sos"}
                                          :text_with_ws ""}))
 
      (def set-forth-source
@@ -420,6 +424,7 @@
             (mapcat #(->> sentence
                           (map :lemma_)
                           (partition % 1)))
+            set
             (mapcat (get-confusions))))
 
      (def many-any
@@ -772,31 +777,48 @@
                                 originals
                                 replacements)
                 d many-any]
-               (-> (conj ((juxt (set-a-text-with-wss a)
-                                (comp (set-b-text-with-wss b)
-                                      (if-else (partial unalterable-tags?
-                                                        (first originals))
-                                               (make-set-candidate-source b))))
-                           (first replacements))
-                         ((aid/casep d
-                                     trim? trim-last
-                                     identity)
-                           c)
-                         d)
-                   m/pure)))
+               (m/pure (concat (->> replacements
+                                    first
+                                    (set-a-text-with-wss a))
+                               (->> replacements
+                                    first
+                                    ((if-else (partial unalterable-tags?
+                                                       (first originals))
+                                              (make-set-candidate-source b)))
+                                    (set-b-text-with-wss b))
+                               ((aid/casep d
+                                           trim? trim-last
+                                           identity)
+                                 c)
+                               d))))
 
      (defn get-candidates*
        [originals replacements sentence]
        (-> (get-candidate-parser originals replacements)
            (parse/parse sentence)))
 
+     (defn recursively-get-candidates*
+       [original replacement before accumulation]
+       (let [after (->> before
+                        (mapcat (partial get-candidates*
+                                         original
+                                         replacement))
+                        set)]
+         (aid/casep after
+                    empty? accumulation
+                    (->> (concat accumulation after)
+                         set
+                         (recur original replacement after)))))
+
      (def get-candidates
        (aid/build mapcat
                   (aid/curriedfn [sentence [originals replacements]]
-                                 ;TODO implement this function
-                                 (get-candidates* originals
-                                                  replacements
-                                                  sentence))
+                                 (->> sentence
+                                      (get-candidates* originals replacements)
+                                      (repeat 2)
+                                      (apply recursively-get-candidates*
+                                             originals
+                                             replacements)))
                   screen))
 
      (def arrange-evaluation-sentences
