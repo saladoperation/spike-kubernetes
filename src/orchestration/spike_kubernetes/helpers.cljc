@@ -856,14 +856,14 @@
                               :forth)))
 
      (def augment-forth
-       (partial s/transform* :forth (comp (transfer* :reference
-                                                     (comp (partial s/setval*
-                                                                    s/AFTER-ELEM
-                                                                    eos)
-                                                           rest
-                                                           :source))
-                                          set-character
-                                          consolidate-into-vector)))
+       (partial s/transform*
+                :forth
+                (comp (transfer* :reference
+                                 (comp (partial s/setval* s/AFTER-ELEM eos)
+                                       rest
+                                       :source))
+                      set-character
+                      consolidate-into-vector)))
 
      (def arrange-evaluation-sentences
        ;TODO implement this function
