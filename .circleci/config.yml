@@ -16,6 +16,7 @@ jobs:
           paths:
             - dev-resources
             - kubernetes.txt
+            - node_modules
             - script
             - target
   machine:

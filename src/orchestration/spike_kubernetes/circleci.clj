@@ -195,8 +195,7 @@
          "-p"
          (get-forwarding helpers/parse-port)
          parse-image]
-        (conj alteration-cmd "&")
-        ["lein" "test"]]
+        (conj alteration-cmd "&" "lein" "test")]
        get-shell-script
        (spit docker-script-path))
   (command/chmod "+x" docker-script-path))
