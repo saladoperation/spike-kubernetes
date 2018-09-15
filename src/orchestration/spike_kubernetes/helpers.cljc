@@ -874,9 +874,23 @@
              augment-forth
              consolidate-into-sentence))
 
+     (defn set-index
+       [index sentences]
+       (s/setval [s/ALL :index] [index] sentences))
+
+     (def mapcat-indexed
+       (comp (partial apply concat)
+             map-indexed))
+
+     (def group-by-vals
+       (aid/curry 2 (comp vals
+                          group-by)))
+
      (def arrange-evaluation-sentences
-       ;TODO implement this function
-       (comp (partial map (comp (partial map arrange-candidate-sentence)
+       (comp (group-by-vals (comp count
+                                  :lemma_))
+             (partial mapcat-indexed set-index)
+             (partial map (comp (partial map arrange-candidate-sentence)
                                 (aid/build cons
                                            identity
                                            get-variants)
