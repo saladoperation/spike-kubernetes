@@ -181,29 +181,19 @@
         (s/transform s/MAP-KEYS get-dockerfile-path)
         (run! (partial apply spit+))))
 
-(def get-docker-image-path
-  (partial (aid/flip get-docker-path) "image.tar"))
-
 (def integration-image-name
   (s/setval helpers/orchestration-port integration-name helpers/image-name))
-
-(def get-load
-  (comp (partial vector "docker" "load" "<")
-        get-docker-image-path
-        integration-image-name))
 
 (def get-forwarding
   (comp (partial str/join ":")
         (partial repeat 2)))
 
-(def get-run
-  (aid/build (partial vector "docker" "run" "-d" "-p")
-             get-forwarding
-             integration-image-name))
+(def docker
+  "docker")
 
 (defn get-run
   [port]
-  ["docker"
+  [docker
    "run"
    (aid/case-eval port
                   helpers/orchestration-port ""
@@ -218,11 +208,14 @@
 (def docker-script-path
   "script/docker.sh")
 
+(def docker-image-path
+  (get-docker-path "image.tar"))
+
 (defn spit-docker-script
   []
   (->> integration-ports
-       (mapcat (juxt get-load
-                     get-run))
+       (map get-run)
+       (cons [docker "load" "<" docker-image-path])
        get-shell-script
        (spit docker-script-path))
   (command/chmod "+x" docker-script-path))
@@ -231,14 +224,12 @@
   (comp (partial apply m/>>)
         map))
 
-(def get-save-command
-  (comp (partial interleave ["save" ">"])
-        (juxt helpers/get-image
-              get-docker-image-path)
-        integration-image-name))
-
-(def save-commands
-  (map get-save-command integration-ports))
+(def save-command
+  (concat ["save"]
+          (map (comp helpers/get-image
+                     integration-image-name)
+               integration-ports)
+          [">" docker-image-path]))
 
 (defn run-circleci
   []
@@ -266,7 +257,7 @@
                         (map->> (comp (partial apply command/docker)
                                       get-build-command)))
                    (command/lein "doo" node "test" "once")
-                   (map->> command/docker save-commands))
+                   (apply command/docker save-command))
              #(aid/casep env
                          :circle-tag (->> helpers/image-name
                                           vals
