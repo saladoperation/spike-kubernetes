@@ -18,7 +18,7 @@ jobs:
             - dev-resources/docker
   machine:
     machine:
-      image: circleci/classic:latest
+      image: circleci/classic:201808-01
     steps:
       - checkout
       - attach_workspace:
