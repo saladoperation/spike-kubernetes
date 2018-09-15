@@ -76,11 +76,14 @@
     node
     ":8.11.4@sha256:fd3c42d91fcf6019eec4e6ccd38168628dd4660992a1550a71c7a7e2b0dc2bdd"))
 
+(def alteration-cmd
+  [node (get-prod-path "main.js")])
+
 (def alteration-dockerfile
   (get-dockerfile {:image    node-image
                    :from-tos (get-from-tos #{(get-prod-path) node-modules})
                    :port     helpers/alteration-port
-                   :cmd      [node (get-prod-path "main.js")]}))
+                   :cmd      alteration-cmd}))
 
 (def python
   "python")
@@ -174,32 +177,26 @@
 (def docker
   "docker")
 
-(defn get-run
-  [port]
-  [docker
-   "run"
-   (aid/case-eval port
-                  helpers/orchestration-port ""
-                  "-d")
-   "-p"
-   (get-forwarding port)
-   (-> port
-       helpers/get-image)])
-
-(def integration-ports
-  [helpers/alteration-port helpers/parse-port])
-
 (def docker-script-path
   "script/docker.sh")
 
 (def docker-image-path
   (get-docker-path "image.tar"))
 
+(def parse-image
+  (helpers/get-image helpers/parse-name))
+
 (defn spit-docker-script
   []
-  (->> (concat [[docker "load" "<" docker-image-path]]
-               (map get-run integration-ports)
-               [["lein" "test"]])
+  (->> [[docker "load" "<" docker-image-path]
+        [docker
+         "run"
+         "-d"
+         "-p"
+         (get-forwarding helpers/parse-port)
+         parse-image]
+        (conj alteration-cmd "&")
+        ["lein" "test"]]
        get-shell-script
        (spit docker-script-path))
   (command/chmod "+x" docker-script-path))
@@ -209,11 +206,7 @@
         map))
 
 (def save-command
-  (concat ["save"]
-          (map (comp helpers/get-image
-                     helpers/image-name)
-               integration-ports)
-          [">" docker-image-path]))
+  ["save" parse-image ">" docker-image-path])
 
 (defn run-circleci
   []

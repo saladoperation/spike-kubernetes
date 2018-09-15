@@ -14,9 +14,10 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
+            - dev-resources
             - kubernetes.txt
-            - dev-resources/docker
-            - script/docker.sh
+            - script
+            - target
   machine:
     machine:
       image: circleci/classic:201808-01
