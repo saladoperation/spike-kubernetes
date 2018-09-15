@@ -201,6 +201,17 @@
              get-forwarding
              integration-image-name))
 
+(defn get-run
+  [port]
+  ["docker"
+   "run"
+   (aid/case-eval port
+                  helpers/orchestration-port ""
+                  "-d")
+   "-p"
+   (get-forwarding port)
+   (integration-image-name port)])
+
 (def integration-ports
   [helpers/alteration-port helpers/parse-port helpers/orchestration-port])
 
