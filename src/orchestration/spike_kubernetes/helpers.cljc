@@ -868,12 +868,15 @@
        (partial s/transform* :original (comp vector
                                              (partial every? true?))))
 
+     (def arrange-candidate-sentence
+       (comp consolidate-original
+             set-back
+             augment-forth
+             consolidate-into-sentence))
+
      (def arrange-evaluation-sentences
        ;TODO implement this function
-       (comp (partial map (comp (partial map (comp consolidate-original
-                                                   set-back
-                                                   augment-forth
-                                                   consolidate-into-sentence))
+       (comp (partial map (comp (partial map arrange-candidate-sentence)
                                 (aid/build cons
                                            identity
                                            get-variants)
