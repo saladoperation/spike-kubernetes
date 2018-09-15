@@ -190,19 +190,21 @@
   []
   (->> [[docker "load" "<" docker-image-path]
         [docker "run" "-d" "-p" (get-forwarding helpers/parse-port) parse-image]
-        ["while"
-         "!"
-         "nc"
-         "-z"
-         "localhost"
-         helpers/parse-port
-         ";"
-         "do"
-         "sleep"
-         1
-         ";"
-         "done"]
-        (conj alteration-cmd "&" "lein" "test")]
+        (concat ["while"
+                 "!"
+                 "nc"
+                 "-z"
+                 "localhost"
+                 helpers/parse-port
+                 ";"
+                 "do"
+                 "sleep"
+                 1
+                 ";"
+                 "done"
+                 "\n"]
+                alteration-cmd
+                ["&" "lein" "test"])]
        get-shell-script
        (spit docker-script-path))
   (command/chmod "+x" docker-script-path))
