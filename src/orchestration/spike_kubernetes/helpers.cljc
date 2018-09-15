@@ -94,10 +94,7 @@
        (partial str "http://localhost:"))
 
      (def get-json-request
-       (comp (partial assoc
-                      {:as           :json
-                       :content-type :json}
-                      :body)
+       (comp (partial array-map :as :json :content-type :json :body)
              generate-string))
 
      (def parse-remotely
