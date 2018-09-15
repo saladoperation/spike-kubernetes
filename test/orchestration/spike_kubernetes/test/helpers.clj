@@ -236,3 +236,9 @@
 
 (test/deftest one-three-empty
   (test-structure "That was for years." "That was years ago."))
+
+(test/deftest one-three-non-empty-non-split
+  (test-structure "I opened the light." "I turned on light."))
+
+(test/deftest one-three-non-empty-split
+  (test-structure "I opened the light." "I turned light on."))
