@@ -233,3 +233,6 @@
 
 (test/deftest one-two
   (test-structure "I'll see that." "I'll see about that."))
+
+(test/deftest one-three-empty
+  (test-structure "That was for years." "That was years ago."))
