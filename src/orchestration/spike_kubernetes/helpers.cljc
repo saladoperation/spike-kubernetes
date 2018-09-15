@@ -865,9 +865,14 @@
                       set-character
                       consolidate-into-vector)))
 
+     (def consolidate-original
+       (partial s/transform* :original (comp vector
+                                             (partial every? true?))))
+
      (def arrange-evaluation-sentences
        ;TODO implement this function
-       (comp (partial map (comp (partial map (comp set-back
+       (comp (partial map (comp (partial map (comp consolidate-original
+                                                   set-back
                                                    augment-forth
                                                    consolidate-into-sentence))
                                 (aid/build cons
