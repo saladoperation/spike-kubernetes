@@ -391,7 +391,7 @@
              (map aid/funcall [(comp (partial apply combo/cartesian-product)
                                      (partial split-at 1))
                                combo/permutations])
-             (map get-graph [graph/graph graph/digraph])
+             (map get-graph [graph/digraph graph/graph])
              (apply graph/digraph)))
 
      (def minimum-n
