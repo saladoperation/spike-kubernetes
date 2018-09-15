@@ -95,7 +95,7 @@
   "continuumio/miniconda:4.5.4@sha256:19d3eedab8b6301a0e1819476cfc50d53399881612183cf65208d7d43db99cd9")
 
 (def get-shell-script
-  (comp (partial str/join " && ")
+  (comp (partial str/join "\n")
         (partial map (partial str/join " "))))
 
 (def get-python-dockerfile
@@ -189,12 +189,19 @@
 (defn spit-docker-script
   []
   (->> [[docker "load" "<" docker-image-path]
-        [docker
-         "run"
-         "-d"
-         "-p"
-         (get-forwarding helpers/parse-port)
-         parse-image]
+        [docker "run" "-d" "-p" (get-forwarding helpers/parse-port) parse-image]
+        ["while"
+         "!"
+         "nc"
+         "-z"
+         "localhost"
+         helpers/parse-port
+         ";"
+         "do"
+         "sleep"
+         1
+         ";"
+         "done"]
         (conj alteration-cmd "&" "lein" "test")]
        get-shell-script
        (spit docker-script-path))
