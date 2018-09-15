@@ -391,9 +391,9 @@
                         get-files
                         io/resource
                         (partial join-paths "lm" "confusions")))
-             (map aid/funcall [(comp (partial apply combo/cartesian-product)
-                                     (partial split-at 1))
-                               combo/permutations])
+             (map map [(comp (partial apply combo/cartesian-product)
+                             (partial split-at 1))
+                       combo/permutations])
              (map get-graph [graph/digraph graph/graph])
              (apply graph/digraph)))
 
