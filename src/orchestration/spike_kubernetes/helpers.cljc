@@ -822,9 +822,19 @@
                                              replacements)))
                   screen))
 
+     (def consolidate-into-vector
+       (comp (partial apply merge-with concat)
+             (partial s/transform* [s/ALL s/MAP-VALS] vector)))
+
+     (def consolidate-into-sentence
+       (comp (partial s/transform* :text_with_ws (comp vector
+                                                       str/join))
+             consolidate-into-vector))
+
      (def arrange-evaluation-sentences
        ;TODO implement this function
-       (comp (partial map (comp (aid/build cons
+       (comp (partial map (comp (partial map consolidate-into-sentence)
+                                (aid/build cons
                                            identity
                                            get-candidates)
                                 arrange-original-sentence))
