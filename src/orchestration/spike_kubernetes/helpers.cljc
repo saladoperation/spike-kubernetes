@@ -567,7 +567,7 @@
                                           replaceable-lemma
                                           replaceable-lower)))
 
-     (aid/defcurried get-candidate-source
+     (aid/defcurried get-variant-source
                      [original replacement-source]
                      (get ((get-alternative) replacement-source)
                           (-> original
@@ -754,7 +754,7 @@
                                       str/capitalize)
                              identity))))
 
-     (defn make-set-candidate-source
+     (defn make-set-variant-source
        [original]
        (partial s/transform*
                 [(aid/casep original
@@ -764,9 +764,9 @@
                  :source]
                 (-> original
                     get-discriminative-token
-                    get-candidate-source)))
+                    get-variant-source)))
 
-     (defn get-candidate-parser
+     (defn get-variant-parser
        [originals replacements]
        ;TODO optimize this function
        (m/mlet [a many-any
@@ -785,7 +785,7 @@
                                     first
                                     ((if-else (partial unalterable-tags?
                                                        (first originals))
-                                              (make-set-candidate-source b)))
+                                              (make-set-variant-source b)))
                                     (set-b-text-with-wss b))
                                ((aid/casep d
                                            trim? trim-last
@@ -793,15 +793,15 @@
                                  c)
                                d))))
 
-     (defn get-candidates*
+     (defn get-variants*
        [originals replacements sentence]
-       (-> (get-candidate-parser originals replacements)
+       (-> (get-variant-parser originals replacements)
            (parse/parse sentence)))
 
-     (defn recursively-get-candidates*
+     (defn recursively-get-variants*
        [original replacement before accumulation]
        (let [after (->> before
-                        (mapcat (partial get-candidates*
+                        (mapcat (partial get-variants*
                                          original
                                          replacement))
                         set)]
@@ -811,13 +811,13 @@
                          set
                          (recur original replacement after)))))
 
-     (def get-candidates
+     (def get-variants
        (aid/build mapcat
                   (aid/curriedfn [sentence [originals replacements]]
                                  (->> sentence
-                                      (get-candidates* originals replacements)
+                                      (get-variants* originals replacements)
                                       (repeat 2)
-                                      (apply recursively-get-candidates*
+                                      (apply recursively-get-variants*
                                              originals
                                              replacements)))
                   screen))
@@ -836,7 +836,7 @@
        (comp (partial map (comp (partial map consolidate-into-sentence)
                                 (aid/build cons
                                            identity
-                                           get-candidates)
+                                           get-variants)
                                 arrange-original-sentence))
              partition-sentences
              arrange-tokens*))))
