@@ -127,19 +127,19 @@
   [s]
   ["build" "-f" (get-dockerfile-path s) "-t" (helpers/get-image s) "."])
 
-(def build-clojurescript*
+(def build-clojurescript
   (partial command/lein "cljsbuild" "once"))
 
-(def build-clojure
-  #(m/>> (build-clojurescript* helpers/orchestration-name)
+(def build-orchestration
+  #(m/>> (build-clojurescript helpers/orchestration-name)
          (command/lein uberjar)
          (->> helpers/orchestration-name
               get-build-command
               (apply command/docker))))
 
-(def build-clojurescript
+(def build-alteration
   #(m/>> (command/lein "npm" "install")
-         (build-clojurescript* helpers/alteration-name)
+         (build-clojurescript helpers/alteration-name)
          (->> helpers/alteration-name
               get-build-command
               (apply command/docker))))
@@ -188,8 +188,8 @@
                                         "-u"
                                         helpers/username
                                         "-p"))
-                   (build-clojure)
-                   (build-clojurescript)
+                   (build-orchestration)
+                   (build-alteration)
                    ;This conditional reduces the bandwidth usage.
                    (aid/casep env
                               :circle-tag (install/install-word2vecf)
