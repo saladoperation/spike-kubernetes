@@ -51,7 +51,7 @@
     java
     ":8u111-jdk@sha256:c1ff613e8ba25833d2e1940da0940c3824f03f802c449f3d1815a66b7f8c0e9d"))
 
-(def clojure-dockerfile
+(def orchestration-dockerfile
   (get-dockerfile {:image    java-image
                    :from-tos #{[(get-target-path uberjar jar)
                                 (get-code-path jar)]}
@@ -76,7 +76,7 @@
     node
     ":8.11.4@sha256:fd3c42d91fcf6019eec4e6ccd38168628dd4660992a1550a71c7a7e2b0dc2bdd"))
 
-(def clojurescript-dockerfile
+(def alteration-dockerfile
   (get-dockerfile {:image    node-image
                    :from-tos (get-from-tos #{(get-prod-path) node-modules})
                    :port     helpers/alteration-port
@@ -162,9 +162,9 @@
                       get-python-dockerfile))
         (apply array-map
                helpers/orchestration-name
-               clojure-dockerfile
+               orchestration-dockerfile
                helpers/alteration-name
-               clojurescript-dockerfile)
+               alteration-dockerfile)
         (s/transform s/MAP-KEYS get-dockerfile-path)
         (run! (partial apply spit+))))
 
