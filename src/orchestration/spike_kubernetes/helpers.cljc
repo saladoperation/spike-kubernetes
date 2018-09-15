@@ -82,8 +82,8 @@
 
      (def python-name
        {parse-port parse-name
-        8001       "document"
-        8002       "lm"})
+        8001       "lm"
+        8002       "document"})
 
      (def image-name
        (merge {orchestration-port orchestration-name
