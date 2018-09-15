@@ -132,17 +132,11 @@
 
 (def build-orchestration
   #(m/>> (build-clojurescript helpers/orchestration-name)
-         (command/lein uberjar)
-         (->> helpers/orchestration-name
-              get-build-command
-              (apply command/docker))))
+         (command/lein uberjar)))
 
 (def build-alteration
   #(m/>> (command/lein "npm" "install")
-         (build-clojurescript helpers/alteration-name)
-         (->> helpers/alteration-name
-              get-build-command
-              (apply command/docker))))
+         (build-clojurescript helpers/alteration-name)))
 
 (defn make-+
   [f g]
@@ -194,7 +188,7 @@
                    (aid/casep env
                               :circle-tag (install/install-word2vecf)
                               (either/right ""))
-                   (->> helpers/python-name
+                   (->> helpers/image-name
                         vals
                         (map->> (comp (partial apply command/docker)
                                       get-build-command)))
