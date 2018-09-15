@@ -450,17 +450,18 @@
      (def post-macchiato
        (partial client/post (get-origin alteration-port)))
 
-     (def get-alternative
-       #(->> (get-confusion)
-             graph/nodes
-             vec
-             flatten
-             (map :lower_)
-             set
-             (array-map :action :get-alternative :data)
-             get-edn-request
-             post-macchiato
-             :body))
+     (utils/defmemoized get-alternative
+                        []
+                        (->> (get-confusion)
+                             graph/nodes
+                             vec
+                             flatten
+                             (map :lower_)
+                             set
+                             (array-map :action :get-alternative :data)
+                             get-edn-request
+                             post-macchiato
+                             :body))
 
      (def condense-tag
        #(if (and (or (str/starts-with? % "J")
