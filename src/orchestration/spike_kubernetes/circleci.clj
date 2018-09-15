@@ -95,7 +95,7 @@
   "continuumio/miniconda:4.5.4@sha256:19d3eedab8b6301a0e1819476cfc50d53399881612183cf65208d7d43db99cd9")
 
 (def get-shell-script
-  (comp (partial str/join "\n")
+  (comp (partial str/join " && ")
         (partial map (partial str/join " "))))
 
 (def get-python-dockerfile
