@@ -248,3 +248,9 @@
 
 (test/deftest three-one
   (test-structure "I'll allow you to know." "I'll let you know."))
+
+(test/deftest comparative
+  (test-structure "I'm nicer with you." "I'm nicer to you."))
+
+(test/deftest superlative
+  (test-structure "I'm nicest with you." "I'm nicest to you."))
