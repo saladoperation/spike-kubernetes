@@ -16,6 +16,7 @@ jobs:
           paths:
             - kubernetes.txt
             - dev-resources/docker
+            - script/docker.sh
   machine:
     machine:
       image: circleci/classic:201808-01
