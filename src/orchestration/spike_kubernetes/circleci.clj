@@ -200,7 +200,9 @@
                   "-d")
    "-p"
    (get-forwarding port)
-   (integration-image-name port)])
+   (-> port
+       integration-image-name
+       helpers/get-image)])
 
 (def integration-ports
   [helpers/alteration-port helpers/parse-port helpers/orchestration-port])
