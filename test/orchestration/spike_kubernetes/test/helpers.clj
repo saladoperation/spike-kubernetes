@@ -242,3 +242,6 @@
 
 (test/deftest one-three-non-empty-split
   (test-structure "I opened the light." "I turned light on."))
+
+(test/deftest two-one
+  (test-structure "I married with you." "I married you."))
