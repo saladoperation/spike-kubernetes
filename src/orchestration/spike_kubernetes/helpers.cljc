@@ -945,7 +945,9 @@
 
      (aid/defcurried get-tuned-path
                      [model extension identifier]
-                     (get-runs-path model identifier (str "tuned." extension)))
+                     (->> extension
+                          (str "tuned.")
+                          (get-runs-path model identifier)))
 
      (def tuned-edn-path
        (get-tuned-path lm "edn" lm-run))
