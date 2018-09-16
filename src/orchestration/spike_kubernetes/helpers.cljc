@@ -998,7 +998,8 @@
      (def get-upperbounds
        #(->> lm-tuned
              :cutoffs
-             (s/setval s/AFTER-ELEM (-> (get-stoi lm-port)
+             (s/setval s/AFTER-ELEM (-> lm-port
+                                        get-stoi
                                         keys
                                         count))))
 
