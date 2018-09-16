@@ -965,10 +965,11 @@
 
      (utils/defmemoized get-stoi
                         [port]
-                        (->> stoi-request
-                             (client/post (get-origin port))
-                             :body
-                             parse-string))
+                        (-> port
+                            get-origin
+                            (client/post stoi-request)
+                            :body
+                            parse-string))
 
      (def integers
        (range))
