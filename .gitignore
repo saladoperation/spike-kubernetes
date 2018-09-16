@@ -119,3 +119,5 @@ typings/
 */public
 figwheel_server.log
 dev-resources/docker
+dev-resources/*/selection.json
+dev-resources/*/runs

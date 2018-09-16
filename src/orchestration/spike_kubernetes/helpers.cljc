@@ -5,6 +5,7 @@
                [clojure.string :as str]
                [clojure.tools.reader.edn :as edn]
                [aid.core :as aid]
+               [cats.builtin]
                [cats.core :as m]
                [cheshire.core :refer :all]
                [clj-http.client :as client]
@@ -80,9 +81,12 @@
      (def parse-name
        "parse")
 
+     (def lm-port
+       8001)
+
      (def python-name
        {parse-port parse-name
-        8001       "lm"
+        lm-port    "lm"
         8002       "document"})
 
      (def image-name
@@ -296,11 +300,14 @@
      (def set-source
        (transfer* :source get-source))
 
+     (def integer
+       {true  1
+        false 0})
+
      (def set-reference
        (transfer* :reference
                   (aid/build +
-                             (comp {true  1
-                                    false 0}
+                             (comp integer
                                    (partial apply not=)
                                    (partial s/select*
                                             (s/multi-path :source :lower_)))
@@ -375,6 +382,18 @@
             (map (partial apply f))
             (apply f)))
 
+     (def lm
+       "lm")
+
+     (def resources-path
+       (-> lm
+           io/resource
+           fs/parent
+           str))
+
+     (def get-resources-path
+       (partial join-paths resources-path))
+
      (def get-confusion
        #(->> ["directed" "undirected"]
              (map (comp (partial map (comp arrange-line
@@ -386,8 +405,7 @@
                         (partial mapcat str/split-lines)
                         (partial map slurp)
                         get-files
-                        io/resource
-                        (partial join-paths "lm" "confusions")))
+                        (partial get-resources-path "lm" "confusions")))
              (map map [(comp (partial apply combo/cartesian-product)
                              (partial split-at 1))
                        combo/permutations])
@@ -897,4 +915,173 @@
                                 arrange-original-sentence))
              partition-sentences
              arrange-tokens*
-             parse-remotely))))
+             parse-remotely))
+
+     (def get-selection-path
+       #(join-paths resources-path % "selection.json"))
+
+     (def lm-selection-path
+       (get-selection-path lm))
+
+     (def parse-keywordize
+       (partial (aid/flip parse-string) true))
+
+     (def production
+       "production")
+
+     (def get-run
+       (command/if-then-else fs/exists?
+                             (comp :run
+                                   parse-keywordize
+                                   slurp)
+                             (constantly production)))
+
+     (def lm-run
+       (get-run lm-selection-path))
+
+     (defn get-runs-path
+       [model & more]
+       (apply get-resources-path model "runs" more))
+
+     (aid/defcurried get-tuned-path
+                     [model extension identifier]
+                     (get-runs-path model identifier (str "tuned." extension)))
+
+     (def tuned-edn-path
+       (get-tuned-path lm "edn" lm-run))
+
+     (def lm-tuned
+       (command/if-then-else fs/exists?
+                             (comp edn/read-string
+                                   slurp)
+                             (constantly {})
+                             tuned-edn-path))
+
+     (def stoi-request
+       {:body         (generate-string {:action :get-stoi})
+        :content-type :json})
+
+     (utils/defmemoized get-stoi
+                        [port]
+                        (->> stoi-request
+                             (client/post (get-origin port))
+                             :body
+                             parse-string))
+
+     (def integers
+       (range))
+
+     (def positive-integers
+       (map inc integers))
+
+     (defn make-within
+       [infimum upperbound]
+       (aid/build and
+                  (partial <= infimum)
+                  (partial > upperbound)))
+
+     (defn <$
+       [v fv]
+       (m/<$> (constantly v) fv))
+
+     (defn get-mask
+       [reference infimum upperbound]
+       (case infimum
+         0 (<$ 1 reference)
+         (map (comp integer
+                    (make-within infimum upperbound))
+              reference)))
+
+     (def get-upperbounds
+       #(->> lm-tuned
+             :cutoffs
+             (s/setval s/AFTER-ELEM (-> (get-stoi lm-port)
+                                        keys
+                                        count))))
+
+     (def get-head-upperbound
+       #(first (get-upperbounds)))
+
+     (def get-tail
+       #(->> (get-upperbounds)
+             (take-while (partial >= %))
+             count
+             dec))
+
+     (def cut-off
+       #((command/if-then (partial < (get-head-upperbound))
+                          (comp (partial + (get-head-upperbound))
+                                get-tail))
+          %))
+
+     (aid/defcurried get-cluster
+                     [reference infimum upperbound]
+                     {:index     (->> (map *
+                                           (get-mask reference
+                                                     infimum
+                                                     upperbound)
+                                           positive-integers)
+                                      (filter pos?)
+                                      (map dec))
+                      :infimum   infimum
+                      :length    (- upperbound infimum)
+                      :mask      (get-mask reference infimum upperbound)
+                      :reference (->> reference
+                                      ((case infimum
+                                         0 (partial map cut-off)
+                                         (partial filter
+                                                  (make-within infimum
+                                                               upperbound))))
+                                      (map (partial (aid/flip -) infimum)))})
+
+     (def infima
+       (->> lm-tuned
+            :cutoffs
+            (cons 0)))
+
+     (def get-clusters
+       #(-> %
+            get-cluster
+            (map infima (get-upperbounds))))
+
+     (def unk-index
+       0)
+
+     (def get-index
+       #(-> lm-port
+            get-stoi
+            (get % unk-index)))
+
+     (def directions
+       (s/multi-path :forth :back))
+
+     (def transform-string
+       (partial s/transform*
+                [directions (s/multi-path :source :reference) s/ALL]
+                get-index))
+
+     (def get-batch
+       (comp (partial transfer* :product (aid/build *
+                                                    :batch-size
+                                                    :length))
+             (partial transfer* :length (comp count
+                                              first
+                                              :source
+                                              :forth))
+             (partial transfer* :batch-size (comp count
+                                                  :index))
+             (partial s/transform*
+                      directions
+                      (partial transfer* :clusters (comp get-clusters
+                                                         :reference)))
+             (partial apply deep-merge-with concat)
+             (partial map (comp (partial s/transform*
+                                         [directions
+                                          (s/multi-path :source :character)]
+                                         vector)
+                                transform-string))))
+
+     (def get-evaluation-steps
+       (partial mapcat
+                (comp (partial map get-batch)
+                      (partial partition-all (:batch-size lm-tuned)))))))

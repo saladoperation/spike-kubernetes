@@ -33,11 +33,10 @@
   :test-paths ["test/orchestration"]
   :target-path "target/%s"
   :uberjar-name "main.jar"
-  :profiles {:dev  {:dependencies [[binaryage/devtools "0.9.10"]
-                                   [buddy "2.0.0"]
-                                   [environ "1.1.0"]
-                                   [figwheel-sidecar "0.5.16"]]}
-             :prod {}}
+  :profiles {:dev {:dependencies [[binaryage/devtools "0.9.10"]
+                                  [buddy "2.0.0"]
+                                  [environ "1.1.0"]
+                                  [figwheel-sidecar "0.5.16"]]}}
   :cljsbuild
   {:builds
    {:orchestration {:source-paths ["src/orchestration"]
