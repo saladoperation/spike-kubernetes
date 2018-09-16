@@ -744,13 +744,16 @@
      (def trim-last
        (partial s/transform* [s/LAST :text_with_ws] str/trimr))
 
+     (def multiton?
+       (comp (partial < 1)
+             count))
+
      (aid/defcurried set-a-text-with-wss
                      [original replacement]
                      ((aid/casep replacement
                                  trim? trim-last
                                  identity)
-                       (command/if-then (comp (partial < 1)
-                                              count)
+                       (command/if-then multiton?
                                         ensure-whitespace
                                         original)))
 
@@ -987,13 +990,18 @@
        [v fv]
        (m/<$> (constantly v) fv))
 
+     (def unk-index
+       0)
+
      (defn get-mask
        [reference infimum upperbound]
-       (case infimum
-         0 (<$ 1 reference)
-         (map (comp integer
-                    (make-within infimum upperbound))
-              reference)))
+       (aid/case-eval infimum
+                      unk-index (-> true
+                                    integer
+                                    (<$ reference))
+                      (map (comp integer
+                                 (make-within infimum upperbound))
+                           reference)))
 
      (def get-upperbounds
        #(->> lm-tuned
@@ -1030,26 +1038,26 @@
                       :infimum   infimum
                       :length    (- upperbound infimum)
                       :mask      (get-mask reference infimum upperbound)
-                      :reference (->> reference
-                                      ((case infimum
-                                         0 (partial map cut-off)
-                                         (partial filter
-                                                  (make-within infimum
-                                                               upperbound))))
-                                      (map (partial (aid/flip -) infimum)))})
+                      :reference (->>
+                                   reference
+                                   ((aid/case-eval infimum
+                                                   unk-index (partial map
+                                                                      cut-off)
+                                                   (partial
+                                                     filter
+                                                     (make-within infimum
+                                                                  upperbound))))
+                                   (map (partial (aid/flip -) infimum)))})
 
      (def infima
        (->> lm-tuned
             :cutoffs
-            (cons 0)))
+            (cons unk-index)))
 
      (def get-clusters
        #(-> %
             get-cluster
             (map infima (get-upperbounds))))
-
-     (def unk-index
-       0)
 
      (def get-index
        #(-> lm-port
