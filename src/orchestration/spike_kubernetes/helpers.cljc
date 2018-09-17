@@ -84,9 +84,12 @@
      (def lm-port
        8001)
 
+     (def lm-name
+       "lm")
+
      (def python-name
        {parse-port parse-name
-        lm-port    "lm"
+        lm-port    lm-name
         8002       "document"})
 
      (def image-name
@@ -382,11 +385,11 @@
             (map (partial apply f))
             (apply f)))
 
-     (def lm
-       "lm")
+     (def confusions-name
+       "confusions")
 
      (def resources-path
-       (-> lm
+       (-> confusions-name
            io/resource
            fs/parent
            str))
@@ -405,7 +408,7 @@
                         (partial mapcat str/split-lines)
                         (partial map slurp)
                         get-files
-                        (partial get-resources-path "lm" "confusions")))
+                        (partial get-resources-path confusions-name)))
              (map map [(comp (partial apply combo/cartesian-product)
                              (partial split-at 1))
                        combo/permutations])
@@ -924,7 +927,7 @@
        (partial (aid/flip get-resources-path) "selection.json"))
 
      (def lm-selection-path
-       (get-selection-path lm))
+       (get-selection-path lm-name))
 
      (def parse-keywordize
        (partial (aid/flip parse-string) true))
@@ -953,7 +956,7 @@
                           (get-runs-path model identifier)))
 
      (def tuned-edn-path
-       (get-tuned-path lm "edn" lm-run))
+       (get-tuned-path lm-name "edn" lm-run))
 
      (def lm-tuned
        (command/if-then-else fs/exists?
