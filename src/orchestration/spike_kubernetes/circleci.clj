@@ -56,7 +56,7 @@
                    :cmd      [java-name
                               "-jar"
                               jar-name
-                              helpers/orchestrate-name]}))
+                              helpers/orchestration-name]}))
 
 (def get-from-tos
   (partial map (comp (partial s/transform* s/LAST get-code-path)

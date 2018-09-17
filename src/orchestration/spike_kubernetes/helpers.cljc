@@ -1093,8 +1093,5 @@
      (def join-lines
        (partial str/join "\n"))
 
-     (def orchestrate-name
-       "orchestrate")
-
      (def kubernetes-name
        "kubernetes")))

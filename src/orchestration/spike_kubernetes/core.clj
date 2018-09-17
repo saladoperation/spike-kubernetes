@@ -12,8 +12,8 @@
   [command & more]
   (aid/case-eval
     command
-    helpers/orchestrate-name (do (require 'spike-kubernetes.orchestration)
-                                 (mount/start))
+    helpers/orchestration-name (do (require 'spike-kubernetes.orchestration)
+                                   (mount/start))
     helpers/kubernetes-name (do (kubernetes/spit-kubernetes)
                                 (shutdown-agents))
     (System/exit (aid/casep (circleci/run-circleci)
