@@ -197,7 +197,7 @@
          (wait "localhost" helpers/parse-port)))
 
 (def run-dependencies
-  #(m/>> (command/node main-path)
+  #(m/>> (command/node main-path "&")
          (run-parse)))
 
 (def map->>
