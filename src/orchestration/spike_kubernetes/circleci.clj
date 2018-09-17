@@ -53,7 +53,10 @@
                    :from-tos #{[(get-target-path uberjar-name jar-name)
                                 (get-code-path jar-name)]}
                    :port     helpers/orchestration-port
-                   :cmd      [java-name "-jar" jar-name helpers/serve-name]}))
+                   :cmd      [java-name
+                              "-jar"
+                              jar-name
+                              helpers/orchestrate-name]}))
 
 (def get-from-tos
   (partial map (comp (partial s/transform* s/LAST get-code-path)

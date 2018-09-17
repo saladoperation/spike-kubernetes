@@ -1,4 +1,4 @@
-(ns spike-kubernetes.serve
+(ns spike-kubernetes.orchestrate
   (:require [hiccup.core :as hiccup]
             [immutant.web :as web]
             [mount.core :as mount :refer [defstate]]

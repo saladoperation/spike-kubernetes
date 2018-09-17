@@ -10,11 +10,12 @@
 
 (defn -main
   [command & more]
-  (aid/case-eval command
-                 helpers/serve-name (do (require 'spike-kubernetes.serve)
-                                        (mount/start))
-                 helpers/kubernetes-name (do (kubernetes/spit-kubernetes)
-                                             (shutdown-agents))
-                 (System/exit (aid/casep (circleci/run-circleci)
-                                         either/right? 0
-                                         1))))
+  (aid/case-eval
+    command
+    helpers/orchestrate-name (do (require 'spike-kubernetes.orchestrate)
+                                 (mount/start))
+    helpers/kubernetes-name (do (kubernetes/spit-kubernetes)
+                                (shutdown-agents))
+    (System/exit (aid/casep (circleci/run-circleci)
+                            either/right? 0
+                            1))))
