@@ -3,30 +3,18 @@
   (:require [clojure.string :as str]
             [aid.core :as aid]
             [mount.core :as mount]
-            [cats.monad.either :as either]))
-
-(def get-namespace
-  (comp symbol
-        first
-        (partial (aid/flip str/split) #"/")
-        str))
-
-(defmacro require-call
-  [qualified]
-  `(do (-> ~qualified
-           get-namespace
-           require)
-       ((resolve ~qualified))))
+            [cats.monad.either :as either]
+            [spike-kubernetes.circleci :as circleci]
+            [spike-kubernetes.helpers :as helpers]
+            [spike-kubernetes.kubernetes :as kubernetes]))
 
 (defn -main
   [command & more]
-  (case command
-    "serve" (do (require 'spike-kubernetes.serve)
-                (mount/start))
-    "kubernetes"
-    (do (require-call 'spike-kubernetes.kubernetes/spit-kubernetes)
-        (shutdown-agents))
-    (System/exit
-      (aid/casep (require-call 'spike-kubernetes.circleci/run-circleci)
-                 either/right? 0
-                 1))))
+  (aid/case-eval command
+                 helpers/serve (do (require 'spike-kubernetes.serve)
+                                   (mount/start))
+                 helpers/kubernetes (do (kubernetes/spit-kubernetes)
+                                        (shutdown-agents))
+                 (System/exit (aid/casep (circleci/run-circleci)
+                                         either/right? 0
+                                         1))))

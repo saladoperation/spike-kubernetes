@@ -1099,4 +1099,10 @@
                       (partial partition-all (:batch-size lm-tuned)))))
 
      (def join-lines
-       (partial str/join "\n"))))
+       (partial str/join "\n"))
+
+     (def serve
+       "serve")
+
+     (def kubernetes
+       "kubernetes")))
