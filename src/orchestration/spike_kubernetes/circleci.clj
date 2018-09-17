@@ -175,40 +175,27 @@
   (comp (partial str/join ":")
         (partial repeat 2)))
 
-(def docker-name
-  "docker")
-
-(def docker-script-path
-  "script/docker.sh")
-
-(def docker-image-path
-  (get-docker-path "image.tar"))
-
 (def parse-image
   (helpers/get-image helpers/parse-name))
 
-(defn spit-docker-script
-  []
-  (->> [[docker-name "load" "<" docker-image-path]
-        [docker-name "run" "-d" "-p" (get-forwarding helpers/parse-port) parse-image]
-        (concat ["while"
-                 "!"
-                 "nc"
-                 "-z"
-                 "localhost"
-                 helpers/parse-port
-                 ";"
-                 "do"
-                 "sleep"
-                 1
-                 ";"
-                 "done"
-                 "\n"]
-                alteration-cmd
-                ["&" "lein" "test"])]
-       get-shell-script
-       (spit docker-script-path))
-  (fs/chmod "+x" docker-script-path))
+(def run-parse
+  #(m/>> (command/docker "run"
+                         "-d"
+                         "-p"
+                         (get-forwarding helpers/parse-port)
+                         parse-image)
+         (command/sh "while"
+                     "!"
+                     "nc"
+                     "-z"
+                     "localhost"
+                     helpers/parse-port
+                     ";"
+                     "do"
+                     "sleep"
+                     1
+                     ";"
+                     "done")))
 
 (def map->>
   (comp (partial apply m/>>)
@@ -222,15 +209,6 @@
        (map->> (comp (partial apply command/docker)
                      get-build-command))))
 
-(def save-command
-  ["save" parse-image ">" docker-image-path])
-
-(defn persist
-  []
-  (spit-docker-script)
-  (kubernetes/spit-kubernetes)
-  (apply command/docker save-command))
-
 (def push
   #(m/>> (->> env
               :docker-password
@@ -240,16 +218,18 @@
               (map->> (comp (partial command/docker "push")
                             helpers/get-image)))))
 
+(def test-commands
+  [["test"] ["doo" node-name "test" "once"]])
+
 (defn run-circleci
   []
+  (kubernetes/spit-kubernetes)
   (timbre/with-level :trace
                      (timbre/spy (m/>>= (m/>> (build-programs)
-                                              (command/lein "doo"
-                                                            node-name
-                                                            "test"
-                                                            "once")
                                               (build-images)
-                                              (persist))
+                                              (run-parse)
+                                              (map->> command/lein
+                                                      test-commands))
                                         #(aid/casep env
                                                     :circle-tag (push)
                                                     (m/pure %))))))

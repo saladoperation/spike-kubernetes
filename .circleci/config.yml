@@ -1,11 +1,10 @@
 version: 2
 jobs:
   clojure:
-    docker:
-      - image: circleci/clojure:lein-2.8.1-node@sha256:1d232488cb86d9174393202867bb2a4d1229edc7dd602eda69025fb99954c92a
+    machine:
+      image: circleci/classic:201808-01
     steps:
       - checkout
-      - setup_remote_docker
       - run:
           command: lein run circleci
           #no_output_timeout works around the following error.
@@ -14,19 +13,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - dev-resources
             - kubernetes.txt
-            - node_modules
-            - script
-            - target
-  machine:
-    machine:
-      image: circleci/classic:201808-01
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run: script/docker.sh
   gcloud:
     docker:
       - image: google/cloud-sdk
@@ -43,12 +30,6 @@ workflows:
           filters:
             tags:
               only: /.+/
-      - machine:
-          filters:
-            tags:
-              only: /.+/
-          requires:
-            - clojure
       - gcloud:
           filters:
             branches:
@@ -57,4 +38,3 @@ workflows:
               only: /.+/
           requires:
             - clojure
-            - machine
