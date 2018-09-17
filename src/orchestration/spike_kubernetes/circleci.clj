@@ -73,6 +73,9 @@
     node-name
     ":8.11.4@sha256:fd3c42d91fcf6019eec4e6ccd38168628dd4660992a1550a71c7a7e2b0dc2bdd"))
 
+(def main-path
+  (get-prod-path "main.js"))
+
 (def alteration-cmd
   [node-name (get-prod-path "main.js")])
 
@@ -224,6 +227,7 @@
                      (timbre/spy (m/>>= (m/>> (build-programs)
                                               (build-images)
                                               (run-parse)
+                                              (command/node main-path)
                                               (map->> (partial apply
                                                                command/lein)
                                                       test-commands))
