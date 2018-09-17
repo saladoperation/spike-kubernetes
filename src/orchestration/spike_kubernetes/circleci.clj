@@ -146,6 +146,14 @@
   #(m/>> (command/lein "npm" "install")
          (build-clojurescript helpers/alteration-name)))
 
+(def build-programs
+  #(m/>> (build-orchestration)
+         (build-alteration)
+         ;This conditional reduces bandwidth usage.
+         (aid/casep env
+                    :circle-tag (install/install-word2vecf)
+                    (either/right ""))))
+
 (defn make-+
   [f g]
   (comp (juxt (comp fs/mkdirs
@@ -242,12 +250,7 @@
                                     "-u"
                                     helpers/username
                                     "-p"))
-               (build-orchestration)
-               (build-alteration)
-               ;This conditional reduces the bandwidth usage.
-               (aid/casep env
-                          :circle-tag (install/install-word2vecf)
-                          (either/right ""))
+               (build-programs)
                (command/lein "doo" node "test" "once")
                (build-images)
                (persist))
