@@ -17,8 +17,8 @@
   "main.jar")
 
 (def generate-dockerfile
-  (comp helpers/join-lines
-        (partial map command/join-lexemes)
+  (comp command/join-newline
+        (partial map command/join-whitespace)
         (partial s/transform* [s/ALL s/ALL vector?] generate-string)))
 
 (def get-code-path
@@ -99,7 +99,7 @@
 
 (def get-shell-script
   (comp (partial str/join " && ")
-        (partial map command/join-lexemes)))
+        (partial map command/join-whitespace)))
 
 (def get-python-dockerfile
   #(get-dockerfile

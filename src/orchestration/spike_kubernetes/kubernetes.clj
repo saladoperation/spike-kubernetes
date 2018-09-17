@@ -2,6 +2,7 @@
   (:require [clojure.string :as str]
             [aid.core :as aid]
             [cheshire.core :refer :all]
+            [spike-kubernetes.command :as command]
             [spike-kubernetes.helpers :as helpers]))
 
 (def label
@@ -48,7 +49,7 @@
   (map transfer-name #{ingress service deployment}))
 
 (def get-json-lines
-  (comp helpers/join-lines
+  (comp command/join-newline
         (partial map generate-string)))
 
 (def spit-kubernetes

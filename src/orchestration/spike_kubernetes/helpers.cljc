@@ -1010,9 +1010,6 @@
                       (partial partition-all (:batch-size (get-lm-tuned))))
                 %))
 
-     (def join-lines
-       (partial str/join "\n"))
-
      (def kubernetes-name
        "kubernetes")
 

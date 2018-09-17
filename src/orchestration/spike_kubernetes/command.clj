@@ -7,9 +7,13 @@
             [me.raynes.fs :as fs]
             [taoensso.timbre :as timbre]))
 
-(def join-lexemes
+(def join-whitespace
   ;TODO move this function to aid
   (partial str/join " "))
+
+(def join-newline
+  ;TODO move this function to aid
+  (partial str/join "\n"))
 
 (aid/defcurried if-then-else
                 ;TODO move this function to aid
@@ -32,7 +36,7 @@
   [shell & more]
   (->> more
        (concat ["source" (fs/expand-home (str "~/." shell "rc")) "&&"])
-       join-lexemes
+       join-whitespace
        (sh/sh shell "-c")
        (s/transform :err #(str/replace % err ""))
        ((if-then (comp empty?
@@ -47,21 +51,29 @@
   (comp str/trim-newline
         :out))
 
+(aid/defcurried effect
+                [f x]
+                (f x)
+                x)
+
 (defn monadify
   [shell command]
-  (comp (aid/build if
+  (comp (effect #(->> %
+                      deref
+                      (timbre/spy :trace)))
+        (aid/build if
                    (comp zero?
                          :exit)
                    (comp either/right
                          out)
                    (comp either/left
+                         join-newline
                          (juxt out
                                (comp str/trim-newline
                                      :err))))
         ;(partial (aid/functionize timbre/spy) :trace)
         ;aid/functionize gives the following error.
         ;Exception in thread "main" java.lang.RuntimeException: No such namespace: timbre
-        #(timbre/spy :trace %)
         (partial execute shell command)))
 
 (def make-defcommand
