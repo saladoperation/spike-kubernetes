@@ -113,17 +113,13 @@
                                    (helpers/image-name %)
                                    "prod.sh")]}))
 
-(def get-resources-path
-  (comp (partial str/join "/")
-        (partial vector "dev-resources")))
-
 ;docker doesn't seem to support symlinks for -f
 ;error unable to prepare context: unable to evaluate symlinks in Dockerfile path
 ;(def get-file
 ;  #(str "<(echo \"" % "\")"))
 
 (def get-docker-path
-  (partial get-resources-path "docker"))
+  (partial helpers/get-resources-path "docker"))
 
 (def get-dockerfile-path
   (partial (aid/flip get-docker-path) "Dockerfile"))
