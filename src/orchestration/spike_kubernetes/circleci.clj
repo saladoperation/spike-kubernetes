@@ -213,6 +213,14 @@
   (comp (partial apply m/>>)
         map))
 
+(defn build-images
+  []
+  (spit-dockerfiles+)
+  (->> helpers/image-name
+       vals
+       (map->> (comp (partial apply command/docker)
+                     get-build-command))))
+
 (def save-command
   ["save" parse-image ">" docker-image-path])
 
@@ -224,29 +232,25 @@
 
 (defn run-circleci
   []
-  (spit-dockerfiles+)
   (timbre/with-level
     :trace
     (timbre/spy
       (m/>>= (m/>>
-                   (->> env
-                        :docker-password
-                        (command/docker "login"
-                                        "-u"
-                                        helpers/username
-                                        "-p"))
-                   (build-orchestration)
-                   (build-alteration)
-                   ;This conditional reduces the bandwidth usage.
-                   (aid/casep env
-                              :circle-tag (install/install-word2vecf)
-                              (either/right ""))
-                   (->> helpers/image-name
-                        vals
-                        (map->> (comp (partial apply command/docker)
-                                      get-build-command)))
-                   (command/lein "doo" node "test" "once")
-                   (persist))
+               (->> env
+                    :docker-password
+                    (command/docker "login"
+                                    "-u"
+                                    helpers/username
+                                    "-p"))
+               (build-orchestration)
+               (build-alteration)
+               ;This conditional reduces the bandwidth usage.
+               (aid/casep env
+                          :circle-tag (install/install-word2vecf)
+                          (either/right ""))
+               (command/lein "doo" node "test" "once")
+               (build-images)
+               (persist))
              #(aid/casep env
                          :circle-tag (->> helpers/image-name
                                           vals
