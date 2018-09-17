@@ -7,6 +7,10 @@
             [me.raynes.fs :as fs]
             [taoensso.timbre :as timbre]))
 
+(def join-lexemes
+  ;TODO move this function to aid
+  (partial str/join " "))
+
 (aid/defcurried if-then-else
                 ;TODO move this function to aid
                 [if-function then-function else-function x]
@@ -28,7 +32,7 @@
   [shell & more]
   (->> more
        (concat ["source" (fs/expand-home (str "~/." shell "rc")) "&&"])
-       (str/join " ")
+       join-lexemes
        (sh/sh shell "-c")
        (s/transform :err #(str/replace % err ""))
        ((if-then (comp empty?

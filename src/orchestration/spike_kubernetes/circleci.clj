@@ -18,7 +18,7 @@
 
 (def generate-dockerfile
   (comp helpers/join-lines
-        (partial map (partial str/join " "))
+        (partial map command/join-lexemes)
         (partial s/transform* [s/ALL s/ALL vector?] generate-string)))
 
 (def get-code-path
@@ -93,7 +93,7 @@
 
 (def get-shell-script
   (comp (partial str/join " && ")
-        (partial map (partial str/join " "))))
+        (partial map command/join-lexemes)))
 
 (def get-python-dockerfile
   #(get-dockerfile
