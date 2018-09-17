@@ -121,3 +121,4 @@ figwheel_server.log
 dev-resources/docker
 dev-resources/*/selection.json
 dev-resources/*/runs
+resources/prepared.edn

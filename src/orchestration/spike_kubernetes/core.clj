@@ -8,10 +8,24 @@
             [spike-kubernetes.helpers :as helpers]
             [spike-kubernetes.kubernetes :as kubernetes]))
 
+(def get-namespace
+  (comp symbol
+        first
+        (partial (aid/flip str/split) #"/")
+        str))
+
+(defmacro require-call
+  [qualified & more]
+  `(do (-> ~qualified
+           get-namespace
+           require)
+       ((resolve ~qualified) ~@more)))
+
 (defn -main
   [command & more]
   (aid/case-eval
     command
+    helpers/prepare-name (require-call 'spike-kubernetes.prepare/prepare)
     helpers/orchestration-name (do (require 'spike-kubernetes.orchestration)
                                    (mount/start))
     helpers/kubernetes-name (do (kubernetes/spit-kubernetes)

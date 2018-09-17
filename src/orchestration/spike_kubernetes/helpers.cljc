@@ -9,11 +9,9 @@
                [cats.core :as m]
                [cheshire.core :refer :all]
                [clj-http.client :as client]
-               [clojure.math.combinatorics :as combo]
                [com.rpl.specter :as s]
                [compliment.utils :as utils]
                [environ.core :refer [env]]
-               [loom.graph :as graph]
                [me.raynes.fs :as fs]
                [spike-kubernetes.command :as command]
                [spike-kubernetes.parse.core :as parse])))
@@ -354,37 +352,6 @@
              set-sos
              (partial map set-forth-source)))
 
-     (def get-files
-       (partial (aid/flip fs/find-files*) fs/file?))
-
-     (def parse-cell
-       (command/if-then-else (partial (aid/flip str/starts-with?) "[")
-                             edn/read-string
-                             vector))
-
-     (def parse-line
-       (comp (partial map parse-cell)
-             (partial (aid/flip str/split) #"\t")))
-
-     (def arrange-line
-       (partial s/transform*
-                [s/ALL
-                 s/ALL]
-                (comp set-remove-tokens
-                      (partial map
-                               (comp (partial s/setval*
-                                              (s/multi-path :original
-                                                            :proper
-                                                            :quote)
-                                              false)
-                                     set-forth-source)))))
-
-     (defn get-graph
-       [f coll]
-       (->> coll
-            (map (partial apply f))
-            (apply f)))
-
      (def confusions-name
        "confusions")
 
@@ -397,56 +364,29 @@
      (def get-resources-path
        (partial get-path resources-path))
 
-     (def get-confusion
-       #(->> ["directed" "undirected"]
-             (map (comp (partial map (comp arrange-line
-                                           (partial s/transform*
-                                                    [s/ALL
-                                                     s/ALL]
-                                                    parse-remotely)
-                                           parse-line))
-                        (partial mapcat str/split-lines)
-                        (partial map slurp)
-                        get-files
-                        (partial get-resources-path confusions-name)))
-             (map map [(comp (partial apply combo/cartesian-product)
-                             (partial split-at 1))
-                       combo/permutations])
-             (map get-graph [graph/digraph graph/graph])
-             (apply graph/digraph)))
-
      (def n-infimum
        1)
 
-     (utils/defmemoized get-ns
-                        []
-                        (->> (get-confusion)
-                             graph/nodes
-                             (map (comp count
-                                        first))
-                             (apply max)
-                             inc
-                             (range n-infimum)))
+     (def prepared-filename
+       "prepared.edn")
 
-     (utils/defmemoized get-confusions
+     (utils/defmemoized get-prepared
                         []
-                        (->> (get-confusion)
-                             graph/edges
-                             (map (aid/build array-map
-                                             (comp (partial map :lemma_)
-                                                   first
-                                                   first)
-                                             vector))
-                             (apply merge-with concat)))
+                        (-> prepared-filename
+                            get-resources-path
+                            slurp
+                            edn/read-string))
 
      (defn screen
        [sentence]
-       (->> (get-ns)
+       (->> (get-prepared)
+            :n-upperbound
+            (range n-infimum)
             (mapcat #(->> sentence
                           (map :lemma_)
                           (partition % 1)))
             set
-            (mapcat (get-confusions))))
+            (mapcat (:confusions (get-prepared)))))
 
      (def many-any
        (parse/many parse/any))
@@ -463,26 +403,6 @@
        (command/if-then-else starts-with-verb?
                              first
                              last))
-
-     (def get-edn-request
-       (comp (partial array-map :as :clojure :body)
-             pr-str))
-
-     (def post-macchiato
-       (partial client/post (get-origin alteration-port)))
-
-     (utils/defmemoized get-alternative
-                        []
-                        (->> (get-confusion)
-                             graph/nodes
-                             vec
-                             flatten
-                             (map :lower_)
-                             set
-                             (array-map :action :get-alternative :data)
-                             get-edn-request
-                             post-macchiato
-                             :body))
 
      (def condense-tag
        #(if (and (or (str/starts-with? % "J")
@@ -524,7 +444,7 @@
                                 (aid/build aid/funcall
                                            (comp condense-tag
                                                  :tag_)
-                                           (comp (get-alternative)
+                                           (comp (:alternative (get-prepared))
                                                  :lemma_))))
           (constantly verb-prefix)
           :tag_
@@ -590,7 +510,7 @@
 
      (aid/defcurried get-variant-source
                      [original replacement-source]
-                     (get ((get-alternative) replacement-source)
+                     (get ((:alternative (get-prepared)) replacement-source)
                           (-> original
                               :tag_
                               condense-tag)
@@ -1094,4 +1014,7 @@
        (partial str/join "\n"))
 
      (def kubernetes-name
-       "kubernetes")))
+       "kubernetes")
+
+     (def prepare-name
+       "prepare")))

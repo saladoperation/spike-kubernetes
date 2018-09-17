@@ -209,7 +209,6 @@
 
 (defn build-images
   []
-  (spit-dockerfiles+)
   (->> helpers/image-name
        vals
        (map->> (comp (partial apply command/docker)
@@ -230,13 +229,24 @@
 (defn run-circleci
   []
   (kubernetes/spit-kubernetes)
-  (timbre/with-level :trace
-                     (timbre/spy (m/>>= (m/>> (build-programs)
-                                              (build-images)
-                                              (run-dependencies)
-                                              (map->> (partial apply
-                                                               command/lein)
-                                                      test-commands))
-                                        #(aid/casep env
-                                                    :circle-tag (push)
-                                                    (m/pure %))))))
+  (spit-dockerfiles+)
+  (timbre/with-level
+    :trace
+    (timbre/spy (m/>>= (m/>> (build-programs)
+                             (-> helpers/parse-name
+                                 get-build-command
+                                 command/docker)
+                             (run-dependencies)
+                             (command/lein "run"
+                                           helpers/prepare-name)
+                             (map->> (partial apply
+                                              command/lein)
+                                     test-commands)
+                             (->> helpers/image-name
+                                  vals
+                                  (map->> (comp (partial apply
+                                                         command/docker)
+                                                get-build-command))))
+                       #(aid/casep env
+                                   :circle-tag (push)
+                                   (m/pure %))))))
