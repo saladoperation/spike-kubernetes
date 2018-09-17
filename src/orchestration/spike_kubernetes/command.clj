@@ -60,6 +60,7 @@
   [shell command]
   (comp (effect #(->> %
                       deref
+                      (str "\n")
                       (timbre/spy :trace)))
         (aid/build if
                    (comp zero?
