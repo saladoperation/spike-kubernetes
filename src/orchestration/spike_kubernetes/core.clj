@@ -12,7 +12,7 @@
   [command & more]
   (aid/case-eval
     command
-    helpers/prepare-name prepare/prepare
+    helpers/prepare-name (prepare/prepare)
     helpers/orchestration-name (do (require 'spike-kubernetes.orchestration)
                                    (mount/start))
     helpers/kubernetes-name (do (kubernetes/spit-kubernetes)
