@@ -199,9 +199,10 @@
                          parse-image)
          (wait "localhost" helpers/parse-port)))
 
-(def run-dependencies
-  #(m/>> (command/node main-path "&")
-         (run-parse)))
+(defn run-dependencies
+  []
+  (future (command/node main-path))
+  (run-parse))
 
 (def map->>
   (comp (partial apply m/>>)
