@@ -932,18 +932,12 @@
      (def parse-keywordize
        (partial (aid/flip parse-string) true))
 
-     (def production
-       "production")
-
-     (def get-run
-       (command/if-then-else fs/exists?
-                             (comp :run
-                                   parse-keywordize
-                                   slurp)
-                             (constantly production)))
-
-     (def lm-run
-       (get-run lm-selection-path))
+     (utils/defmemoized get-lm-run
+                        []
+                        (-> lm-selection-path
+                            slurp
+                            parse-keywordize
+                            :run))
 
      (defn get-runs-path
        [model & more]
@@ -955,14 +949,12 @@
                           (str "tuned.")
                           (get-runs-path model identifier)))
 
-     (def tuned-edn-path
-       (get-tuned-path lm-name "edn" lm-run))
-
      (utils/defmemoized get-lm-tuned
                         []
-                        (-> tuned-edn-path
-                            slurp
-                            edn/read-string))
+                        (->> (get-lm-run)
+                             (get-tuned-path lm-name "edn")
+                             slurp
+                             edn/read-string))
 
      (def stoi-request
        {:body         (generate-string {:action :get-stoi})
