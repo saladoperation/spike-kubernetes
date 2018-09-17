@@ -52,7 +52,8 @@
                    (partial mapcat str/split-lines)
                    (partial map slurp)
                    get-files
-                   (partial helpers/get-resources-path helpers/confusions-name)))
+                   (partial helpers/get-resources-path
+                            helpers/confusions-name)))
         (map map [(comp (partial apply combo/cartesian-product)
                         (partial split-at 1))
                   combo/permutations])
@@ -98,7 +99,7 @@
         :body))
 
 (def prepare
-  #(spit (helpers/get-path "resources" helpers/prepared-filename)
+  #(spit (helpers/get-resources-path helpers/prepared-filename)
          {:n-upperbound (get-n-upperbound)
           :confusions   (get-confusions)
           :alternative  (get-alternative)}))

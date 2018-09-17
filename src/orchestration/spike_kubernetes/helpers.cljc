@@ -355,14 +355,8 @@
      (def confusions-name
        "confusions")
 
-     (def resources-path
-       (-> confusions-name
-           io/resource
-           fs/parent
-           str))
-
      (def get-resources-path
-       (partial get-path resources-path))
+       (partial get-path "resources"))
 
      (def n-infimum
        1)

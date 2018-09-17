@@ -118,7 +118,7 @@ typings/
 ### spike-kubernetes
 */public
 figwheel_server.log
-dev-resources/docker
-dev-resources/*/selection.json
-dev-resources/*/runs
+resources/docker
+resources/*/selection.json
+resources/*/runs
 resources/prepared.edn
