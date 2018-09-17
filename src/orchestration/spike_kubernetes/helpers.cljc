@@ -415,7 +415,7 @@
              (map get-graph [graph/digraph graph/graph])
              (apply graph/digraph)))
 
-     (def minimum-n
+     (def n-infimum
        1)
 
      (utils/defmemoized get-ns
@@ -426,7 +426,7 @@
                                         first))
                              (apply max)
                              inc
-                             (range minimum-n)))
+                             (range n-infimum)))
 
      (utils/defmemoized get-confusions
                         []
