@@ -5,6 +5,7 @@
                  [aid "0.1.1"]
                  [aysylu/loom "1.0.2"]
                  [binaryage/oops "0.6.2"]
+                 [buddy "2.0.0"]
                  [cheshire "5.8.0"]
                  [clj-http "3.9.1"]
                  [cljs-ajax "0.7.4"]
@@ -34,7 +35,6 @@
   :target-path "target/%s"
   :uberjar-name "main.jar"
   :profiles {:dev {:dependencies [[binaryage/devtools "0.9.10"]
-                                  [buddy "2.0.0"]
                                   [figwheel-sidecar "0.5.16"]]}}
   :cljsbuild
   {:builds
