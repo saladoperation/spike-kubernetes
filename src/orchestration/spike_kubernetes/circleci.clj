@@ -159,10 +159,17 @@
                          parse-image)
          (wait "localhost" helpers/parse-port)))
 
+(def npm-install
+  #(command/lein "npm" "install"))
+
 (defn run-dependencies
   []
-  (future (command/node main-path))
-  (run-parse))
+  (m/>> (npm-install)
+        (-> main-path
+            command/node
+            future
+            either/right)
+        (run-parse)))
 
 (def build-orchestration
   #(m/>> (run-dependencies)
@@ -171,7 +178,7 @@
          (command/lein uberjar-name)))
 
 (def build-alteration
-  #(m/>> (command/lein "npm" "install")
+  #(m/>> (npm-install)
          (build-clojurescript helpers/alteration-name)))
 
 (defn make-+
@@ -220,14 +227,14 @@
   (spit-dockerfiles+)
   (timbre/with-level
     :trace
-    (timbre/spy (m/>>= (m/>> (build-alteration)
-                             (aid/casep env
+    (timbre/spy (m/>>= (m/>> (aid/casep env
                                         :circle-tag (install/install-word2vecf)
                                         (either/right ""))
                              (->> helpers/parse-name
                                   get-build-command
                                   (apply command/docker))
                              (build-orchestration)
+                             (build-alteration)
                              (map->> (partial apply
                                               command/lein)
                                      test-commands)
