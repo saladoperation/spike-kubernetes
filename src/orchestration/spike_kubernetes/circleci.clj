@@ -159,27 +159,24 @@
                          parse-image)
          (wait "localhost" helpers/parse-port)))
 
-(def npm-install
-  #(command/lein "npm" "install"))
+(def build-alteration
+  #(m/>> (command/lein "npm" "install")
+         (build-clojurescript helpers/alteration-name)))
 
 (defn run-dependencies
   []
-  (m/>> (npm-install)
-        (-> main-path
+  (m/>> (-> main-path
             command/node
             future
             either/right)
         (run-parse)))
 
 (def build-orchestration
-  #(m/>> (run-dependencies)
+  #(m/>> (build-alteration)
+         (run-dependencies)
          (command/lein "run" helpers/prepare-name)
          (build-clojurescript helpers/orchestration-name)
          (command/lein uberjar-name)))
-
-(def build-alteration
-  #(m/>> (npm-install)
-         (build-clojurescript helpers/alteration-name)))
 
 (defn make-+
   [f g]
