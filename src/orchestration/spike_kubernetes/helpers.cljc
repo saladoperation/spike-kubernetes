@@ -958,12 +958,11 @@
      (def tuned-edn-path
        (get-tuned-path lm-name "edn" lm-run))
 
-     (def lm-tuned
-       (command/if-then-else fs/exists?
-                             (comp edn/read-string
-                                   slurp)
-                             (constantly {})
-                             tuned-edn-path))
+     (utils/defmemoized get-lm-tuned
+                        []
+                        (-> tuned-edn-path
+                            slurp
+                            edn/read-string))
 
      (def stoi-request
        {:body         (generate-string {:action :get-stoi})
@@ -1007,7 +1006,7 @@
                            reference)))
 
      (def get-index-upperbounds
-       #(->> lm-tuned
+       #(->> (get-lm-tuned)
              :cutoffs
              (s/setval s/AFTER-ELEM (-> lm-port
                                         get-stoi
@@ -1052,15 +1051,13 @@
                                                                   upperbound))))
                                    (map (partial (aid/flip -) infimum)))})
 
-     (def index-infima
-       (->> lm-tuned
-            :cutoffs
-            (cons unk-index)))
-
      (def get-clusters
        #(-> %
             get-cluster
-            (map index-infima (get-index-upperbounds))))
+            (map (->> (get-lm-tuned)
+                      :cutoffs
+                      (cons unk-index))
+                 (get-index-upperbounds))))
 
      (def get-index
        #(-> lm-port
@@ -1097,9 +1094,9 @@
                                 transform-string))))
 
      (def get-evaluation-steps
-       (partial mapcat
-                (comp (partial map get-batch)
-                      (partial partition-all (:batch-size lm-tuned)))))
+       #(mapcat (comp (partial map get-batch)
+                      (partial partition-all (:batch-size (get-lm-tuned))))
+                %))
 
      (def join-lines
        (partial str/join "\n"))
