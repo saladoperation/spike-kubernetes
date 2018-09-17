@@ -13,7 +13,7 @@
             [spike-kubernetes.install :as install]
             [spike-kubernetes.kubernetes :as kubernetes]))
 
-(def jar
+(def jar-name
   "main.jar")
 
 (def generate-dockerfile
@@ -37,55 +37,55 @@
 (def get-target-path
   (partial helpers/get-path "target"))
 
-(def java
+(def java-name
   "java")
 
-(def uberjar
+(def uberjar-name
   "uberjar")
 
 (def java-image
   (str
-    java
+    java-name
     ":8u111-jdk@sha256:c1ff613e8ba25833d2e1940da0940c3824f03f802c449f3d1815a66b7f8c0e9d"))
 
 (def orchestration-dockerfile
   (get-dockerfile {:image    java-image
-                   :from-tos #{[(get-target-path uberjar jar)
-                                (get-code-path jar)]}
+                   :from-tos #{[(get-target-path uberjar-name jar-name)
+                                (get-code-path jar-name)]}
                    :port     helpers/orchestration-port
-                   :cmd      [java "-jar" jar helpers/serve]}))
+                   :cmd      [java-name "-jar" jar-name helpers/serve]}))
 
 (def get-from-tos
   (partial map (comp (partial s/transform* s/LAST get-code-path)
                      (partial repeat 2))))
 
-(def node-modules
+(def node-modules-name
   "node_modules")
 
 (def get-prod-path
   (partial get-target-path "prod"))
 
-(def node
+(def node-name
   "node")
 
 (def node-image
   (str
-    node
+    node-name
     ":8.11.4@sha256:fd3c42d91fcf6019eec4e6ccd38168628dd4660992a1550a71c7a7e2b0dc2bdd"))
 
 (def alteration-cmd
-  [node (get-prod-path "main.js")])
+  [node-name (get-prod-path "main.js")])
 
 (def alteration-dockerfile
   (get-dockerfile {:image    node-image
-                   :from-tos (get-from-tos #{(get-prod-path) node-modules})
+                   :from-tos (get-from-tos #{(get-prod-path) node-modules-name})
                    :port     helpers/alteration-port
                    :cmd      alteration-cmd}))
 
-(def python
+(def python-name
   "python")
 
-(def script
+(def script-name
   "script")
 
 (def conda-image
@@ -98,18 +98,18 @@
 (def get-python-dockerfile
   #(get-dockerfile
      {:image    conda-image
-      :from-tos (get-from-tos #{python script})
+      :from-tos (get-from-tos #{python-name script-name})
       :run      (get-shell-script [["conda"
                                     "env"
                                     "create"
                                     "-f"
-                                    (helpers/get-path python
+                                    (helpers/get-path python-name
                                                       "environments/cpu.yml")]
                                    ["source" "activate" "spike-kubernetes"]
-                                   [python "-m" "spacy" "download" "en"]])
+                                   [python-name "-m" "spacy" "download" "en"]])
       :port     %
-      :cmd      [(helpers/get-path script
-                                   python
+      :cmd      [(helpers/get-path script-name
+                                   python-name
                                    (helpers/image-name %)
                                    "prod.sh")]}))
 
@@ -133,7 +133,7 @@
 
 (def build-orchestration
   #(m/>> (build-clojurescript helpers/orchestration-name)
-         (command/lein uberjar)))
+         (command/lein uberjar-name)))
 
 (def build-alteration
   #(m/>> (command/lein "npm" "install")
@@ -175,7 +175,7 @@
   (comp (partial str/join ":")
         (partial repeat 2)))
 
-(def docker
+(def docker-name
   "docker")
 
 (def docker-script-path
@@ -189,8 +189,8 @@
 
 (defn spit-docker-script
   []
-  (->> [[docker "load" "<" docker-image-path]
-        [docker "run" "-d" "-p" (get-forwarding helpers/parse-port) parse-image]
+  (->> [[docker-name "load" "<" docker-image-path]
+        [docker-name "run" "-d" "-p" (get-forwarding helpers/parse-port) parse-image]
         (concat ["while"
                  "!"
                  "nc"
@@ -245,7 +245,7 @@
   (timbre/with-level :trace
                      (timbre/spy (m/>>= (m/>> (build-programs)
                                               (command/lein "doo"
-                                                            node
+                                                            node-name
                                                             "test"
                                                             "once")
                                               (build-images)
