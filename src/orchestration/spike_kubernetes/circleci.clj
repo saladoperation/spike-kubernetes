@@ -215,7 +215,7 @@
                 ["&" "lein" "test"])]
        get-shell-script
        (spit docker-script-path))
-  (command/chmod "+x" docker-script-path))
+  (fs/chmod "+x" docker-script-path))
 
 (def map->>
   (comp (partial apply m/>>)
