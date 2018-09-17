@@ -1006,7 +1006,7 @@
                                  (make-within infimum upperbound))
                            reference)))
 
-     (def get-upperbounds
+     (def get-index-upperbounds
        #(->> lm-tuned
              :cutoffs
              (s/setval s/AFTER-ELEM (-> lm-port
@@ -1015,10 +1015,10 @@
                                         count))))
 
      (def get-head-upperbound
-       #(first (get-upperbounds)))
+       #(first (get-index-upperbounds)))
 
      (def get-tail
-       #(->> (get-upperbounds)
+       #(->> (get-index-upperbounds)
              (take-while (partial >= %))
              count
              dec))
@@ -1052,7 +1052,7 @@
                                                                   upperbound))))
                                    (map (partial (aid/flip -) infimum)))})
 
-     (def infima
+     (def index-infima
        (->> lm-tuned
             :cutoffs
             (cons unk-index)))
@@ -1060,7 +1060,7 @@
      (def get-clusters
        #(-> %
             get-cluster
-            (map infima (get-upperbounds))))
+            (map index-infima (get-index-upperbounds))))
 
      (def get-index
        #(-> lm-port
