@@ -1093,7 +1093,7 @@
      (def join-lines
        (partial str/join "\n"))
 
-     (def serve
+     (def serve-name
        "serve")
 
      (def kubernetes-name
