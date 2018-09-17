@@ -13,8 +13,8 @@
   (aid/case-eval command
                  helpers/serve (do (require 'spike-kubernetes.serve)
                                    (mount/start))
-                 helpers/kubernetes (do (kubernetes/spit-kubernetes)
-                                        (shutdown-agents))
+                 helpers/kubernetes-name (do (kubernetes/spit-kubernetes)
+                                             (shutdown-agents))
                  (System/exit (aid/casep (circleci/run-circleci)
                                          either/right? 0
                                          1))))

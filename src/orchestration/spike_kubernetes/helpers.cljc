@@ -1096,5 +1096,5 @@
      (def serve
        "serve")
 
-     (def kubernetes
+     (def kubernetes-name
        "kubernetes")))
