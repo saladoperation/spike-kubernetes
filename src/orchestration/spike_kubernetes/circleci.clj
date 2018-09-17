@@ -208,13 +208,6 @@
   (comp (partial apply m/>>)
         map))
 
-(defn build-images
-  []
-  (->> helpers/image-name
-       vals
-       (map->> (comp (partial apply command/docker)
-                     get-build-command))))
-
 (def push
   #(m/>> (->> env
               :docker-password
