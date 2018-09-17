@@ -68,7 +68,7 @@
      (def deep-merge
        (partial deep-merge-with (comp last
                                       vector)))
-     (def join-paths
+     (def get-path
        (comp (partial str/join "/")
              vector))
 
@@ -392,7 +392,7 @@
            str))
 
      (def get-resources-path
-       (partial join-paths resources-path))
+       (partial get-path resources-path))
 
      (def get-confusion
        #(->> ["directed" "undirected"]
@@ -921,7 +921,7 @@
              parse-remotely))
 
      (def get-selection-path
-       #(join-paths resources-path % "selection.json"))
+       #(get-path resources-path % "selection.json"))
 
      (def lm-selection-path
        (get-selection-path lm))

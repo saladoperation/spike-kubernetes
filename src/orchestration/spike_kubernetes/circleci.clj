@@ -22,7 +22,7 @@
         (partial s/transform* [s/ALL s/ALL vector?] generate-string)))
 
 (def get-code-path
-  (partial helpers/join-paths "code"))
+  (partial helpers/get-path "code"))
 
 (defn get-dockerfile
   [{:keys [image from-tos run port cmd] :or {run ":"}}]
@@ -35,7 +35,7 @@
                                 ["CMD" cmd]])))
 
 (def get-target-path
-  (partial helpers/join-paths "target"))
+  (partial helpers/get-path "target"))
 
 (def java
   "java")
@@ -103,15 +103,15 @@
                                     "env"
                                     "create"
                                     "-f"
-                                    (helpers/join-paths python
-                                                        "environments/cpu.yml")]
+                                    (helpers/get-path python
+                                                      "environments/cpu.yml")]
                                    ["source" "activate" "spike-kubernetes"]
                                    [python "-m" "spacy" "download" "en"]])
       :port     %
-      :cmd      [(helpers/join-paths script
-                                     python
-                                     (helpers/image-name %)
-                                     "prod.sh")]}))
+      :cmd      [(helpers/get-path script
+                                   python
+                                   (helpers/image-name %)
+                                   "prod.sh")]}))
 
 (def get-resources-path
   (comp (partial str/join "/")

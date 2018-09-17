@@ -32,7 +32,7 @@
   #(with-sh-dir+ cache-path
                  (m/>> (command/wget word2vecf-url)
                        (aid/case-eval (->> word2vecf-filename
-                                           (helpers/join-paths cache-path)
+                                           (helpers/get-path cache-path)
                                            io/input-stream
                                            hash/sha256
                                            bytes->hex)
