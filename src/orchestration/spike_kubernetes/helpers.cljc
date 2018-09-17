@@ -921,7 +921,7 @@
              parse-remotely))
 
      (def get-selection-path
-       #(get-path resources-path % "selection.json"))
+       (partial (aid/flip get-resources-path) "selection.json"))
 
      (def lm-selection-path
        (get-selection-path lm))
