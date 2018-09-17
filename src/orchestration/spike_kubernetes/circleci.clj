@@ -216,14 +216,19 @@
 (def save-command
   ["save" parse-image ">" docker-image-path])
 
+(defn persist
+  []
+  (spit-docker-script)
+  (kubernetes/spit-kubernetes)
+  (apply command/docker save-command))
+
 (defn run-circleci
   []
   (spit-dockerfiles+)
-  (kubernetes/spit-kubernetes)
   (timbre/with-level
     :trace
     (timbre/spy
-      (m/>>= (m/>> (spit-docker-script)
+      (m/>>= (m/>>
                    (->> env
                         :docker-password
                         (command/docker "login"
@@ -241,7 +246,7 @@
                         (map->> (comp (partial apply command/docker)
                                       get-build-command)))
                    (command/lein "doo" node "test" "once")
-                   (apply command/docker save-command))
+                   (persist))
              #(aid/casep env
                          :circle-tag (->> helpers/image-name
                                           vals
