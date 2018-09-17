@@ -48,7 +48,7 @@
   (map transfer-name #{ingress service deployment}))
 
 (def get-json-lines
-  (comp (partial str/join "\n")
+  (comp helpers/join-lines
         (partial map generate-string)))
 
 (def spit-kubernetes

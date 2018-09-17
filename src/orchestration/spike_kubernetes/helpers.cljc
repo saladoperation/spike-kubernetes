@@ -1096,4 +1096,7 @@
      (def get-evaluation-steps
        (partial mapcat
                 (comp (partial map get-batch)
-                      (partial partition-all (:batch-size lm-tuned)))))))
+                      (partial partition-all (:batch-size lm-tuned)))))
+
+     (def join-lines
+       (partial str/join "\n"))))
