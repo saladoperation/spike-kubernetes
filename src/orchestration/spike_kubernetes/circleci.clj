@@ -178,24 +178,20 @@
 (def parse-image
   (helpers/get-image helpers/parse-name))
 
+(defn wait
+  [& more]
+  (->> #(apply command/nc "-z" more)
+       repeatedly
+       (drop-while either/left?)
+       first))
+
 (def run-parse
   #(m/>> (command/docker "run"
                          "-d"
                          "-p"
                          (get-forwarding helpers/parse-port)
                          parse-image)
-         (command/sh "while"
-                     "!"
-                     "nc"
-                     "-z"
-                     "localhost"
-                     helpers/parse-port
-                     ";"
-                     "do"
-                     "sleep"
-                     1
-                     ";"
-                     "done")))
+         (wait "localhost" helpers/parse-port)))
 
 (def map->>
   (comp (partial apply m/>>)
@@ -228,7 +224,8 @@
                      (timbre/spy (m/>>= (m/>> (build-programs)
                                               (build-images)
                                               (run-parse)
-                                              (map->> command/lein
+                                              (map->> (partial apply
+                                                               command/lein)
                                                       test-commands))
                                         #(aid/casep env
                                                     :circle-tag (push)
