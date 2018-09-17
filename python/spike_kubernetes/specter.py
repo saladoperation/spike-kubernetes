@@ -31,3 +31,13 @@ def transform_(path, transform_fn, structure):
     return reduce(get_transform_continuation,
                   transform_fn,
                   reverse(coerce_path(path)))(structure)
+
+
+def vals(m):
+    return m.values()
+
+
+MAP_VALS = RichNavigator(comp(tuple,
+                              vals,
+                              first),
+                         walk_values)

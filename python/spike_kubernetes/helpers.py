@@ -1,9 +1,5 @@
 from flask import jsonify, request
 from spike_kubernetes.clojure.core import *
-import spike_kubernetes.aid as aid
-
-make_get_stoi = comp(constantly,
-                     partial(aid.flip(getattr), "stoi"))
 
 
 def make_index_(m):
