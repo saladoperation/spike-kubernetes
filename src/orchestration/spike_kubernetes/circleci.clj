@@ -137,46 +137,6 @@
 (def build-clojurescript
   (partial command/lein "cljsbuild" "once"))
 
-(def build-orchestration
-  #(m/>> (build-clojurescript helpers/orchestration-name)
-         (command/lein uberjar-name)))
-
-(def build-alteration
-  #(m/>> (command/lein "npm" "install")
-         (build-clojurescript helpers/alteration-name)))
-
-(def build-programs
-  #(m/>> (build-orchestration)
-         (build-alteration)
-         ;This conditional reduces bandwidth usage.
-         (aid/casep env
-                    :circle-tag (install/install-word2vecf)
-                    (either/right ""))))
-
-(defn make-+
-  [f g]
-  (comp (juxt (comp fs/mkdirs
-                    fs/parent
-                    f)
-              (partial apply g))
-        vector))
-
-(def spit+
-  (make-+ first spit))
-
-(def spit-dockerfiles+
-  #(->> helpers/python-name
-        keys
-        (mapcat (juxt helpers/python-name
-                      get-python-dockerfile))
-        (apply array-map
-               helpers/orchestration-name
-               orchestration-dockerfile
-               helpers/alteration-name
-               alteration-dockerfile)
-        (s/transform s/MAP-KEYS get-dockerfile-path)
-        (run! (partial apply spit+))))
-
 (def get-forwarding
   (comp (partial str/join ":")
         (partial repeat 2)))
@@ -204,6 +164,40 @@
   (future (command/node main-path))
   (run-parse))
 
+(def build-orchestration
+  #(m/>> (run-dependencies)
+         (command/lein "run" helpers/prepare-name)
+         (build-clojurescript helpers/orchestration-name)
+         (command/lein uberjar-name)))
+
+(def build-alteration
+  #(m/>> (command/lein "npm" "install")
+         (build-clojurescript helpers/alteration-name)))
+
+(defn make-+
+  [f g]
+  (comp (juxt (comp fs/mkdirs
+                    fs/parent
+                    f)
+              (partial apply g))
+        vector))
+
+(def spit+
+  (make-+ first spit))
+
+(def spit-dockerfiles+
+  #(->> helpers/python-name
+        keys
+        (mapcat (juxt helpers/python-name
+                      get-python-dockerfile))
+        (apply array-map
+               helpers/orchestration-name
+               orchestration-dockerfile
+               helpers/alteration-name
+               alteration-dockerfile)
+        (s/transform s/MAP-KEYS get-dockerfile-path)
+        (run! (partial apply spit+))))
+
 (def map->>
   (comp (partial apply m/>>)
         map))
@@ -226,13 +220,14 @@
   (spit-dockerfiles+)
   (timbre/with-level
     :trace
-    (timbre/spy (m/>>= (m/>> (build-programs)
+    (timbre/spy (m/>>= (m/>> (build-alteration)
+                             (aid/casep env
+                                        :circle-tag (install/install-word2vecf)
+                                        (either/right ""))
                              (->> helpers/parse-name
                                   get-build-command
                                   (apply command/docker))
-                             (run-dependencies)
-                             (command/lein "run"
-                                           helpers/prepare-name)
+                             (build-orchestration)
                              (map->> (partial apply
                                               command/lein)
                                      test-commands)
