@@ -41,41 +41,41 @@
        (map (partial apply f))
        (apply f)))
 
-(def confusion
-  (->> ["directed" "undirected"]
-       (map (comp (partial map (comp arrange-line
-                                     (partial s/transform*
-                                              [s/ALL
-                                               s/ALL]
-                                              helpers/parse-remotely)
-                                     parse-line))
-                  (partial mapcat str/split-lines)
-                  (partial map slurp)
-                  get-files
-                  (partial helpers/get-resources-path helpers/confusions-name)))
-       (map map [(comp (partial apply combo/cartesian-product)
-                       (partial split-at 1))
-                 combo/permutations])
-       (map get-graph [graph/digraph graph/graph])
-       (apply graph/digraph)))
+(def get-confusion
+  #(->> ["directed" "undirected"]
+        (map (comp (partial map (comp arrange-line
+                                      (partial s/transform*
+                                               [s/ALL
+                                                s/ALL]
+                                               helpers/parse-remotely)
+                                      parse-line))
+                   (partial mapcat str/split-lines)
+                   (partial map slurp)
+                   get-files
+                   (partial helpers/get-resources-path helpers/confusions-name)))
+        (map map [(comp (partial apply combo/cartesian-product)
+                        (partial split-at 1))
+                  combo/permutations])
+        (map get-graph [graph/digraph graph/graph])
+        (apply graph/digraph)))
 
-(def n-upperbound
-  (->> confusion
-       graph/nodes
-       (map (comp count
-                  first))
-       (apply max)
-       inc))
+(def get-n-upperbound
+  #(->> (get-confusion)
+        graph/nodes
+        (map (comp count
+                   first))
+        (apply max)
+        inc))
 
-(def confusions
-  (->> confusion
-       graph/edges
-       (map (aid/build array-map
-                       (comp (partial map :lemma_)
-                             first
-                             first)
-                       vector))
-       (apply merge-with concat)))
+(def get-confusions
+  #(->> (get-confusion)
+        graph/edges
+        (map (aid/build array-map
+                        (comp (partial map :lemma_)
+                              first
+                              first)
+                        vector))
+        (apply merge-with concat)))
 
 
 (def get-edn-request
@@ -85,20 +85,20 @@
 (def post-macchiato
   (partial client/post (helpers/get-origin helpers/alteration-port)))
 
-(def alternative
-  (->> confusion
-       graph/nodes
-       vec
-       flatten
-       (map :lower_)
-       set
-       (array-map :action :get-alternative :data)
-       get-edn-request
-       post-macchiato
-       :body))
+(def get-alternative
+  #(->> (get-confusion)
+        graph/nodes
+        vec
+        flatten
+        (map :lower_)
+        set
+        (array-map :action :get-alternative :data)
+        get-edn-request
+        post-macchiato
+        :body))
 
 (def prepare
   #(spit (helpers/get-path "resources" helpers/prepared-filename)
-         {:n-upperbound n-upperbound
-          :confusions   confusions
-          :alternative  alternative}))
+         {:n-upperbound (get-n-upperbound)
+          :confusions   (get-confusions)
+          :alternative  (get-alternative)}))
