@@ -238,26 +238,29 @@
   (kubernetes/spit-kubernetes)
   (apply command/docker save-command))
 
+(def push
+  #(m/>> (->> env
+              :docker-password
+              (command/docker "login"
+                              "-u"
+                              helpers/username
+                              "-p"))
+         (->> helpers/image-name
+              vals
+              (map->> (comp (partial command/docker
+                                     "push")
+                            helpers/get-image)))))
+
 (defn run-circleci
   []
-  (timbre/with-level
-    :trace
-    (timbre/spy
-      (m/>>= (m/>>
-               (->> env
-                    :docker-password
-                    (command/docker "login"
-                                    "-u"
-                                    helpers/username
-                                    "-p"))
-               (build-programs)
-               (command/lein "doo" node "test" "once")
-               (build-images)
-               (persist))
-             #(aid/casep env
-                         :circle-tag (->> helpers/image-name
-                                          vals
-                                          (map->> (comp (partial command/docker
-                                                                 "push")
-                                                        helpers/get-image)))
-                         (m/pure %))))))
+  (timbre/with-level :trace
+                     (timbre/spy (m/>>= (m/>> (build-programs)
+                                              (command/lein "doo"
+                                                            node
+                                                            "test"
+                                                            "once")
+                                              (build-images)
+                                              (persist))
+                                        #(aid/casep env
+                                                    :circle-tag (push)
+                                                    (m/pure %))))))
