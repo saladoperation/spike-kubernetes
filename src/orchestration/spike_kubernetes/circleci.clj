@@ -196,6 +196,10 @@
                          parse-image)
          (wait "localhost" helpers/parse-port)))
 
+(def run-dependencies
+  #(m/>> (command/node main-path)
+         (run-parse)))
+
 (def map->>
   (comp (partial apply m/>>)
         map))
@@ -226,8 +230,7 @@
   (timbre/with-level :trace
                      (timbre/spy (m/>>= (m/>> (build-programs)
                                               (build-images)
-                                              (run-parse)
-                                              (command/node main-path)
+                                              (run-dependencies)
                                               (map->> (partial apply
                                                                command/lein)
                                                       test-commands))
