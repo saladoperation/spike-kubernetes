@@ -244,8 +244,7 @@
                               "-p"))
          (->> helpers/image-name
               vals
-              (map->> (comp (partial command/docker
-                                     "push")
+              (map->> (comp (partial command/docker "push")
                             helpers/get-image)))))
 
 (defn run-circleci
