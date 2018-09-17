@@ -1,7 +1,6 @@
 (ns spike-kubernetes.core
   (:gen-class)
-  (:require [clojure.string :as str]
-            [aid.core :as aid]
+  (:require [aid.core :as aid]
             [mount.core :as mount]
             [cats.monad.either :as either]
             [spike-kubernetes.circleci :as circleci]

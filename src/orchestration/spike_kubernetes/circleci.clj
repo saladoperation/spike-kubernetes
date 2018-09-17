@@ -227,9 +227,9 @@
   (timbre/with-level
     :trace
     (timbre/spy (m/>>= (m/>> (build-programs)
-                             (-> helpers/parse-name
-                                 get-build-command
-                                 command/docker)
+                             (->> helpers/parse-name
+                                  get-build-command
+                                  (apply command/docker))
                              (run-dependencies)
                              (command/lein "run"
                                            helpers/prepare-name)
