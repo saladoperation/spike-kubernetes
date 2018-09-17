@@ -234,10 +234,7 @@
 (def push
   #(m/>> (->> env
               :docker-password
-              (command/docker "login"
-                              "-u"
-                              helpers/username
-                              "-p"))
+              (command/docker "login" "-u" helpers/username "-p"))
          (->> helpers/image-name
               vals
               (map->> (comp (partial command/docker "push")
