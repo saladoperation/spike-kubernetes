@@ -858,10 +858,10 @@
        (apply get-resources-path model "runs" more))
 
      (aid/defcurried get-tuned-path
-                     [model extension identifier]
+                     [model extension timestamp]
                      (->> extension
                           (str "tuned.")
-                          (get-runs-path model identifier)))
+                          (get-runs-path model timestamp)))
 
      (utils/defmemoized get-lm-tuned
                         []
