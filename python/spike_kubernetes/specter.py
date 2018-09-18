@@ -42,6 +42,12 @@ MAP_VALS = RichNavigator(comp(tuple,
                               vals,
                               first),
                          walk_values)
+
+
+def setval_(path, val, structure):
+    return transform_(path, constantly(val), structure)
+
+
 ALL = RichNavigator(first, walk)
 
 

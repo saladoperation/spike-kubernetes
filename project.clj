@@ -15,6 +15,7 @@
                  [environ "1.1.0"]
                  [funcool/cats "2.2.0"]
                  [hiccup "1.0.5"]
+                 [incanter "1.9.3"]
                  [macchiato/core "0.2.14"]
                  [me.raynes/fs "1.4.6"]
                  [mount "0.1.13"]

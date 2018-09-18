@@ -235,7 +235,7 @@ def forward_(m):
                             torch.cat(
                                 (m["model"]["embedding"](
                                     m[m["direction"]]["source"]),
-                                 m[m["direction"]]["text"]),
+                                 m[m["direction"]]["character"]),
                                 -1),
                             get_batch_states(m)))),
                 m)),
@@ -293,7 +293,7 @@ convert_list = partial(
     s.transform_,
     s.multi_path("forth", "back"),
     comp(partial(s.transform_,
-                 "text",
+                 "character",
                  comp(torch.cat,
                       tuple,
                       partial(map,
