@@ -11,7 +11,8 @@
             [spike-kubernetes.command :as command]
             [spike-kubernetes.helpers :as helpers]
             [spike-kubernetes.install :as install]
-            [spike-kubernetes.kubernetes :as kubernetes]))
+            [spike-kubernetes.kubernetes :as kubernetes]
+            [clojure.java.shell :as sh]))
 
 (def jar-name
   "main.jar")
@@ -218,28 +219,49 @@
 (def test-argument-collection
   [["test"] ["doo" node-name "test" "once"]])
 
+(def get-tar-path
+  (comp (partial helpers/get-path
+                 "https://storage.googleapis.com/wikipediadataset")
+        (partial (aid/flip str) ".tar")))
+
+(defn get-download-extract-argument
+  [s]
+  ["-qO-" s "|" "tar" "x"])
+
+(def download-extract-arguments
+  (->> helpers/model-name
+       vals
+       (map (comp get-download-extract-argument get-tar-path))))
+
+(def download-extract
+  #(sh/with-sh-dir (helpers/get-resources-path)
+                   (map->> (partial apply command/wget)
+                           download-extract-arguments)))
+
 (defn run-circleci
   []
   (kubernetes/spit-kubernetes)
   (spit-dockerfiles+)
   (timbre/with-level
     :trace
-    (timbre/spy (m/>>= (m/>> (aid/casep env
-                                        :circle-tag (install/install-word2vecf)
-                                        (either/right ""))
-                             (->> helpers/parse-name
-                                  get-build-arguments
-                                  (apply command/docker))
-                             (build-orchestration)
-                             (build-alteration)
-                             (map->> (partial apply
-                                              command/lein)
-                                     test-argument-collection)
-                             (->> helpers/image-name
-                                  vals
-                                  (map->> (comp (partial apply
-                                                         command/docker)
-                                                get-build-arguments))))
-                       #(aid/casep env
-                                   :circle-tag (push)
-                                   (m/pure %))))))
+    (timbre/spy
+      (m/>>= (m/>> (aid/casep env
+                              :circle-tag (m/>> (download-extract)
+                                                (install/install-word2vecf))
+                              (either/right ""))
+                   (->> helpers/parse-name
+                        get-build-arguments
+                        (apply command/docker))
+                   (build-orchestration)
+                   (build-alteration)
+                   (map->> (partial apply
+                                    command/lein)
+                           test-argument-collection)
+                   (->> helpers/image-name
+                        vals
+                        (map->> (comp (partial apply
+                                               command/docker)
+                                      get-build-arguments))))
+             #(aid/casep env
+                         :circle-tag (push)
+                         (m/pure %))))))

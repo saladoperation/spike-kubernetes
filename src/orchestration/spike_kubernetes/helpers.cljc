@@ -85,10 +85,12 @@
      (def lm-name
        "lm")
 
+     (def model-name
+       {lm-port lm-name
+        8002    "document"})
+
      (def python-name
-       {parse-port parse-name
-        lm-port    lm-name
-        8002       "document"})
+       (s/setval parse-port parse-name model-name))
 
      (def image-name
        (merge {orchestration-port orchestration-name
