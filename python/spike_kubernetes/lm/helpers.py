@@ -50,7 +50,8 @@ def make_attribute_call(s_):
 
 get_states = comp(nn.ParameterList,
                   partial(map, nn.Parameter))
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+cpu_name = "cpu"
+device = torch.device("cuda:0" if torch.cuda.is_available() else cpu_name)
 move = partial(aid.flip(make_attribute_call("to")), device)
 get_character_vector = comp(move,
                             partial(get, vocab.CharNGram()))
@@ -154,14 +155,14 @@ append_extension = comp(partial(str_.join, "."),
                         vector)
 append_pth = partial(aid.flip(append_extension), "pth")
 recent_filename = "recent"
-step_selection = recent_filename if selection["recent"] else "minimum"
+step_selection = recent_filename if selection[recent_filename] else "minimum"
 get_pth_path = comp(get_checkpoints_path,
                     append_pth)
 selected_pth_path = get_pth_path(step_selection)
 selected_json_path = get_checkpoints_path(append_extension(step_selection,
                                                            "json"))
 checkpoint = deep_merge(
-    torch.load(selected_pth_path, map_location="cpu"),
+    torch.load(selected_pth_path, map_location=cpu_name),
     parse_string(
         slurp(
             selected_json_path))) if path.exists(
