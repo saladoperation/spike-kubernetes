@@ -1051,7 +1051,11 @@
                               (partial client/post (get-origin lm-port))
                               get-evaluate-request))))
 
-     (def generate-lm-inference
-       (comp :text_with_ws
-             (partial apply min-key :negative-log-probability)))))
+     (def consolidate-text
+       (comp (partial str/join "")
+             (partial map :text_with_ws)))
 
+     (def generate-lm-inference
+       (comp consolidate-text
+             (partial map
+                      (partial apply min-key :negative-log-probability))))))
