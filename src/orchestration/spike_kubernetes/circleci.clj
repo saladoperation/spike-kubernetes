@@ -175,7 +175,7 @@
 (def build-orchestration
   #(m/>> (build-alteration)
          (run-dependencies)
-         (command/lein "run" helpers/prepare-name)
+         (command/lein "run" helpers/preparation-name)
          (build-clojurescript helpers/orchestration-name)
          (command/lein uberjar-name)))
 

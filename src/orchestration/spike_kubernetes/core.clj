@@ -6,13 +6,13 @@
             [spike-kubernetes.circleci :as circleci]
             [spike-kubernetes.helpers :as helpers]
             [spike-kubernetes.kubernetes :as kubernetes]
-            [spike-kubernetes.prepare :as prepare]))
+            [spike-kubernetes.preparation :as prepare]))
 
 (defn -main
   [command & more]
   (aid/case-eval
     command
-    helpers/prepare-name (prepare/prepare)
+    helpers/preparation-name (prepare/prepare)
     helpers/orchestration-name (do (require 'spike-kubernetes.orchestration)
                                    (mount/start))
     helpers/kubernetes-name (do (kubernetes/spit-kubernetes)

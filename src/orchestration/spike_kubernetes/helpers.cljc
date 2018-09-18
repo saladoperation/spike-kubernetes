@@ -1009,5 +1009,5 @@
      (def kubernetes-name
        "kubernetes")
 
-     (def prepare-name
-       "prepare")))
+     (def preparation-name
+       "preparation")))

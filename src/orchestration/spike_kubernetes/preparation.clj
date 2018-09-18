@@ -1,4 +1,4 @@
-(ns spike-kubernetes.prepare
+(ns spike-kubernetes.preparation
   (:require [clojure.math.combinatorics :as combo]
             [clojure.string :as str]
             [clojure.tools.reader.edn :as edn]
