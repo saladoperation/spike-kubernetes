@@ -161,7 +161,7 @@ selected_pth_path = get_pth_path(step_selection)
 selected_json_path = get_checkpoints_path(append_extension(step_selection,
                                                            "json"))
 checkpoint = deep_merge(
-    torch.load(selected_pth_path),
+    torch.load(selected_pth_path, map_location="cpu"),
     parse_string(
         slurp(
             selected_json_path))) if path.exists(
