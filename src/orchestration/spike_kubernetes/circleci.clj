@@ -105,7 +105,9 @@
 (def get-python-dockerfile
   #(get-dockerfile
      {:image    conda-image
-      :from-tos (get-from-tos #{python-name script-name})
+      :from-tos (get-from-tos #{(helpers/get-resources-path)
+                                python-name
+                                script-name})
       :run      (get-shell-script [["conda"
                                     "env"
                                     "create"
