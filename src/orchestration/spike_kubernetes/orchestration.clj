@@ -3,7 +3,8 @@
             [immutant.web :as web]
             [mount.core :as mount :refer [defstate]]
             [ring.middleware.resource :refer [wrap-resource]]
-            [ring.util.response :refer [response]]))
+            [ring.util.response :refer [response]]
+            [spike-kubernetes.helpers :as helpers]))
 
 (defn handler
   [request]
@@ -17,7 +18,11 @@
                        hiccup/html)
               (-> request
                   :body
-                  slurp))))
+                  slurp
+                  helpers/structure-evaluation-sentences
+                  helpers/get-evaluation-steps
+                  helpers/grade-lm
+                  helpers/generate-lm-inference))))
 
 (def start
   (partial web/run (wrap-resource handler "public") {:host "0.0.0.0"}))
