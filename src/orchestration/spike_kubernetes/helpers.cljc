@@ -363,26 +363,29 @@
      (def n-infimum
        1)
 
-     (def prepared-filename
-       "prepared.edn")
+     (def preparation-name
+       "preparation")
 
-     (utils/defmemoized get-prepared
+     (def preparation-filename
+       (str preparation-name ".edn"))
+
+     (utils/defmemoized get-preparation
                         []
-                        (-> prepared-filename
+                        (-> preparation-filename
                             get-resources-path
                             slurp
                             edn/read-string))
 
      (defn screen
        [sentence]
-       (->> (get-prepared)
+       (->> (get-preparation)
             :n-upperbound
             (range n-infimum)
             (mapcat #(->> sentence
                           (map :lemma_)
                           (partition % 1)))
             set
-            (mapcat (:confusions (get-prepared)))))
+            (mapcat (:confusions (get-preparation)))))
 
      (def many-any
        (parse/many parse/any))
@@ -432,16 +435,17 @@
 
      (def get-priority-tag
        #(command/if-then-else
-          (aid/build and
-                     (comp ambiguous-tag?
-                           :tag_)
-                     (aid/build =
-                                :lemma_
-                                (aid/build aid/funcall
-                                           (comp condense-tag
-                                                 :tag_)
-                                           (comp (:alternative (get-prepared))
-                                                 :lemma_))))
+          (aid/build
+            and
+            (comp ambiguous-tag?
+                  :tag_)
+            (aid/build =
+                       :lemma_
+                       (aid/build aid/funcall
+                                  (comp condense-tag
+                                        :tag_)
+                                  (comp (:alternative (get-preparation))
+                                        :lemma_))))
           (constantly verb-prefix)
           :tag_
           %))
@@ -506,7 +510,7 @@
 
      (aid/defcurried get-variant-source
                      [original replacement-source]
-                     (get ((:alternative (get-prepared)) replacement-source)
+                     (get ((:alternative (get-preparation)) replacement-source)
                           (-> original
                               :tag_
                               condense-tag)
@@ -1007,7 +1011,4 @@
                 %))
 
      (def kubernetes-name
-       "kubernetes")
-
-     (def preparation-name
-       "preparation")))
+       "kubernetes")))

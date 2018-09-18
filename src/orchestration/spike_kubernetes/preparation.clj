@@ -99,7 +99,7 @@
         :body))
 
 (def prepare
-  #(spit (helpers/get-resources-path helpers/prepared-filename)
+  #(spit (helpers/get-resources-path helpers/preparation-filename)
          {:n-upperbound (get-n-upperbound)
           :confusions   (get-confusions)
           :alternative  (get-alternative)}))
