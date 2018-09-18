@@ -1,11 +1,13 @@
 import funcy
 import itertools
+import os.path as path
 import torch
 from torch.nn import init
 import torch.nn as nn
 import torchtext.vocab as vocab
 from spike_kubernetes.clojure.core import *
 import spike_kubernetes.clojure.java.io as io
+import spike_kubernetes.clojure.string as str_
 import spike_kubernetes.aid as aid
 from spike_kubernetes.cheshire import *
 import spike_kubernetes.helpers as helpers
@@ -106,4 +108,60 @@ def get_model():
                                             pretrained.dim))))})}))))
 
 
+def _flip(f):
+    def g(x, *more):
+        def h(y, *more_):
+            return apply(f, y, x, more_)
+        return h if empty_(more) else apply(f, first(more), x, rest(more))
+    return g
+
+
+map_ = partial(_flip(isinstance), dict)
+true_ = partial(equal, True)
+every_ = comp(empty_,
+              partial(remove, true_),
+              map)
+
+
+def assoc(m, k, v):
+    return set_in(m, (k,), v)
+
+
+key = first
+val = second
+
+
+def merge_with(f, *maps):
+    def merge_entry(m, e):
+        return assoc(m,
+                     key(e),
+                     f(m[key(e)],
+                       val(e)) if contains_(m, key(e)) else val(e))
+    return reduce(partial(reduce, merge_entry), maps)
+
+
+def deep_merge_with(f, *more):
+    return merge_with(partial(deep_merge_with, f),
+                      *more) if every_(map_, more) else f(*more)
+
+
+deep_merge = partial(deep_merge_with, comp(last,
+                                           vector))
+get_checkpoints_path = partial(get_run_path, "checkpoints")
+append_extension = comp(partial(str_.join, "."),
+                        vector)
+append_pth = partial(aid.flip(append_extension), "pth")
+recent_filename = "recent"
+step_selection = recent_filename if selection["recent"] else "minimum"
+get_pth_path = comp(get_checkpoints_path,
+                    append_pth)
+selected_pth_path = get_pth_path(step_selection)
+selected_json_path = get_checkpoints_path(append_extension(step_selection,
+                                                           "json"))
+checkpoint = deep_merge(
+    torch.load(selected_pth_path),
+    parse_string(
+        slurp(
+            selected_json_path))) if path.exists(
+    selected_pth_path) else {"training": {}}
 index_ = helpers.make_index_({"get-stoi": constantly(stoi)})
