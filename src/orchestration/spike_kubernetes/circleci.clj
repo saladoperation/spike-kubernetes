@@ -130,7 +130,7 @@
 (def get-dockerfile-path
   (partial (aid/flip get-docker-path) "Dockerfile"))
 
-(defn get-build-command
+(defn get-build-arguments
   [s]
   ["build" "-f" (get-dockerfile-path s) "-t" (helpers/get-image s) "."])
 
@@ -215,7 +215,7 @@
               (map->> (comp (partial command/docker "push")
                             helpers/get-image)))))
 
-(def test-commands
+(def test-argument-collection
   [["test"] ["doo" node-name "test" "once"]])
 
 (defn run-circleci
@@ -228,18 +228,18 @@
                                         :circle-tag (install/install-word2vecf)
                                         (either/right ""))
                              (->> helpers/parse-name
-                                  get-build-command
+                                  get-build-arguments
                                   (apply command/docker))
                              (build-orchestration)
                              (build-alteration)
                              (map->> (partial apply
                                               command/lein)
-                                     test-commands)
+                                     test-argument-collection)
                              (->> helpers/image-name
                                   vals
                                   (map->> (comp (partial apply
                                                          command/docker)
-                                                get-build-command))))
+                                                get-build-arguments))))
                        #(aid/casep env
                                    :circle-tag (push)
                                    (m/pure %))))))
