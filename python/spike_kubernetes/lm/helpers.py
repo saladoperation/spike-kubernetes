@@ -2,8 +2,9 @@ import funcy
 import itertools
 import os.path as path
 import torch
-from torch.nn import init
 import torch.nn as nn
+import torch.nn.functional as F
+import torch.nn.init as init
 import torchtext.vocab as vocab
 from spike_kubernetes.clojure.core import *
 import spike_kubernetes.clojure.java.io as io
@@ -164,4 +165,86 @@ checkpoint = deep_merge(
         slurp(
             selected_json_path))) if path.exists(
     selected_pth_path) else {"training": {}}
+
+
+def transpose_batch(x):
+    return torch.transpose(x, 0, 1).contiguous()
+
+
+def make_get_batch_state(batch_size):
+    def get_batch_state(state):
+        return transpose_batch(state.expand(batch_size, *state.size()))
+    return get_batch_state
+
+
+def get_batch_states(m):
+    return tuple(map(make_get_batch_state(m["batch-size"]),
+                     m["model"][m["direction"]]["states"]))
+
+
+def flatten_batch(tensor):
+    return tensor.contiguous().view((-1, last(tensor.size())))
+
+
+def make_cat_tail(tail):
+    def cat_tail(x):
+        return torch.cat((x, tail), 0)
+    return cat_tail
+
+
+def make_adaptive_cross_entropy(m):
+    def adaptive_cross_entropy(cluster):
+        return move(
+            torch.zeros(
+                m["product"])) if empty_(
+            cluster["reference"]) else move(
+            torch.zeros(
+                m["product"])).index_copy_(
+            0,
+            cluster["index"],
+            F.cross_entropy(
+                F.linear(
+                    m["model"][m["direction"]]["linear"](
+                        m["hidden"])[cluster["mask"]],
+                    (make_cat_tail(
+                        m["model"]["parameter"]["tail"]) if
+                     zero_(
+                         cluster["infimum"]) else identity)(
+                        m["model"]["embedding"].weight.narrow(
+                            0,
+                            cluster["infimum"],
+                            cluster["length"]))),
+                cluster["reference"],
+                reduction="none"))
+    return adaptive_cross_entropy
+
+
+map_sum = comp(sum,
+               map)
+
+
+def forward_(m):
+    return map_sum(
+        make_adaptive_cross_entropy(
+            s.setval_(
+                "hidden",
+                flatten_batch(
+                    first(
+                        m["model"][m["direction"]]["lstm"](
+                            torch.cat(
+                                (m["model"]["embedding"](
+                                    m[m["direction"]]["source"]),
+                                 m[m["direction"]]["text"]),
+                                -1),
+                            get_batch_states(m)))),
+                m)),
+        m[m["direction"]]["clusters"])
+
+
+def forward(m):
+    return map_sum(comp(forward_,
+                        partial(assoc, m, "direction")),
+                   ("forth", "back"))
+
+
 index_ = helpers.make_index_({"get-stoi": constantly(stoi)})
