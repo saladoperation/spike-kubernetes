@@ -5,6 +5,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.nn.init as init
+import torch.optim as optim
 import torchtext.vocab as vocab
 from spike_kubernetes.clojure.core import *
 import spike_kubernetes.clojure.java.io as io
@@ -247,4 +248,85 @@ def forward(m):
                    ("forth", "back"))
 
 
-index_ = helpers.make_index_({"get-stoi": constantly(stoi)})
+def dorun(coll):
+    for _ in coll:
+        pass
+
+
+run_ = comp(dorun,
+            map)
+
+
+def make_set_lr_(lr):
+    def set_lr__(param_group):
+        param_group["lr"] = lr
+    return set_lr__
+
+
+def set_lr_(optimizer, lr):
+    run_(make_set_lr_(lr), optimizer.param_groups)
+
+
+set_lr = aid.curry(2, set_lr_)
+
+
+def load_state(state, entity):
+    entity.load_state_dict(state)
+
+
+load_states = partial(merge_with, load_state, checkpoint["training"])
+get_optimizer = comp(optim.Adam,
+                     partial(filter,
+                             partial(aid.flip(getattr), "requires_grad")),
+                     aid.funcall,
+                     partial(aid.flip(getattr), "parameters"))
+progress = merge(checkpoint,
+                 effect(partial(s.transform_,
+                                "optimizer",
+                                aid.flip(set_lr)(tuned["lr"])),
+                        effect(load_states,
+                               zipmap(("model",
+                                       "optimizer"),
+                                      juxt(identity,
+                                           get_optimizer)(get_model())))))
+convert_list = partial(
+    s.transform_,
+    s.multi_path("forth", "back"),
+    comp(partial(s.transform_,
+                 "text",
+                 comp(torch.cat,
+                      tuple,
+                      partial(map,
+                              comp(partial(aid.flip(torch.unsqueeze),
+                                           0),
+                                   torch.cat,
+                                   tuple,
+                                   partial(map,
+                                           get_character_vector))))),
+         partial(s.transform_,
+                 ("clusters", s.ALL, "mask"),
+                 make_attribute_call("byte")),
+         partial(s.transform_,
+                 s.multi_path("source",
+                              ("clusters",
+                               s.ALL,
+                               s.multi_path("index",
+                                            "mask",
+                                            "reference"))),
+                 comp(move,
+                      torch.tensor))))
+
+
+def convert_tensor_(x):
+    return x.tolist() if isinstance(x, torch.Tensor) else x
+
+
+evaluate = comp(tuple,
+                partial(map,
+                        comp(convert_tensor_,
+                             forward,
+                             partial(merge, progress),
+                             convert_list)))
+
+index_ = helpers.make_index_({"get-stoi": constantly(stoi),
+                              "evaluate": evaluate})

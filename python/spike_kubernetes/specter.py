@@ -1,4 +1,5 @@
 from spike_kubernetes.clojure.core import *
+import spike_kubernetes.aid as aid
 
 
 class RichNavigator:
@@ -41,3 +42,17 @@ MAP_VALS = RichNavigator(comp(tuple,
                               vals,
                               first),
                          walk_values)
+ALL = RichNavigator(first, walk)
+
+
+def multi_path(*paths):
+    def transform_continuation_(continuation, structure):
+        def transform__(structure_, path):
+            return transform_(path, continuation, structure_)
+        return reduce(transform__, structure, reverse(paths))
+    return RichNavigator(partial(comp(tuple,
+                                      mapcat),
+                                 juxt(*map(aid.curry(2,
+                                                     aid.flip(get)),
+                                           paths))),
+                         transform_continuation_)
