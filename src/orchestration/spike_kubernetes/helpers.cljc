@@ -955,13 +955,13 @@
                       :mask      (get-mask reference infimum upperbound)
                       :reference (->>
                                    reference
-                                   ((aid/case-eval infimum
-                                                   unk-index (partial map
-                                                                      cut-off)
-                                                   (partial
-                                                     filter
-                                                     (make-within infimum
-                                                                  upperbound))))
+                                   ((aid/case-eval
+                                      infimum
+                                      unk-index (partial map
+                                                         cut-off)
+                                      (partial filter
+                                               (make-within infimum
+                                                            upperbound))))
                                    (map (partial (aid/flip -) infimum)))})
 
      (def get-clusters
