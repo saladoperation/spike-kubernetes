@@ -1,8 +1,8 @@
 (ns spike-kubernetes.core
   (:gen-class)
   (:require [aid.core :as aid]
-            [mount.core :as mount]
             [cats.monad.either :as either]
+            [mount.core :as mount]
             [spike-kubernetes.circleci :as circleci]
             [spike-kubernetes.helpers :as helpers]
             [spike-kubernetes.kubernetes :as kubernetes]
