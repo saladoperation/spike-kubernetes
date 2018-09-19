@@ -1,5 +1,6 @@
 (ns spike-kubernetes.circleci
-  (:require [clojure.string :as str]
+  (:require [clojure.java.shell :as sh]
+            [clojure.string :as str]
             [aid.core :as aid]
             [cats.core :as m]
             [cats.monad.either :as either]
@@ -11,8 +12,7 @@
             [spike-kubernetes.command :as command]
             [spike-kubernetes.helpers :as helpers]
             [spike-kubernetes.install :as install]
-            [spike-kubernetes.kubernetes :as kubernetes]
-            [clojure.java.shell :as sh]))
+            [spike-kubernetes.kubernetes :as kubernetes]))
 
 (def jar-name
   "main.jar")
