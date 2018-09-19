@@ -122,3 +122,4 @@ resources/docker
 resources/*/selection.json
 resources/*/runs
 resources/preparation.edn
+kubernetes.txt
