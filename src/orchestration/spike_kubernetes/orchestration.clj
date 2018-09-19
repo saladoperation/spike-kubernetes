@@ -8,13 +8,12 @@
 
 (def handler
   #(response (case (:request-method %)
-               :get (-> [:html {:lang "en"}
-                         [:head
-                          [:meta {:charset "UTF-8"}]]
-                         [:body
-                          [:div {:id "app"}]
-                          [:script {:src "js/main.js"}]]]
-                        hiccup/html)
+               :get (hiccup/html [:html {:lang "en"}
+                                  [:head
+                                   [:meta {:charset "UTF-8"}]]
+                                  [:body
+                                   [:div {:id "app"}]
+                                   [:script {:src "js/main.js"}]]])
                (-> %
                    :body
                    slurp
