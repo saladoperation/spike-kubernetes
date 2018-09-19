@@ -6,23 +6,22 @@
             [ring.util.response :refer [response]]
             [spike-kubernetes.helpers :as helpers]))
 
-(defn handler
-  [request]
-  (response (case (:request-method request)
-              :get (-> [:html {:lang "en"}
-                        [:head
-                         [:meta {:charset "UTF-8"}]]
-                        [:body
-                         [:div {:id "app"}]
-                         [:script {:src "js/main.js"}]]]
-                       hiccup/html)
-              (-> request
-                  :body
-                  slurp
-                  helpers/structure-evaluation-sentences
-                  helpers/get-evaluation-steps
-                  helpers/grade-lm
-                  helpers/generate-lm-inference))))
+(def handler
+  #(response (case (:request-method %)
+               :get (-> [:html {:lang "en"}
+                         [:head
+                          [:meta {:charset "UTF-8"}]]
+                         [:body
+                          [:div {:id "app"}]
+                          [:script {:src "js/main.js"}]]]
+                        hiccup/html)
+               (-> %
+                   :body
+                   slurp
+                   helpers/structure-evaluation-sentences
+                   helpers/get-evaluation-steps
+                   helpers/grade-lm
+                   helpers/generate-lm-inference))))
 
 (def start
   (partial web/run (wrap-resource handler "public") {:host "0.0.0.0"}))
