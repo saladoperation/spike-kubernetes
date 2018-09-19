@@ -14,9 +14,6 @@
             [spike-kubernetes.install :as install]
             [spike-kubernetes.kubernetes :as kubernetes]))
 
-(def jar-name
-  "main.jar")
-
 (def generate-dockerfile
   (comp command/join-newline
         (partial map command/join-whitespace)
@@ -44,24 +41,27 @@
 (def uberjar-name
   "uberjar")
 
+(def jar-path
+  (get-target-path uberjar-name "main.jar"))
+
 (def java-image
   (str
     java-name
     ":8u111-jdk@sha256:c1ff613e8ba25833d2e1940da0940c3824f03f802c449f3d1815a66b7f8c0e9d"))
 
-(def orchestration-dockerfile
-  (get-dockerfile {:image    java-image
-                   :from-tos #{[(get-target-path uberjar-name jar-name)
-                                (get-code-path jar-name)]}
-                   :port     helpers/orchestration-port
-                   :cmd      [java-name
-                              "-jar"
-                              jar-name
-                              helpers/orchestration-name]}))
-
 (def get-from-tos
   (partial map (comp (partial s/transform* s/LAST get-code-path)
                      (partial repeat 2))))
+
+(def orchestration-dockerfile
+  (get-dockerfile {:image    java-image
+                   :from-tos (get-from-tos #{jar-path
+                                             (helpers/get-resources-path)})
+                   :port     helpers/orchestration-port
+                   :cmd      [java-name
+                              "-jar"
+                              jar-path
+                              helpers/orchestration-name]}))
 
 (def node-modules-name
   "node_modules")
@@ -81,7 +81,7 @@
   (get-prod-path "main.js"))
 
 (def alteration-cmd
-  [node-name (get-prod-path "main.js")])
+  [node-name main-path])
 
 (def alteration-dockerfile
   (get-dockerfile {:image    node-image
