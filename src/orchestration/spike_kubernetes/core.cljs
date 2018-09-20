@@ -2,7 +2,8 @@
   (:require [ajax.core :refer [POST]]
             [com.rpl.specter :as s]
             [reagent.core :as r]
-            [reagent-forms.core :refer [bind-fields]]))
+            [reagent-forms.core :refer [bind-fields]]
+            [spike-kubernetes.helpers :as helpers]))
 
 (def doc
   (r/atom {:source    ""
@@ -25,6 +26,6 @@
                                    :body    (:source @doc)})}]
    [:p (:reference @doc)]])
 
-(->> "app"
+(->> helpers/app-name
      js/document.getElementById
      (r/render [app]))

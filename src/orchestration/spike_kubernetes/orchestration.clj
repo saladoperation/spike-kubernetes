@@ -14,7 +14,7 @@
                [:head
                 [:meta {:charset "UTF-8"}]]
                [:body
-                [:div {:id "app"}]
+                [:div {:id helpers/app-name}]
                 [:script {:src (helpers/get-path "js"
                                                  helpers/main-file)}]]])
        (-> %

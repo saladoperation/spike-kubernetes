@@ -20,6 +20,9 @@
 (def alteration-port
   3000)
 
+(def app-name
+  "app")
+
 #?(:clj
    (do
      (def orchestration-name
