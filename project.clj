@@ -43,7 +43,7 @@
                     :compiler     {:output-to     "resources/public/js/main.js"
                                    :optimizations :advanced
                                    :main          spike_kubernetes.core}}
-    :alteration    {:source-paths ["src/orchestration" "src/alteration"]
+    :alteration    {:source-paths ["src/alteration"]
                     :compiler     {:output-to  "target/prod/main.js"
                                    ;deleting :output-dir and setting :optimizations :advanced gives the following error.
                                    ;Error: Cannot find module 'react'
