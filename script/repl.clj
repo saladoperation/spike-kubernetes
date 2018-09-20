@@ -18,16 +18,14 @@
 (def get-public-js
   (partial helpers/get-path "dev-resources/public" js-directory))
 
-(def entry-point
-  "main.js")
-
 (def compiler*
-  ({helpers/orchestration-name {:output-to  (get-public-js entry-point)
+  ({helpers/orchestration-name {:output-to  (get-public-js helpers/main-file)
                                 :output-dir (get-public-js output-directory)
                                 :asset-path (helpers/get-path js-directory
                                                               output-directory)}
-    helpers/alteration-name    {:output-to (helpers/get-path "target/dev"
-                                                             entry-point)
+    helpers/alteration-name    {:output-to (helpers/get-path "target"
+                                                             "dev"
+                                                             helpers/main-file)
                                 :target    :nodejs
                                 :npm-deps  {:en-inflectors "1.0.12"}}}
     ;Not using lein npm install gives the following error.
