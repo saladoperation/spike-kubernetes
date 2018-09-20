@@ -7,6 +7,7 @@ dependencies:
   - certifi=2018.8.24=py37_1
   - click=6.7=py37_0
   - flask=1.0.2=py37_1
+  - gunicorn=19.9.0=py37_0
   - itsdangerous=0.24=py37_1
   - jinja2=2.10=py37_0
   - markupsafe=1.0=py37h14c3975_1
