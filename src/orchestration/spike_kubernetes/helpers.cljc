@@ -923,13 +923,39 @@
                                  (make-within infimum upperbound))
                            reference)))
 
-     (def get-index-upperbounds
-       #(->> (get-lm-tuned)
-             :cutoffs
-             (s/setval s/AFTER-ELEM (-> lm-port
-                                        get-stoi
-                                        keys
-                                        count))))
+     (utils/defmemoized get-index-upperbounds
+                        []
+                        (->> (get-lm-tuned)
+                             :cutoffs
+                             (s/setval s/AFTER-ELEM (-> lm-port
+                                                        get-stoi
+                                                        keys
+                                                        count))))
+     ;get-evaluation-steps seems faster with memoization than without it.
+     ;(-> "I opened it."
+     ;    structure-evaluation-sentences
+     ;    get-evaluation-steps
+     ;    generate-string
+     ;    count
+     ;    time)
+     ;"Elapsed time: 2503.398474 msecs"
+     ;=> 7922
+     ;(def get-index-upperbounds
+     ;  #(->> (get-lm-tuned)
+     ;        :cutoffs
+     ;        (s/setval s/AFTER-ELEM (-> lm-port
+     ;                                   get-stoi
+     ;                                   keys
+     ;                                   count))))
+     ;
+     ;(-> "I opened it."
+     ;    structure-evaluation-sentences
+     ;    get-evaluation-steps
+     ;    generate-string
+     ;    count
+     ;    time)
+     ;"Elapsed time: 13249.900044 msecs"
+     ;=> 7922
 
      (def get-head-upperbound
        #(first (get-index-upperbounds)))
