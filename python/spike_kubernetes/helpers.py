@@ -1,5 +1,8 @@
 from flask import jsonify, request
+import torch
 from spike_kubernetes.clojure.core import *
+
+torch.manual_seed(0)
 
 
 def make_index_(m):
