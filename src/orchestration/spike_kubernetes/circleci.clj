@@ -63,9 +63,6 @@
                               jar-path
                               helpers/orchestration-name]}))
 
-(def node-modules-name
-  "node_modules")
-
 (def get-prod-path
   (partial get-target-path "prod"))
 
@@ -85,7 +82,7 @@
 
 (def alteration-dockerfile
   (get-dockerfile {:image    node-image
-                   :from-tos (get-from-tos #{(get-prod-path) node-modules-name})
+                   :from-tos (get-from-tos #{(get-prod-path) "node_modules"})
                    :port     helpers/alteration-port
                    :cmd      alteration-cmd}))
 
