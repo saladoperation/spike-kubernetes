@@ -1064,4 +1064,7 @@
                       (partial apply min-key :negative-log-probability))))
 
      (def main-file
-       "main.js")))
+       "main.js")
+
+     (def js-directory
+       "js")))
