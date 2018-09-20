@@ -7,20 +7,23 @@
             [spike-kubernetes.helpers :as helpers]))
 
 (def handler
-  #(response (case (:request-method %)
-               :get (hiccup/html [:html {:lang "en"}
-                                  [:head
-                                   [:meta {:charset "UTF-8"}]]
-                                  [:body
-                                   [:div {:id "app"}]
-                                   [:script {:src "js/main.js"}]]])
-               (-> %
-                   :body
-                   slurp
-                   helpers/structure-evaluation-sentences
-                   helpers/get-evaluation-steps
-                   helpers/grade-lm
-                   helpers/generate-lm-inference))))
+  #(response
+     (case (:request-method %)
+       :get (hiccup/html
+              [:html {:lang "en"}
+               [:head
+                [:meta {:charset "UTF-8"}]]
+               [:body
+                [:div {:id "app"}]
+                [:script {:src (helpers/get-path "js"
+                                                 helpers/main-file)}]]])
+       (-> %
+           :body
+           slurp
+           helpers/structure-evaluation-sentences
+           helpers/get-evaluation-steps
+           helpers/grade-lm
+           helpers/generate-lm-inference))))
 
 (def start
   (partial web/run (wrap-resource handler "public") {:host "0.0.0.0"}))

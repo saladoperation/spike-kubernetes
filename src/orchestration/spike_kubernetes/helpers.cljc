@@ -1058,4 +1058,7 @@
      (def generate-lm-inference
        (comp consolidate-text
              (partial map
-                      (partial apply min-key :negative-log-probability))))))
+                      (partial apply min-key :negative-log-probability))))
+
+     (def main-file
+       "main.js")))
