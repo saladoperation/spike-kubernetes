@@ -53,7 +53,7 @@
                                    ;Not using lein npm install gives the following error.
                                    ;Error: Cannot find module 'cookies'
                                    :npm-deps   {:en-inflectors "1.0.12"}}}
-    :test          {:source-paths ["src/orchestration" "src/alteration" "test"]
+    :test          {:source-paths ["src/alteration" "test"]
                     :compiler     {:output-to  "target/test/main.js"
                                    :output-dir "target/test/out"
                                    :main       spike_kubernetes.test.core
