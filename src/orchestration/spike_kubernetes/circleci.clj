@@ -110,7 +110,8 @@
                                     "create"
                                     "-f"
                                     (helpers/get-path python-name
-                                                      "environments/cpu.yml")]
+                                                      "environments"
+                                                      "cpu.yml")]
                                    ["source" "activate" "spike-kubernetes"]
                                    [python-name "-m" "spacy" "download" "en"]])
       :port     %
