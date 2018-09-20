@@ -1,6 +1,7 @@
 name: spike-kubernetes
 channels:
   - anaconda
+  - pytorch
   - conda-forge
   - defaults
 dependencies:
@@ -13,7 +14,6 @@ dependencies:
   - werkzeug=0.14.1=py37_0
   - asn1crypto=0.24.0=py37_3
   - ca-certificates=2018.8.24=ha4d7672_0
-  - certifi=2018.4.16=py37_0
   - cffi=1.11.5=py37h5e8e0c9_1
   - chardet=3.0.4=py37_3
   - cryptography=2.3=py37hdffb7b8_0
@@ -34,6 +34,8 @@ dependencies:
   - tqdm=4.26.0=py_0
   - urllib3=1.23=py37_1
   - blas=1.0=mkl
+  - certifi=2018.8.24=py37_1
+  - cudatoolkit=8.0=3
   - cymem=1.31.2=py37h6bb024c_0
   - cytoolz=0.9.0.1=py37h14c3975_1
   - dill=0.2.8.2=py37_0
@@ -48,6 +50,7 @@ dependencies:
   - msgpack-python=0.5.6=py37h6bb024c_1
   - murmurhash=0.28.0=py37hf484d3e_0
   - ncurses=6.1=hf484d3e_0
+  - ninja=1.8.2=py37h6bb024c_1
   - numpy=1.15.1=py37h1d66e8a_0
   - numpy-base=1.15.1=py37h81de0dd_0
   - pip=10.0.1=py37_0
@@ -64,6 +67,9 @@ dependencies:
   - wrapt=1.10.11=py37h14c3975_2
   - xz=5.2.4=h14c3975_4
   - zlib=1.2.11=ha838bed_2
+  - cuda80=1.0=h205658b_0
+  - pytorch=0.4.1=py37_cuda8.0.61_cudnn7.1.2_1
   - pip:
     - msgpack==0.5.6
+    - torch==0.4.1
 
