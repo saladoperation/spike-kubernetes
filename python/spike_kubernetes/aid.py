@@ -38,4 +38,4 @@ def curry(x, *outer_more):
                                                        count(middle_more)),
                                                  call_inner)
     return curry(get_currying_arity(x),
-                 x) if zero_(count(outer_more)) else call_middle
+                 x) if empty_(outer_more) else call_middle
