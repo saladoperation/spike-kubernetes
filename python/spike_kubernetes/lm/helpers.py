@@ -327,6 +327,5 @@ evaluate = comp(tuple,
                              forward,
                              partial(merge, progress),
                              convert_list)))
-
 index_ = helpers.make_index_({"get-stoi": constantly(stoi),
                               "evaluate": evaluate})
