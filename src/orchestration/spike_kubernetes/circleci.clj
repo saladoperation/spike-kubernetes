@@ -117,7 +117,7 @@
       :port     %
       :cmd      [(helpers/get-path script-name
                                    python-name
-                                   (helpers/image-names %)
+                                   (helpers/python-name %)
                                    "prod.sh")]}))
 
 ;docker doesn't seem to support symlinks for -f
