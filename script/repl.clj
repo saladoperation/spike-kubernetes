@@ -16,7 +16,7 @@
   "out")
 
 (def get-public-js
-  (partial helpers/join-paths "dev-resources/public" js-directory))
+  (partial helpers/get-path "dev-resources/public" js-directory))
 
 (def entry-point
   "main.js")
@@ -24,11 +24,10 @@
 (def compiler*
   ({helpers/orchestration-name {:output-to  (get-public-js entry-point)
                                 :output-dir (get-public-js output-directory)
-                                :asset-path (helpers/join-paths
-                                              js-directory
-                                              output-directory)}
-    helpers/alteration-name    {:output-to (helpers/join-paths "target/dev"
-                                                               entry-point)
+                                :asset-path (helpers/get-path js-directory
+                                                              output-directory)}
+    helpers/alteration-name    {:output-to (helpers/get-path "target/dev"
+                                                             entry-point)
                                 :target    :nodejs
                                 :npm-deps  {:en-inflectors "1.0.12"}}}
     ;Not using lein npm install gives the following error.
@@ -43,7 +42,7 @@
    ;  No such namespace: fs, could not locate fs.cljs, fs.cljc, or JavaScript source providing "fs"
    ;
    ;----  Analysis Error : Please see dev-resources/public/js/out/macchiato/fs.cljs  ----
-   :source-paths [(helpers/join-paths "src" id)]
+   :source-paths [(helpers/get-path "src" id)]
    :compiler     (helpers/deep-merge
                    {:main                 "spike_kubernetes.core"
                     :source-map-timestamp true
