@@ -117,7 +117,7 @@
       :port     %
       :cmd      [(helpers/get-path script-name
                                    python-name
-                                   (helpers/image-name %)
+                                   (helpers/image-names %)
                                    "prod.sh")]}))
 
 ;docker doesn't seem to support symlinks for -f
@@ -211,10 +211,9 @@
   #(m/>> (->> env
               :docker-password
               (command/docker "login" "-u" helpers/username "-p"))
-         (->> helpers/image-name
-              vals
-              (map->> (comp (partial command/docker "push")
-                            helpers/get-image)))))
+         (map->> (comp (partial command/docker "push")
+                       helpers/get-image)
+                 helpers/image-names)))
 
 (def test-argument-collection
   [["test"] ["doo" node-name "test" "once"]])
@@ -257,11 +256,10 @@
                    (map->> (partial apply
                                     command/lein)
                            test-argument-collection)
-                   (->> helpers/image-name
-                        vals
-                        (map->> (comp (partial apply
-                                               command/docker)
-                                      get-build-arguments))))
+                   (map->> (comp (partial apply
+                                          command/docker)
+                                 get-build-arguments)
+                           helpers/image-names))
              #(aid/casep env
                          :circle-tag (push)
                          (m/pure %))))))

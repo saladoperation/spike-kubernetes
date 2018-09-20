@@ -18,9 +18,8 @@
    :kind       "Deployment"
    :spec       {:selector {:matchLabels label}
                 :template {:metadata {:labels label}
-                           :spec     {:containers (->> helpers/image-name
-                                                       vals
-                                                       (map get-container))}}}})
+                           :spec     {:containers (map get-container
+                                                       helpers/image-names)}}}})
 
 (def service
   {:apiVersion "v1"

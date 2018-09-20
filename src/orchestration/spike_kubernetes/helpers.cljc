@@ -96,10 +96,12 @@
      (def python-name
        (s/setval parse-port parse-name model-name))
 
-     (def image-name
-       (merge {orchestration-port orchestration-name
-               alteration-port    alteration-name}
-              python-name))
+     (def image-names
+       (->> python-name
+            vals
+            set
+            (set/union #{orchestration-name
+                         alteration-name})))
 
      (def get-origin
        (partial str "http://localhost:"))
