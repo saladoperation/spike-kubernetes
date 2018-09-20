@@ -1,8 +1,8 @@
 name: spike-kubernetes
 channels:
-  - anaconda
   - pytorch
   - conda-forge
+  - anaconda
   - defaults
 dependencies:
   - click=6.7=py37_0
@@ -73,4 +73,5 @@ dependencies:
     - funcy==1.10.3
     - msgpack==0.5.6
     - torch==0.4.1
+    - torchtext==0.2.3
 
