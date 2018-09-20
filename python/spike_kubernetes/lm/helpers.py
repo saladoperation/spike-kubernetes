@@ -50,8 +50,7 @@ def make_attribute_call(s_):
 
 get_states = comp(nn.ParameterList,
                   partial(map, nn.Parameter))
-cpu_name = "cpu"
-device = torch.device("cuda:0" if torch.cuda.is_available() else cpu_name)
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 move = partial(aid.flip(make_attribute_call("to")), device)
 get_character_vector = comp(move,
                             partial(get, vocab.CharNGram()))
