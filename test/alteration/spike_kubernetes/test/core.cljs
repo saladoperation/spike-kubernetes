@@ -2,12 +2,12 @@
   (:require [cljs.test :as test]
             [aid.core :as aid]
             [doo.runner :refer-macros [doo-all-tests]]
-            [spike-kubernetes.core :as clojurescript]))
+            [spike-kubernetes.core :as core]))
 
 (aid/defcurried test-alternative
                 [tags lemma alternative]
                 (-> lemma
-                    clojurescript/get-lm-alternative
+                    core/get-lm-alternative
                     vals
                     first
                     (select-keys tags)
@@ -15,7 +15,7 @@
                     test/is))
 
 (def test-verb-alternative
-  (test-alternative clojurescript/verb-tags))
+  (test-alternative core/verb-tags))
 
 (test/deftest do
   (test-verb-alternative "do" {:vbd "did"
@@ -30,7 +30,7 @@
                                :vbp "are"}))
 
 (test/deftest much
-  (test-alternative clojurescript/atives "much" {:comparative "more"
+  (test-alternative core/atives "much" {:comparative          "more"
                                                  :superlative "most"}))
 
 (doo-all-tests #"spike-kubernetes\.+")
