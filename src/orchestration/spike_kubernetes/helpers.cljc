@@ -1,6 +1,7 @@
 (ns spike-kubernetes.helpers
   #?(:clj
-     (:require [clojure.set :as set]
+     (:require [clojure.java.io :as io]
+               [clojure.set :as set]
                [clojure.string :as str]
                [clojure.tools.reader.edn :as edn]
                [aid.core :as aid]
@@ -1093,4 +1094,13 @@
        "main.js")
 
      (def js-directory
-       "js")))
+       "js")
+
+     (def get-hyperparameter
+       (comp edn/read-string
+             slurp
+             io/resource
+             (partial (aid/flip get-path) "hyperparameter.edn")))
+
+     (def document-hyperparameter
+       (get-hyperparameter "document"))))
