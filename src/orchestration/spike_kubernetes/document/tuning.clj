@@ -11,6 +11,9 @@
 (def get-timestamp
   (partial f/unparse (f/formatters :basic-date-time-no-ms)))
 
+(def get-selection
+  (partial array-map :recent true :run))
+
 (defn tune
   []
   (aid/mlet [commit (command/git "rev-parse" "HEAD")]
@@ -29,5 +32,5 @@
                        dorun)
                  (comp (partial spit helpers/document-selection-path)
                        generate-string
-                       (partial array-map :recent true :run))))
+                       get-selection)))
               either/right)))
