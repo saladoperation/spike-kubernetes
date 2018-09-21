@@ -1116,4 +1116,9 @@
        (partial get-resources-path
                 document-name
                 "datasets"
-                (:dataset hyperparameter)))))
+                (:dataset hyperparameter)))
+
+     (def structure-document
+       ;TODO implement this function
+       (comp arrange-tokens
+             parse-remotely))))
