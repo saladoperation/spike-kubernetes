@@ -6,7 +6,8 @@
             [com.rpl.specter :as s]
             [me.raynes.fs :as fs]
             [spike-kubernetes.command :as command]
-            [spike-kubernetes.helpers :as helpers]))
+            [spike-kubernetes.helpers :as helpers]
+            [spike-kubernetes.random :as random]))
 
 (def test-ids
   #{19961})
@@ -55,10 +56,12 @@
   (->> "extracted"
        helpers/get-dataset-path
        helpers/get-files
+       random/shuffle
        (mapcat (comp (partial map (comp (partial s/transform*
                                                  :text
                                                  helpers/structure-document)
                                         helpers/parse-keywordize))
+                     random/shuffle
                      str/split-lines
                      slurp))
        ((apply juxt
@@ -68,8 +71,10 @@
                                                         "training")
                                                (partial (aid/flip str)
                                                         ".txt")
-                                               :id)
-                                         :text))
+                                               first)
+                                         last))
+                     (partial map-indexed vector)
+                     (partial map :text)
                      (partial remove (comp evaluation-ids
                                            edn/read-string
                                            :id)))
