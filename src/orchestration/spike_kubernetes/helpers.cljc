@@ -863,12 +863,18 @@
      (def parse-keywordize
        (partial (aid/flip parse-string) true))
 
+     (def get-run
+       (comp :run
+             parse-keywordize
+             slurp))
+
      (utils/defmemoized get-lm-run
                         []
-                        (-> lm-selection-path
-                            slurp
-                            parse-keywordize
-                            :run))
+                        (get-run lm-selection-path))
+
+     (utils/defmemoized get-document-run
+                        []
+                        (get-run document-selection-path))
 
      (defn get-runs-path
        [model & more]
@@ -880,11 +886,21 @@
                           (str "tuned.")
                           (get-runs-path model timestamp)))
 
+     (def slurp-read-string
+       (comp read-string
+             slurp))
+
      (utils/defmemoized get-lm-tuned
                         []
-                        (->> (get-tuned-path lm-name (get-lm-run) "edn")
-                             slurp
-                             edn/read-string))
+                        (slurp-read-string (get-tuned-path lm-name
+                                                           (get-lm-run)
+                                                           "edn")))
+
+     (utils/defmemoized get-document-tuned
+                        []
+                        (slurp-read-string (get-tuned-path document-name
+                                                           (get-document-run)
+                                                           "edn")))
 
      (def stoi-request
        {:body         (generate-string {:action :get-stoi})
