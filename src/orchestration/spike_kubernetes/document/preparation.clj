@@ -53,29 +53,35 @@
 (defn organize
   []
   (fs/delete-dir (get-organized-path))
-  (->> "extracted"
-       helpers/get-dataset-path
-       helpers/get-files
-       random/shuffle
-       (mapcat (comp (partial map (comp (partial s/transform*
-                                                 :text
-                                                 helpers/structure-document)
-                                        helpers/parse-keywordize))
-                     random/shuffle
-                     str/split-lines
-                     slurp))
-       ((apply juxt
-               (comp (partial run!
-                              (aid/build spit-edn-lines+
-                                         (comp (partial get-organized-path
-                                                        "training")
-                                               (partial (aid/flip str)
-                                                        ".txt")
-                                               first)
-                                         last))
-                     (partial map-indexed vector)
-                     (partial map :text)
-                     (partial remove (comp evaluation-ids
-                                           edn/read-string
-                                           :id)))
-               (map make-spit-evaluation [test-name validation-name])))))
+  (->>
+    "extracted"
+    helpers/get-dataset-path
+    helpers/get-files
+    random/shuffle
+    (mapcat (comp (partial map (comp (partial s/transform*
+                                              :text
+                                              helpers/structure-document)
+                                     helpers/parse-keywordize))
+                  random/shuffle
+                  str/split-lines
+                  slurp))
+    ((apply juxt
+            (comp (juxt (partial run!
+                                 (aid/build spit-edn-lines+
+                                            (comp (partial get-organized-path
+                                                           "training")
+                                                  (partial (aid/flip str)
+                                                           ".txt")
+                                                  first)
+                                            last))
+                        (comp (partial spit (get-organized-path "length.edn"))
+                              (partial apply hash-map)
+                              (partial mapcat (juxt first
+                                                    (comp count
+                                                          last)))))
+                  (partial map-indexed vector)
+                  (partial map :text)
+                  (partial remove (comp evaluation-ids
+                                        edn/read-string
+                                        :id)))
+            (map make-spit-evaluation [test-name validation-name])))))
