@@ -89,9 +89,12 @@
      (def lm-name
        "lm")
 
+     (def document-name
+       "document")
+
      (def model-name
        {lm-port lm-name
-        8002    "document"})
+        8002    document-name})
 
      (def python-name
        (s/setval parse-port parse-name model-name))
@@ -1103,8 +1106,14 @@
              io/resource
              (partial (aid/flip get-path) "hyperparameter.edn")))
 
-     (def document-hyperparameter
-       (get-hyperparameter "document"))
+     (def hyperparameter
+       (get-hyperparameter document-name))
 
      (def get-files
-       (partial (aid/flip fs/find-files*) fs/file?))))
+       (partial (aid/flip fs/find-files*) fs/file?))
+
+     (def get-dataset-path
+       (partial get-resources-path
+                document-name
+                "datasets"
+                (:dataset hyperparameter)))))
