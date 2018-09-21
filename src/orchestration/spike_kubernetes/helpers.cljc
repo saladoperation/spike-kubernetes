@@ -858,6 +858,9 @@
      (def lm-selection-path
        (get-selection-path lm-name))
 
+     (def document-selection-path
+       (get-selection-path document-name))
+
      (def parse-keywordize
        (partial (aid/flip parse-string) true))
 
@@ -873,15 +876,14 @@
        (apply get-resources-path model "runs" more))
 
      (aid/defcurried get-tuned-path
-                     [model extension timestamp]
+                     [model timestamp extension]
                      (->> extension
                           (str "tuned.")
                           (get-runs-path model timestamp)))
 
      (utils/defmemoized get-lm-tuned
                         []
-                        (->> (get-lm-run)
-                             (get-tuned-path lm-name "edn")
+                        (->> (get-tuned-path lm-name (get-lm-run) "edn")
                              slurp
                              edn/read-string))
 
@@ -1121,4 +1123,14 @@
      (def structure-document
        ;TODO implement this function
        (comp arrange-tokens
-             parse-remotely))))
+             parse-remotely))
+
+     (def make-+
+       #(comp (juxt (comp fs/mkdirs
+                          fs/parent
+                          first)
+                    (partial apply %))
+              vector))
+
+     (def spit+
+       (make-+ spit))))

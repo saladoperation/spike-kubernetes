@@ -46,15 +46,8 @@
        command/join-newline
        (spit f)))
 
-(def make-+
-  #(comp (juxt (comp fs/mkdirs
-                     fs/parent
-                     first)
-               (partial apply %))
-         vector))
-
 (def spit-edn-lines+
-  (make-+ spit-edn-lines))
+  (helpers/make-+ spit-edn-lines))
 
 (defn organize
   []
