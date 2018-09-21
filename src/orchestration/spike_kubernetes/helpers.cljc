@@ -13,6 +13,7 @@
                [compliment.utils :as utils]
                [environ.core :refer [env]]
                [incanter.core :as incanter]
+               [me.raynes.fs :as fs]
                [spike-kubernetes.command :as command]
                [spike-kubernetes.parse.core :as parse])))
 
@@ -1103,4 +1104,7 @@
              (partial (aid/flip get-path) "hyperparameter.edn")))
 
      (def document-hyperparameter
-       (get-hyperparameter "document"))))
+       (get-hyperparameter "document"))
+
+     (def get-files
+       (partial (aid/flip fs/find-files*) fs/file?))))
