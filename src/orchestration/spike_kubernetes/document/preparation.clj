@@ -18,11 +18,8 @@
 (def evaluation-ids
   (set/union test-ids validation-ids))
 
-(def get-organized-path
-  (partial helpers/get-dataset-path "organized"))
-
 (def get-evaluation-organized-path
-  (comp get-organized-path
+  (comp helpers/get-organized-path
         (partial (aid/flip str) ".edn")))
 
 (def test-name
@@ -52,7 +49,7 @@
 
 (defn organize
   []
-  (fs/delete-dir (get-organized-path))
+  (fs/delete-dir (helpers/get-organized-path))
   (->>
     "extracted"
     helpers/get-dataset-path
@@ -68,13 +65,12 @@
     ((apply juxt
             (comp (juxt (partial run!
                                  (aid/build spit-edn-lines+
-                                            (comp (partial get-organized-path
-                                                           "training")
+                                            (comp helpers/training-path
                                                   (partial (aid/flip str)
                                                            ".txt")
                                                   first)
                                             last))
-                        (comp (partial spit (get-organized-path "length.edn"))
+                        (comp (partial spit helpers/length-path)
                               (partial apply hash-map)
                               (partial mapcat (juxt first
                                                     (comp count

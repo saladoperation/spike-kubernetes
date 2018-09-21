@@ -1133,4 +1133,13 @@
               vector))
 
      (def spit+
-       (make-+ spit))))
+       (make-+ spit))
+
+     (def get-organized-path
+       (partial get-dataset-path "organized"))
+
+     (def training-path
+       (get-organized-path "training"))
+
+     (def length-path
+       (get-organized-path "length.edn"))))
