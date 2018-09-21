@@ -56,10 +56,6 @@
 (def spit-edn-lines+
   (make-+ spit-edn-lines))
 
-(def get-id
-  (comp edn/read-string
-        :id))
-
 (defn organize
   []
   (fs/delete-dir (get-organized-path))
@@ -79,8 +75,9 @@
                                                         "training")
                                                (partial (aid/flip str)
                                                         ".txt")
-                                               get-id)
+                                               :id)
                                          :text))
                      (partial remove (comp evaluation-ids
-                                           get-id)))
+                                           edn/read-string
+                                           :id)))
                (map make-spit-evaluation [test-name validation-name])))))
