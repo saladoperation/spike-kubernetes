@@ -572,7 +572,7 @@
                                   (partial (aid/flip str) whitespace)))))
 
      (defn make-parse-singleton-c
-       [child? originals replacements]
+       [child? replacements]
        (m/mlet [xs (-> non-particle-adverb-tag?
                        parse/satisfy
                        parse/many)
@@ -661,7 +661,6 @@
                   singleton? (aid/casep replacements
                                         singleton? (m/pure [])
                                         (make-parse-singleton-c child?
-                                                                originals
                                                                 replacements))
                   (make-parse-multiton-c originals replacements)))
 
