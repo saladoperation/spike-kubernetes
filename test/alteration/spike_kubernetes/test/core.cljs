@@ -30,7 +30,7 @@
                                :vbp "are"}))
 
 (test/deftest much
-  (test-alternative core/atives "much" {:comparative          "more"
-                                                 :superlative "most"}))
+  (test-alternative core/atives "much" {:comparative "more"
+                                        :superlative "most"}))
 
 (doo-all-tests #"spike-kubernetes\.+")
