@@ -1,11 +1,13 @@
 (ns spike-kubernetes.document.learning
   (:require [clojure.tools.reader.edn :as edn]
+            [compliment.utils :as utils]
             [spike-kubernetes.helpers :as helpers]))
 
-(def get-length
-  #(-> helpers/length-path
-       slurp
-       edn/read-string))
+(utils/defmemoized get-length
+                   []
+                   (-> helpers/length-path
+                       slurp
+                       edn/read-string))
 
 (def partition-into-batches
   #(->> %
