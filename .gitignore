@@ -121,5 +121,6 @@ figwheel_server.log
 resources/docker
 resources/*/selection.json
 resources/*/runs
+resources/*/datasets
 resources/preparation.edn
 kubernetes.txt
