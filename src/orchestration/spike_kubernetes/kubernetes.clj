@@ -1,6 +1,5 @@
 (ns spike-kubernetes.kubernetes
   (:require [clojure.string :as str]
-            [aid.core :as aid]
             [cheshire.core :refer :all]
             [spike-kubernetes.command :as command]
             [spike-kubernetes.helpers :as helpers]))

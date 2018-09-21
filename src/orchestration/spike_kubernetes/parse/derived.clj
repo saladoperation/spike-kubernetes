@@ -2,7 +2,6 @@
   (:refer-clojure :exclude [= some])
   (:require [clojure.core :as core]
             [aid.core :as aid]
-            [cats.core :as m]
             [com.rpl.specter :as s]
             [spike-kubernetes.parse.primitive :as primitive]))
 

@@ -1,7 +1,7 @@
 (ns spike-kubernetes.orchestration
   (:require [hiccup.core :as hiccup]
             [immutant.web :as web]
-            [mount.core :as mount :refer [defstate]]
+            [mount.core :refer [defstate]]
             [ring.middleware.resource :refer [wrap-resource]]
             [ring.util.response :refer [response]]
             [spike-kubernetes.helpers :as helpers]))

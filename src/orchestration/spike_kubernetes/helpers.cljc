@@ -1,7 +1,6 @@
 (ns spike-kubernetes.helpers
   #?(:clj
-     (:require [clojure.java.io :as io]
-               [clojure.set :as set]
+     (:require [clojure.set :as set]
                [clojure.string :as str]
                [clojure.tools.reader.edn :as edn]
                [aid.core :as aid]
@@ -13,7 +12,6 @@
                [compliment.utils :as utils]
                [environ.core :refer [env]]
                [incanter.core :as incanter]
-               [me.raynes.fs :as fs]
                [spike-kubernetes.command :as command]
                [spike-kubernetes.parse.core :as parse])))
 

@@ -1,7 +1,6 @@
 (ns spike-kubernetes.parse.primitive
   (:require [aid.core :as aid]
     ;TODO replace cats when Clojure supports type inference and non-strict evaluation
-            [cats.core :as m]
             [cats.protocols :as p]
             [cats.util :as util]
             [com.rpl.specter :as s]
