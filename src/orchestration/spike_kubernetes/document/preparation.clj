@@ -1,4 +1,4 @@
-(ns spike-kubernetes.document.prepare
+(ns spike-kubernetes.document.preparation
   (:require [clojure.edn :as edn]
             [clojure.set :as set]
             [clojure.string :as str]
