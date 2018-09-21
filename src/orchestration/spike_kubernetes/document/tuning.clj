@@ -11,28 +11,23 @@
 (def get-timestamp
   (partial f/unparse (f/formatters :basic-date-time-no-ms)))
 
-(aid/defcurried spit+-hyperparameters
-                [hyperparameter timestamp]
-                (->> hyperparameter
-                     ((juxt pr-str
-                            generate-string))
-                     (map helpers/spit+
-                          (map (helpers/get-tuned-path helpers/document-name
-                                                       timestamp)
-                               ["edn" "json"]))
-                     (dorun)))
-
-(def spit-selection
-  (comp (partial spit helpers/document-selection-path)
-        generate-string
-        (partial array-map :recent true :run)))
-
-(def tune
-  #(aid/mlet [commit (command/git "rev-parse" "HEAD")]
-             (-> (t/now)
-                 get-timestamp
-                 ((juxt (->> helpers/hyperparameter
-                             (s/setval :commit commit)
-                             spit+-hyperparameters)
-                        spit-selection))
-                 either/right)))
+(defn tune
+  []
+  (aid/mlet [commit (command/git "rev-parse" "HEAD")]
+            (->
+              (t/now)
+              get-timestamp
+              ((juxt
+                 #(->> helpers/hyperparameter
+                       (s/setval :commit commit)
+                       ((juxt pr-str
+                              generate-string))
+                       (map helpers/spit+
+                            (map (helpers/get-tuned-path helpers/document-name
+                                                         %)
+                                 ["edn" "json"]))
+                       dorun)
+                 (comp (partial spit helpers/document-selection-path)
+                       generate-string
+                       (partial array-map :recent true :run))))
+              either/right)))
