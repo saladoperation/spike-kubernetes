@@ -6,3 +6,11 @@
   #(-> helpers/length-path
        slurp
        edn/read-string))
+
+(def partition-into-batches
+  #(->> %
+        (partition (-> (get-length)
+                       keys
+                       count
+                       (quot (:batch-size (helpers/get-document-tuned)))))
+        (take (:batch-size (helpers/get-document-tuned)))))
