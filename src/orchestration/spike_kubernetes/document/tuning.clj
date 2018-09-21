@@ -11,9 +11,6 @@
 (def get-timestamp
   (partial f/unparse (f/formatters :basic-date-time-no-ms)))
 
-(def create-timestamp
-  #(get-timestamp (t/now)))
-
 (aid/defcurried spit+-hyperparameters
                 [hyperparameter timestamp]
                 (->> hyperparameter
@@ -32,7 +29,8 @@
 
 (def tune
   #(aid/mlet [commit (command/git "rev-parse" "HEAD")]
-             (-> (create-timestamp)
+             (-> (t/now)
+                 get-timestamp
                  ((juxt (->> helpers/hyperparameter
                              (s/setval :commit commit)
                              spit+-hyperparameters)
