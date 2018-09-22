@@ -1,6 +1,10 @@
 (ns spike-kubernetes.document.learning
-  (:require [clojure.tools.reader.edn :as edn]
+  (:require [clojure.string :as str]
+            [clojure.tools.reader.edn :as edn]
+            [aid.core :as aid]
+            [com.rpl.specter :as s]
             [compliment.utils :as utils]
+            [me.raynes.fs :as fs]
             [spike-kubernetes.helpers :as helpers]))
 
 (utils/defmemoized get-length
@@ -16,3 +20,80 @@
                        count
                        (quot (:batch-size (helpers/get-document-tuned)))))
         (take (:batch-size (helpers/get-document-tuned)))))
+
+(def get-gaps
+  #(->> %
+        :file
+        (map (comp (get-length)
+                   edn/read-string
+                   (partial (aid/flip fs/base-name) true)))
+        (reductions +)
+        (cons 0)
+        (map (partial -
+                      (+ (:step-size (helpers/get-document-tuned))
+                         (:token-offset %))))
+        (take-while (complement neg?))))
+
+(def get-document-offset*
+  (comp dec
+        count
+        get-gaps))
+
+(def get-file
+  #(->> %
+        :file
+        (drop (get-document-offset* %))))
+
+(def get-token-offset
+  (comp last
+        get-gaps))
+
+(def get-document-offset
+  #(->> %
+        :document-offset
+        (+ (get-document-offset* %))))
+
+(def get-batch
+  #(->> (str "[" (->> %
+                      :file
+                      (take (-> %
+                                get-document-offset*
+                                inc))
+                      (map slurp)
+                      str/join
+                      str/split-lines
+                      (drop (:token-offset %))
+                      (take (:step-size (helpers/get-document-tuned)))
+                      str/join)
+             "]")
+        edn/read-string
+        (s/transform [s/ALL :source] helpers/get-document-index)))
+
+(defn get-step
+  [m]
+  {:file            (get-file m)
+   :document-offset (get-document-offset m)
+   :token-offset    (get-token-offset m)
+   :batch           (get-batch m)})
+
+(def get-training-steps*
+  #(->> %
+        (map get-step)
+        get-training-steps*
+        (cons (map get-step %))
+        lazy-seq))
+
+(def get-training-steps
+  (aid/build (partial map (partial s/setval* :global_step))
+             (comp #(map (partial + %) helpers/integers)
+                   :global_step)
+             (comp (partial map helpers/consolidate-into-vector)
+                   get-training-steps*
+                   helpers/separate
+                   (partial (aid/flip dissoc) :global_step)
+                   (helpers/transfer* :file
+                                      #(->> helpers/training-path
+                                            helpers/get-files
+                                            partition-into-batches
+                                            (map drop
+                                                 (:document-offset %)))))))

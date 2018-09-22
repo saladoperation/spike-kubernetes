@@ -92,9 +92,12 @@
      (def document-name
        "document")
 
+     (def document-port
+       8002)
+
      (def model-name
-       {lm-port lm-name
-        8002    document-name})
+       {lm-port       lm-name
+        document-port document-name})
 
      (def python-name
        (s/setval parse-port parse-name model-name))
@@ -930,15 +933,15 @@
        [v fv]
        (m/<$> (constantly v) fv))
 
-     (def unk-index
+     (def lm-unk-index
        0)
 
      (defn get-mask
        [reference infimum upperbound]
        (aid/case-eval infimum
-                      unk-index (-> true
-                                    integer
-                                    (<$ reference))
+                      lm-unk-index (-> true
+                                       integer
+                                       (<$ reference))
                       (map (comp integer
                                  (make-within infimum upperbound))
                            reference)))
@@ -1008,8 +1011,8 @@
                                    reference
                                    ((aid/case-eval
                                       infimum
-                                      unk-index (partial map
-                                                         cut-off)
+                                      lm-unk-index (partial map
+                                                            cut-off)
                                       (partial filter
                                                (make-within infimum
                                                             upperbound))))
@@ -1020,13 +1023,24 @@
             get-cluster
             (map (->> (get-lm-tuned)
                       :cutoffs
-                      (cons unk-index))
+                      (cons lm-unk-index))
                  (get-index-upperbounds))))
 
-     (def get-index
+     (def get-lm-index
        #(-> lm-port
             get-stoi
-            (get % unk-index)))
+            (get % lm-unk-index)))
+
+     (def get-document-unk-index
+       #(-> document-port
+            get-stoi
+            keys
+            count))
+
+     (def get-document-index
+       #(-> document-port
+            get-stoi
+            (get % (get-document-unk-index))))
 
      (def directions
        (s/multi-path :forth :back))
@@ -1034,7 +1048,7 @@
      (def transform-string
        (partial s/transform*
                 [directions (s/multi-path :source :reference) s/ALL]
-                get-index))
+                get-lm-index))
 
      (def get-batch
        (comp (partial transfer* :product (aid/build *
