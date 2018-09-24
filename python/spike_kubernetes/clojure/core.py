@@ -1,6 +1,7 @@
 import builtins
 import functools
 import operator
+import funcy
 from funcy import *
 
 drop_last = butlast
@@ -80,3 +81,15 @@ def take_nth(n, coll):
 
 def array_map(*more):
     return dict(zip(*map(partial(take_nth, 2), (more, tuple(rest(more))))))
+
+
+def _flip(f):
+    def g(x, *more):
+        def h(y, *more_):
+            return apply(f, y, x, more_)
+        return h if empty_(more) else apply(f, first(more), x, rest(more))
+    return g
+
+
+map_ = partial(_flip(isinstance), dict)
+repeat = _flip(funcy.repeat)

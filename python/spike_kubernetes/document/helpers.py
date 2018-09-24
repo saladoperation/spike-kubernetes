@@ -49,5 +49,15 @@ def get_model():
     return model
 
 
+def get_states(batch_size):
+    return tuple(
+        # TODO possibly don't use kaiming_normal_
+        map(init.kaiming_normal_,
+            repeat(2,
+                   torch.zeros(get_bidirectional_size(tuned["num_layers"]),
+                               batch_size,
+                               tuned["hidden_size"]))))
+
+
 index_ = helpers.make_index_(
     {helpers.get_stoi_name: constantly(pretrained.stoi)})

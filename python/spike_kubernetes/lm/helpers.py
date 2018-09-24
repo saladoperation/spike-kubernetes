@@ -106,15 +106,6 @@ def get_model():
                                             pretrained.dim))))})}))))
 
 
-def _flip(f):
-    def g(x, *more):
-        def h(y, *more_):
-            return apply(f, y, x, more_)
-        return h if empty_(more) else apply(f, first(more), x, rest(more))
-    return g
-
-
-map_ = partial(_flip(isinstance), dict)
 true_ = partial(equal, True)
 every_ = comp(empty_,
               partial(remove, true_),
