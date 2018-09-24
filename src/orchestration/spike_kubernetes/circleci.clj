@@ -22,14 +22,26 @@
   (partial helpers/get-path "code"))
 
 (defn get-dockerfile
-  [{:keys [image from-tos run port cmd] :or {run ":"}}]
+  [{:keys [image from-tos runs port cmd] :or {runs [":"]}}]
   (generate-dockerfile (concat [["FROM" image]]
                                (map (partial s/setval* s/BEFORE-ELEM "COPY")
                                     from-tos)
-                               [["WORKDIR" (get-code-path)]
-                                ["RUN" ["/bin/bash" "-c" run]]
-                                ["EXPOSE" port]
-                                ["CMD" cmd]])))
+                               (concat [["WORKDIR" (get-code-path)]]
+                                       (map (partial vector "RUN") runs)
+                                       [["EXPOSE" port]
+                                        ["CMD" cmd]]))))
+;A single RUN seems to cause the following error.
+;The command '/bin/bash -c apt update && apt install -y build-essential libffi-dev && conda env create -f python/environments/cpu.yml && source activate spike-kubernetes && python -m spacy download en' returned a non-zero code: 126
+;/bin/bash: /opt/conda/envs/spike-kubernetes/bin/python: Invalid argument
+;(defn get-dockerfile
+;  [{:keys [image from-tos run port cmd] :or {run ":"}}]
+;  (generate-dockerfile (concat [["FROM" image]]
+;                               (map (partial s/setval* s/BEFORE-ELEM "COPY")
+;                                    from-tos)
+;                               [["WORKDIR" (get-code-path)]
+;                                ["RUN" ["/bin/bash" "-c" run]]
+;                                ["EXPOSE" port]
+;                                ["CMD" cmd]])))
 
 (def get-target-path
   (partial helpers/get-path "target"))
@@ -94,10 +106,6 @@
 (def conda-image
   "continuumio/miniconda:4.5.4@sha256:19d3eedab8b6301a0e1819476cfc50d53399881612183cf65208d7d43db99cd9")
 
-(def get-shell-script
-  (comp (partial str/join " && ")
-        (partial map command/join-whitespace)))
-
 (def apt-name
   "apt")
 
@@ -107,21 +115,21 @@
       :from-tos (get-from-tos #{(helpers/get-resources-path)
                                 python-name
                                 script-name})
-      :run      (get-shell-script [[apt-name "update"]
-                                   [apt-name
-                                    "install"
-                                    "-y"
-                                    "build-essential"
-                                    "libffi-dev"]
-                                   ["conda"
-                                    "env"
-                                    "create"
-                                    "-f"
-                                    (helpers/get-path python-name
-                                                      "environments"
-                                                      "cpu.yml")]
-                                   ["source" "activate" "spike-kubernetes"]
-                                   [python-name "-m" "spacy" "download" "en"]])
+      :runs     [[apt-name "update"]
+                 [apt-name
+                  "install"
+                  "-y"
+                  "build-essential"
+                  "libffi-dev"]
+                 ["conda"
+                  "env"
+                  "create"
+                  "-f"
+                  (helpers/get-path python-name
+                                    "environments"
+                                    "cpu.yml")]
+                 ["source" "activate" "spike-kubernetes"]
+                 [python-name "-m" "spacy" "download" "en"]]
       :port     %
       :cmd      [(helpers/get-path script-name
                                    python-name
