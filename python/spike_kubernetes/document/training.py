@@ -2,6 +2,7 @@ from flask import Flask
 import pika
 from spike_kubernetes.clojure.core import *
 import spike_kubernetes.aid as aid
+from spike_kubernetes.cheshire import *
 import spike_kubernetes.document.helpers as document_helpers
 
 app = Flask(__name__)
@@ -26,7 +27,8 @@ def make_attribute_call(s_):
 
 
 # TODO implement this function
-get_steps = comp(partial(map, comp(make_attribute_call("decode"))),
+get_steps = comp(partial(map, comp(parse_string,
+                                   make_attribute_call("decode"))),
                  partial(remove, partial(equal, None)),
                  partial(map, last))
 steps = get_steps(repeatedly(partial(channel.basic_get, queue, True)))
