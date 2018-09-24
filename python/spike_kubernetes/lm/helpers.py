@@ -7,7 +7,6 @@ import torch.nn.init as init
 import torch.optim as optim
 import torchtext.vocab as vocab
 from spike_kubernetes.clojure.core import *
-import spike_kubernetes.clojure.string as str_
 import spike_kubernetes.aid as aid
 from spike_kubernetes.cheshire import *
 import spike_kubernetes.helpers as helpers
@@ -135,17 +134,14 @@ def deep_merge_with(f, *more):
 
 deep_merge = partial(deep_merge_with, comp(last,
                                            vector))
-get_checkpoints_path = partial(get_run_path, "checkpoints")
-append_extension = comp(partial(str_.join, "."),
-                        vector)
-append_pth = partial(aid.flip(append_extension), "pth")
-recent_filename = "recent"
-step_selection = recent_filename if selection[recent_filename] else "minimum"
-get_pth_path = comp(get_checkpoints_path,
-                    append_pth)
-selected_pth_path = get_pth_path(step_selection)
-selected_json_path = get_checkpoints_path(append_extension(step_selection,
-                                                           "json"))
+recent_name = "recent"
+step_selection = recent_name if selection[recent_name] else "minimum"
+selected_pth_path = helpers.get_selected_pth_path(lm_name,
+                                                  selection["run"],
+                                                  step_selection)
+selected_json_path = helpers.get_selected_json_path(lm_name,
+                                                    selection["run"],
+                                                    step_selection)
 checkpoint = deep_merge(
     torch.load(selected_pth_path, map_location=device),
     parse_string(
