@@ -48,6 +48,7 @@
     <orderEntry type="library" name="Leiningen: clojure-complete:0.2.4" level="project" />
     <orderEntry type="library" name="Leiningen: clojureql:1.0.5" level="project" />
     <orderEntry type="library" name="Leiningen: clojurewerkz/scrypt:1.2.0" level="project" />
+    <orderEntry type="library" name="Leiningen: clojurewerkz/support:1.1.0" level="project" />
     <orderEntry type="library" name="Leiningen: clout:2.1.2" level="project" />
     <orderEntry type="library" name="Leiningen: co.deps/ring-etag-middleware:0.2.0" level="project" />
     <orderEntry type="library" name="Leiningen: com.andrewmcveigh/cljs-time:0.5.2" level="project" />
@@ -76,6 +77,8 @@
     <orderEntry type="library" name="Leiningen: com.googlecode.netlib-java/netlib-java:0.9.3" level="project" />
     <orderEntry type="library" name="Leiningen: com.lambdaworks/scrypt:1.4.0" level="project" />
     <orderEntry type="library" name="Leiningen: com.lowagie/itext:2.1.7" level="project" />
+    <orderEntry type="library" name="Leiningen: com.novemberain/langohr:5.0.0" level="project" />
+    <orderEntry type="library" name="Leiningen: com.rabbitmq/amqp-client:5.2.0" level="project" />
     <orderEntry type="library" name="Leiningen: com.rpl/specter:1.1.1" level="project" />
     <orderEntry type="library" name="Leiningen: com.stuartsierra/component:0.3.2" level="project" />
     <orderEntry type="library" name="Leiningen: com.stuartsierra/dependency:0.2.0" level="project" />
@@ -256,7 +259,7 @@
     <orderEntry type="library" name="Leiningen: org.scilab.forge/jlatexmath-font-cyrillic:1.0.6" level="project" />
     <orderEntry type="library" name="Leiningen: org.scilab.forge/jlatexmath-font-greek:1.0.6" level="project" />
     <orderEntry type="library" name="Leiningen: org.scilab.forge/jlatexmath:1.0.6" level="project" />
-    <orderEntry type="library" name="Leiningen: org.slf4j/slf4j-api:1.7.7" level="project" />
+    <orderEntry type="library" name="Leiningen: org.slf4j/slf4j-api:1.7.25" level="project" />
     <orderEntry type="library" name="Leiningen: org.tukaani/xz:1.5" level="project" />
     <orderEntry type="library" name="Leiningen: org.xerial/sqlite-jdbc:3.7.2" level="project" />
     <orderEntry type="library" name="Leiningen: postgresql:8.4-702.jdbc4" level="project" />

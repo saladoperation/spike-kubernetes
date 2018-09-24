@@ -2,8 +2,14 @@
   (:require [clojure.string :as str]
             [clojure.tools.reader.edn :as edn]
             [aid.core :as aid]
+            [cheshire.core :refer :all]
             [com.rpl.specter :as s]
             [compliment.utils :as utils]
+            [mount.core :refer [defstate]]
+            [langohr.basic :as lb]
+            [langohr.channel :as lc]
+            [langohr.core :as rmq]
+            [langohr.queue :as lq]
             [me.raynes.fs :as fs]
             [spike-kubernetes.helpers :as helpers]))
 
@@ -77,17 +83,37 @@
    :batch           (get-batch m)})
 
 (def get-training-steps
-  (aid/build (partial map (partial s/setval* :global_step))
-             (comp #(map (partial + %) helpers/integers)
-                   :global_step)
-             (comp (partial map helpers/consolidate-into-vector)
-                   rest
-                   (partial iterate (partial map get-step))
-                   helpers/separate
-                   (partial (aid/flip dissoc) :global_step)
-                   (helpers/transfer* :file
-                                      #(->> helpers/training-path
-                                            helpers/get-files
-                                            partition-into-batches
-                                            (map drop
-                                                 (:document-offset %)))))))
+  (comp
+    (partial map (comp generate-string
+                       (partial (aid/flip dissoc) :file)))
+    (aid/build (partial map (partial s/setval* :global_step))
+               (comp #(map (partial + %) helpers/integers)
+                     :global_step)
+               (comp (partial map helpers/consolidate-into-vector)
+                     rest
+                     (partial iterate (partial map get-step))
+                     helpers/separate
+                     (partial (aid/flip dissoc) :global_step)
+                     (helpers/transfer* :file
+                                        #(->> helpers/training-path
+                                              helpers/get-files
+                                              partition-into-batches
+                                              (map drop
+                                                   (:document-offset %))))))))
+
+(def queue-name
+  "queue")
+
+(defstate connection
+          :start (rmq/connect)
+          :stop (rmq/close connection))
+
+(defstate channel
+          :start (lc/open connection))
+
+(def publish-if-zero!
+  #(if (->> queue-name
+            (lq/message-count channel)
+            zero?)
+     (lb/publish channel "" queue-name %)
+     (recur %)))
