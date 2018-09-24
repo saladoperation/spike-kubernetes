@@ -53,11 +53,10 @@ move = partial(aid.flip(make_attribute_call("to")), device)
 get_character_vector = comp(move,
                             partial(get, vocab.CharNGram()))
 character_vector_size = count(first(get_character_vector("")))
-get_lm_path = partial(path.join, "../resources/lm")
-selection_path = get_lm_path("selection.json")
+lm_name = "lm"
+selection_path = helpers.get_selection_path(lm_name)
 selection = parse_string(slurp(selection_path))
-get_run_path = partial(get_lm_path, "runs", selection["run"])
-tuned_path = get_run_path("tuned.json")
+tuned_path = helpers.get_tuned_path(lm_name, selection["run"])
 tuned = parse_string(slurp(tuned_path))
 
 
