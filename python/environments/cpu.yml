@@ -70,6 +70,7 @@ dependencies:
   - pip:
     - funcy==1.10.3
     - msgpack==0.5.6
+    - pika==0.12.0
     - torch==0.4.1
     - torchtext==0.2.3
 
