@@ -76,19 +76,13 @@
    :token-offset    (get-token-offset m)
    :batch           (get-batch m)})
 
-(def get-training-steps*
-  #(->> %
-        (map get-step)
-        get-training-steps*
-        (cons (map get-step %))
-        lazy-seq))
-
 (def get-training-steps
   (aid/build (partial map (partial s/setval* :global_step))
              (comp #(map (partial + %) helpers/integers)
                    :global_step)
              (comp (partial map helpers/consolidate-into-vector)
-                   get-training-steps*
+                   rest
+                   (partial iterate (partial map get-step))
                    helpers/separate
                    (partial (aid/flip dissoc) :global_step)
                    (helpers/transfer* :file
