@@ -8,7 +8,6 @@ import torch.nn.init as init
 import torch.optim as optim
 import torchtext.vocab as vocab
 from spike_kubernetes.clojure.core import *
-import spike_kubernetes.clojure.java.io as io
 import spike_kubernetes.clojure.string as str_
 import spike_kubernetes.aid as aid
 from spike_kubernetes.cheshire import *
@@ -54,7 +53,7 @@ move = partial(aid.flip(make_attribute_call("to")), device)
 get_character_vector = comp(move,
                             partial(get, vocab.CharNGram()))
 character_vector_size = count(first(get_character_vector("")))
-get_lm_path = partial(io.file, "../resources/lm")
+get_lm_path = partial(path.join, "../resources/lm")
 selection_path = get_lm_path("selection.json")
 selection = parse_string(slurp(selection_path))
 get_run_path = partial(get_lm_path, "runs", selection["run"])
