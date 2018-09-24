@@ -40,9 +40,9 @@
         get-gaps))
 
 (def get-file
-  #(->> %
-        :file
-        (drop (get-document-offset* %))))
+  (aid/build drop
+             get-document-offset*
+             :file))
 
 (def get-token-offset
   (comp last
