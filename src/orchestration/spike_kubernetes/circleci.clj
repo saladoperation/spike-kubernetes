@@ -98,13 +98,22 @@
   (comp (partial str/join " && ")
         (partial map command/join-whitespace)))
 
+(def apt-name
+  "apt")
+
 (def get-python-dockerfile
   #(get-dockerfile
      {:image    conda-image
       :from-tos (get-from-tos #{(helpers/get-resources-path)
                                 python-name
                                 script-name})
-      :run      (get-shell-script [["conda"
+      :run      (get-shell-script [[apt-name "update"]
+                                   [apt-name
+                                    "install"
+                                    "-y"
+                                    "build-essential"
+                                    "libffi-dev"]
+                                   ["conda"
                                     "env"
                                     "create"
                                     "-f"
