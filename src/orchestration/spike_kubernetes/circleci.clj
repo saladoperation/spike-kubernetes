@@ -11,7 +11,6 @@
             [taoensso.timbre :as timbre]
             [spike-kubernetes.command :as command]
             [spike-kubernetes.helpers :as helpers]
-            [spike-kubernetes.install :as install]
             [spike-kubernetes.kubernetes :as kubernetes]))
 
 (def generate-dockerfile
@@ -246,7 +245,7 @@
     (timbre/spy
       (m/>>= (m/>> (aid/casep env
                               :circle-tag (m/>> (download-extract)
-                                                (install/install-word2vecf))
+                                                (helpers/install-word2vecf))
                               (either/right ""))
                    (->> helpers/parse-name
                         get-build-arguments
