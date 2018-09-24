@@ -58,8 +58,7 @@ selection_path = get_lm_path("selection.json")
 selection = parse_string(slurp(selection_path))
 get_run_path = partial(get_lm_path, "runs", selection["run"])
 tuned_path = get_run_path("tuned.json")
-tuned_json = slurp(tuned_path)
-tuned = parse_string(tuned_json)
+tuned = parse_string(slurp(tuned_path))
 
 
 def get_direction_model():
