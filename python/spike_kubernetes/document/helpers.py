@@ -1,3 +1,4 @@
+import allennlp.modules.conditional_random_field as conditional_random_field
 import torch
 import torch.nn as nn
 import torch.nn.init as init
@@ -21,6 +22,10 @@ def get_embedding_vectors(unk_vector):
 
 get_embedding = comp(partial(aid.flip(nn.Embedding.from_pretrained), False),
                      get_embedding_vectors)
+multiply = comp(partial(reduce, operator.mul, 1),
+                vector)
+get_bidirectional_size = partial(multiply, 2)
+num_tags = multiply(3, 2)
 
 
 def get_model():
@@ -37,7 +42,10 @@ def get_model():
                          batch_first=True,
                          bidirectional=True,
                          dropout=tuned["dropout"])
-    # TODO implement this function
+    model.linear = nn.Linear(
+        get_bidirectional_size(tuned["hidden_size"]),
+        num_tags)
+    model.crf = conditional_random_field.ConditionalRandomField(num_tags)
     return model
 
 
