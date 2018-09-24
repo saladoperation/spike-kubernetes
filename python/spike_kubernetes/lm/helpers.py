@@ -35,7 +35,6 @@ def get_embedding_vectors(special_vectors):
     return torch.cat((special_vectors, pretrained.vectors))
 
 
-# TODO possibly parameterize freeze
 get_embedding = comp(partial(aid.flip(nn.Embedding.from_pretrained), False),
                      get_embedding_vectors)
 
