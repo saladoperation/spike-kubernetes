@@ -26,10 +26,10 @@
   (generate-dockerfile (concat [["FROM" image]]
                                (map (partial s/setval* s/BEFORE-ELEM "COPY")
                                     from-tos)
-                               (concat [["WORKDIR" (get-code-path)]]
-                                       (map (partial vector "RUN") runs)
-                                       [["EXPOSE" port]
-                                        ["CMD" cmd]]))))
+                               [["WORKDIR" (get-code-path)]]
+                               (map (partial vector "RUN") runs)
+                               [["EXPOSE" port]
+                                ["CMD" cmd]])))
 ;A single RUN seems to cause the following error.
 ;The command '/bin/bash -c apt update && apt install -y build-essential libffi-dev && conda env create -f python/environments/cpu.yml && source activate spike-kubernetes && python -m spacy download en' returned a non-zero code: 126
 ;/bin/bash: /opt/conda/envs/spike-kubernetes/bin/python: Invalid argument
