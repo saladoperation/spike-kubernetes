@@ -118,7 +118,7 @@
       :cmd      [(helpers/get-path script-name
                                    python-name
                                    (helpers/python-name %)
-                                   "prod.sh")]}))
+                                   "evaluation.sh")]}))
 
 ;docker doesn't seem to support symlinks for -f
 ;error unable to prepare context: unable to evaluate symlinks in Dockerfile path
