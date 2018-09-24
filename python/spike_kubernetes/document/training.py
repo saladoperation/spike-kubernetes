@@ -1,8 +1,10 @@
 from flask import Flask
 import pika
+import torch
 from spike_kubernetes.clojure.core import *
 import spike_kubernetes.aid as aid
 from spike_kubernetes.cheshire import *
+import spike_kubernetes.specter as s
 import spike_kubernetes.document.helpers as document_helpers
 
 app = Flask(__name__)
@@ -26,8 +28,11 @@ def make_attribute_call(s_):
                 vector)
 
 
-# TODO implement this function
-get_steps = comp(partial(map, comp(parse_string,
+convert_list = partial(s.transform_,
+                       s.multi_path("source", "reference"),
+                       torch.tensor)
+get_steps = comp(partial(map, comp(convert_list,
+                                   parse_string,
                                    make_attribute_call("decode"))),
                  partial(remove, partial(equal, None)),
                  partial(map, last))
