@@ -49,9 +49,9 @@
         get-gaps))
 
 (def get-document-offset
-  #(->> %
-        :document-offset
-        (+ (get-document-offset* %))))
+  (aid/build +
+             get-document-offset*
+             :document-offset))
 
 (def get-batch
   #(->> (str "[" (->> %
