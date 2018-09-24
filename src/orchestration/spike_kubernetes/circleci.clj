@@ -109,6 +109,10 @@
 (def apt-name
   "apt")
 
+(def get-shell-script
+  (comp (partial str/join " && ")
+        (partial map command/join-whitespace)))
+
 (def get-python-dockerfile
   #(get-dockerfile
      {:image    conda-image
@@ -128,14 +132,14 @@
                   (helpers/get-path python-name
                                     "environments"
                                     "cpu.yml")]
-                 ["/bin/bash" "-c" (str/join " " ["source"
-                                                  "activate"
-                                                  "spike-kubernetes"
-                                                  python-name
-                                                  "-m"
-                                                  "spacy"
-                                                  "download"
-                                                  "en"])]]
+                 ["/bin/bash" "-c" (get-shell-script [["source"
+                                                       "activate"
+                                                       "spike-kubernetes"]
+                                                      [python-name
+                                                       "-m"
+                                                       "spacy"
+                                                       "download"
+                                                       "en"]])]]
       :port     %
       :cmd      [(helpers/get-path script-name
                                    python-name
