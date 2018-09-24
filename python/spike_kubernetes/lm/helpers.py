@@ -1,4 +1,3 @@
-import funcy
 import itertools
 import os.path as path
 import torch
