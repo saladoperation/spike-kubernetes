@@ -128,8 +128,14 @@
                   (helpers/get-path python-name
                                     "environments"
                                     "cpu.yml")]
-                 ["source" "activate" "spike-kubernetes"]
-                 [python-name "-m" "spacy" "download" "en"]]
+                 ["/bin/bash" "-c" (str/join " " ["source"
+                                                  "activate"
+                                                  "spike-kubernetes"
+                                                  python-name
+                                                  "-m"
+                                                  "spacy"
+                                                  "download"
+                                                  "en"])]]
       :port     %
       :cmd      [(helpers/get-path script-name
                                    python-name
