@@ -37,3 +37,20 @@ get_steps = comp(partial(map, comp(convert_list,
                  partial(remove, partial(equal, None)),
                  partial(map, last))
 steps = get_steps(repeatedly(partial(channel.basic_get, queue, True)))
+
+
+def run_step(reduction, step):
+    reduction["model"].train()
+    reduction["model"].zero_grad()
+    forwarded = document_helpers.forward(
+        merge(s.transform_(("states", s.ALL),
+                           make_attribute_call("detach"),
+                           reduction),
+              step))
+    forwarded["loss"].backward()
+    reduction["optimizer"].step()
+    reduction["model"].eval()
+    # TODO: implement this function
+    return merge(reduction,
+                 step,
+                 forwarded)
