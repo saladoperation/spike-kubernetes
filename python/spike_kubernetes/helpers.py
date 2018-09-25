@@ -30,7 +30,21 @@ selection_filename = get_json_filename(selection_name)
 get_resources_path = partial(path.join, "../resources")
 get_selection_path = partial(aid.flip(get_resources_path),
                              get_json_filename(selection_name))
+get_selection = comp(parse_string,
+                     slurp,
+                     get_selection_path)
 tuned_name = get_json_filename("tuned")
+
+
+def get_tuned_path(model_name, selection):
+    return get_run_path(model_name, selection["run"], tuned_name)
+
+
+get_tuned = comp(parse_string,
+                 slurp,
+                 aid.build(get_tuned_path,
+                           identity,
+                           get_selection))
 
 
 def get_run_path(model_name, run, filename):
@@ -47,10 +61,6 @@ def get_selected_json_path(model_name, run, step_selection):
     return get_run_path(model_name,
                         run,
                         append_extension(step_selection, json_name))
-
-
-def get_tuned_path(model_name, run):
-    return get_run_path(model_name, run, tuned_name)
 
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")

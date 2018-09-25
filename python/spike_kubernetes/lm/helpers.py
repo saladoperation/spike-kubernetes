@@ -7,7 +7,6 @@ import torch.optim as optim
 import torchtext.vocab as vocab
 from spike_kubernetes.clojure.core import *
 import spike_kubernetes.aid as aid
-from spike_kubernetes.cheshire import *
 import spike_kubernetes.helpers as helpers
 import spike_kubernetes.specter as s
 
@@ -50,10 +49,8 @@ get_character_vector = comp(move,
                             partial(get, vocab.CharNGram()))
 character_vector_size = count(first(get_character_vector("")))
 lm_name = "lm"
-selection_path = helpers.get_selection_path(lm_name)
-selection = parse_string(slurp(selection_path))
-tuned_path = helpers.get_tuned_path(lm_name, selection["run"])
-tuned = parse_string(slurp(tuned_path))
+selection = helpers.get_selection(lm_name)
+tuned = helpers.get_tuned(lm_name)
 
 
 def get_direction_model():
@@ -133,7 +130,7 @@ selected_pt_path = helpers.get_selected_pt_path(lm_name,
 selected_json_path = helpers.get_selected_json_path(lm_name,
                                                     selection["run"],
                                                     step_selection)
-checkpoint = helpers.get_checkpoint_path(selected_pt_path, selected_json_path) 
+checkpoint = helpers.get_checkpoint_path(selected_pt_path, selected_json_path)
 
 
 def transpose_batch(x):
