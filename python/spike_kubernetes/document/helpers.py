@@ -55,6 +55,16 @@ def get_model():
             "crf": conditional_random_field.ConditionalRandomField(num_tags)})
 
 
+def forward(m):
+    lstm_output, states = m["model"]["lstm"](
+        m["model"]["embedding"](m["source"]),
+        m["model"]["states"])
+    output = m["model"]["linear"](lstm_output)
+    return {"loss": -m["model"]["crf"](output, m["reference"]),
+            "output": output,
+            "states": states}
+
+
 progress = helpers.get_progress(document_name, get_model)
 index_ = helpers.make_index_(
     {helpers.get_stoi_name: constantly(pretrained.stoi)})
