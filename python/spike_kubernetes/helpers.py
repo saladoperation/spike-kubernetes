@@ -140,7 +140,7 @@ def get_checkpoint(model_name):
 
 
 def get_progress(model_name, get_model):
-    return merge(get_checkpoint(model_name),
+    return merge(get_tuned(model_name),
                  effect(partial(s.transform_,
                                 "optimizer",
                                 aid.flip(set_lr)(get_tuned(model_name)["lr"])),
