@@ -117,8 +117,8 @@ effect = aid.curry(2, comp(last,
                                 vector)))
 
 
-def get_progress(model_name, get_model):
-    checkpoint = merge(
+def get_checkpoint(model_name):
+    return merge(
         torch.load(get_resources_path(model_name,
                                       get_selection(model_name)["run"],
                                       append_extension(
@@ -137,11 +137,16 @@ def get_progress(model_name, get_model):
                         json_name))))["training"]) if path.exists(
         get_resources_path(model_name,
                            get_selection(model_name)["run"])) else {}
-    return merge(checkpoint,
+
+
+def get_progress(model_name, get_model):
+    return merge(get_checkpoint(model_name),
                  effect(partial(s.transform_,
                                 "optimizer",
                                 aid.flip(set_lr)(get_tuned(model_name)["lr"])),
-                        effect(partial(merge_with, load_state, checkpoint),
+                        effect(partial(merge_with,
+                                       load_state,
+                                       get_checkpoint(model_name)),
                                zipmap(("model",
                                        "optimizer"),
                                       juxt(identity,
