@@ -127,13 +127,6 @@ def merge_with(f, *maps):
     return reduce(partial(reduce, merge_entry), maps)
 
 
-def deep_merge_with(f, *more):
-    return merge_with(partial(deep_merge_with, f),
-                      *more) if every_(map_, more) else f(*more)
-
-
-deep_merge = partial(deep_merge_with, comp(last,
-                                           vector))
 recent_name = "recent"
 step_selection = recent_name if selection[recent_name] else "minimum"
 selected_pth_path = helpers.get_selected_pth_path(lm_name,
@@ -142,12 +135,12 @@ selected_pth_path = helpers.get_selected_pth_path(lm_name,
 selected_json_path = helpers.get_selected_json_path(lm_name,
                                                     selection["run"],
                                                     step_selection)
-checkpoint = deep_merge(
+checkpoint = merge(
     torch.load(selected_pth_path, map_location=device),
     parse_string(
         slurp(
-            selected_json_path))) if path.exists(
-    selected_pth_path) else {"training": {}}
+            selected_json_path))["training"]) if path.exists(
+    selected_pth_path) else {}
 
 
 def transpose_batch(x):
@@ -256,7 +249,7 @@ def load_state(state, entity):
     entity.load_state_dict(state)
 
 
-load_states = partial(merge_with, load_state, checkpoint["training"])
+load_states = partial(merge_with, load_state, checkpoint)
 get_optimizer = comp(optim.Adam,
                      partial(filter,
                              partial(aid.flip(getattr), "requires_grad")),
