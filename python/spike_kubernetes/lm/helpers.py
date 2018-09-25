@@ -122,15 +122,7 @@ def merge_with(f, *maps):
     return reduce(partial(reduce, merge_entry), maps)
 
 
-recent_name = "recent"
-step_selection = recent_name if selection[recent_name] else "minimum"
-selected_pt_path = helpers.get_selected_pt_path(lm_name,
-                                                selection["run"],
-                                                step_selection)
-selected_json_path = helpers.get_selected_json_path(lm_name,
-                                                    selection["run"],
-                                                    step_selection)
-checkpoint = helpers.get_checkpoint_path(selected_pt_path, selected_json_path)
+checkpoint = helpers.get_checkpoint(lm_name)
 
 
 def transpose_batch(x):

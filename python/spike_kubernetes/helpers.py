@@ -36,6 +36,10 @@ get_selection = comp(parse_string,
 tuned_name = get_json_filename("tuned")
 
 
+def get_run_path(model_name, run, filename):
+    return get_resources_path(model_name, "runs", run, filename)
+
+
 def get_tuned_path(model_name, selection):
     return get_run_path(model_name, selection["run"], tuned_name)
 
@@ -46,30 +50,32 @@ get_tuned = comp(parse_string,
                            identity,
                            get_selection))
 
-
-def get_run_path(model_name, run, filename):
-    return get_resources_path(model_name, "runs", run, filename)
-
-
-def get_selected_pt_path(model_name, run, step_selection):
-    return get_resources_path(model_name,
-                              run,
-                              append_extension(step_selection, "pt"))
-
-
-def get_selected_json_path(model_name, run, step_selection):
-    return get_run_path(model_name,
-                        run,
-                        append_extension(step_selection, json_name))
-
-
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
+recent_name = "recent"
 
-def get_checkpoint_path(selected_pth_path, selected_json_path):
+
+def get_step_selection(selection):
+    return recent_name if selection[recent_name] else "minimum"
+
+
+def get_checkpoint(model_name):
     return merge(
-        torch.load(selected_pth_path, map_location=device),
+        torch.load(get_resources_path(model_name,
+                                      get_selection(model_name)["run"],
+                                      append_extension(
+                                          get_step_selection(
+                                              get_selection(model_name)),
+                                          "pt")),
+                   device),
         parse_string(
             slurp(
-                selected_json_path))["training"]) if path.exists(
-        selected_pth_path) else {}
+                get_resources_path(
+                    model_name,
+                    get_selection(model_name)["run"],
+                    append_extension(
+                        get_step_selection(
+                            get_selection(model_name)),
+                        json_name))))["training"]) if path.exists(
+        get_resources_path(model_name,
+                           get_selection(model_name)["run"])) else {}
