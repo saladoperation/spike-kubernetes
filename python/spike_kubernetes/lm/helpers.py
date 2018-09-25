@@ -3,7 +3,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.nn.init as init
-import torch.optim as optim
 import torchtext.vocab as vocab
 from spike_kubernetes.clojure.core import *
 import spike_kubernetes.aid as aid
@@ -66,12 +65,6 @@ def get_direction_model():
         "linear": nn.Linear(tuned["hidden_size"], pretrained.dim)})
 
 
-effect = aid.curry(2, comp(last,
-                           last,
-                           juxt(aid.funcall,
-                                vector)))
-zipmap = comp(partial(apply, merge),
-              partial(map, array_map))
 repeatedly = comp(partial(apply, funcy.repeatedly),
                   reverse,
                   vector)
@@ -79,7 +72,7 @@ repeatedly = comp(partial(apply, funcy.repeatedly),
 
 def get_model():
     return move(
-        effect(
+        helpers.effect(
             make_attribute_call("eval"),
             nn.ModuleDict(
                 merge(
@@ -97,32 +90,6 @@ def get_model():
                                         torch.zeros(
                                             count(tuned["cutoffs"]),
                                             pretrained.dim))))})}))))
-
-
-true_ = partial(equal, True)
-every_ = comp(empty_,
-              partial(remove, true_),
-              map)
-
-
-def assoc(m, k, v):
-    return set_in(m, (k,), v)
-
-
-key = first
-val = second
-
-
-def merge_with(f, *maps):
-    def merge_entry(m, e):
-        return assoc(m,
-                     key(e),
-                     f(m[key(e)],
-                       val(e)) if contains_(m, key(e)) else val(e))
-    return reduce(partial(reduce, merge_entry), maps)
-
-
-checkpoint = helpers.get_checkpoint(lm_name)
 
 
 def transpose_batch(x):
@@ -205,47 +172,7 @@ def forward(m):
                    ("forth", "back"))
 
 
-def dorun(coll):
-    for _ in coll:
-        pass
-
-
-run_ = comp(dorun,
-            map)
-
-
-def make_set_lr_(lr):
-    def set_lr__(param_group):
-        param_group["lr"] = lr
-    return set_lr__
-
-
-def set_lr_(optimizer, lr):
-    run_(make_set_lr_(lr), optimizer.param_groups)
-
-
-set_lr = aid.curry(2, set_lr_)
-
-
-def load_state(state, entity):
-    entity.load_state_dict(state)
-
-
-load_states = partial(merge_with, load_state, checkpoint)
-get_optimizer = comp(optim.Adam,
-                     partial(filter,
-                             partial(aid.flip(getattr), "requires_grad")),
-                     aid.funcall,
-                     partial(aid.flip(getattr), "parameters"))
-progress = merge(checkpoint,
-                 effect(partial(s.transform_,
-                                "optimizer",
-                                aid.flip(set_lr)(tuned["lr"])),
-                        effect(load_states,
-                               zipmap(("model",
-                                       "optimizer"),
-                                      juxt(identity,
-                                           get_optimizer)(get_model())))))
+progress = helpers.get_progress(lm_name, get_model)
 convert_list = partial(
     s.transform_,
     s.multi_path("forth", "back"),

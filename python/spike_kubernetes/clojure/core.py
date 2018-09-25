@@ -93,3 +93,5 @@ def _flip(f):
 
 map_ = partial(_flip(isinstance), dict)
 repeat = _flip(funcy.repeat)
+zipmap = comp(partial(apply, merge),
+              partial(map, array_map))

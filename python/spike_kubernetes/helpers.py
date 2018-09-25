@@ -1,10 +1,12 @@
 import os.path as path
 from flask import jsonify, request
 import torch
+import torch.optim as optim
 from spike_kubernetes.clojure.core import *
 import spike_kubernetes.clojure.string as str_
 import spike_kubernetes.aid as aid
 from spike_kubernetes.cheshire import *
+import spike_kubernetes.specter as s
 
 torch.manual_seed(0)
 get_stoi_name = "get-stoi"
@@ -59,8 +61,64 @@ def get_step_selection(selection):
     return recent_name if selection[recent_name] else "minimum"
 
 
-def get_checkpoint(model_name):
-    return merge(
+get_optimizer = comp(optim.Adam,
+                     partial(filter,
+                             partial(aid.flip(getattr), "requires_grad")),
+                     aid.funcall,
+                     partial(aid.flip(getattr), "parameters"))
+
+
+def make_set_lr_(lr):
+    def set_lr__(param_group):
+        param_group["lr"] = lr
+    return set_lr__
+
+
+def dorun(coll):
+    for _ in coll:
+        pass
+
+
+run_ = comp(dorun,
+            map)
+
+
+def set_lr_(optimizer, lr):
+    run_(make_set_lr_(lr), optimizer.param_groups)
+
+
+set_lr = aid.curry(2, set_lr_)
+
+
+def load_state(state, entity):
+    entity.load_state_dict(state)
+
+
+def assoc(m, k, v):
+    return set_in(m, (k,), v)
+
+
+key = first
+val = second
+
+
+def merge_with(f, *maps):
+    def merge_entry(m, e):
+        return assoc(m,
+                     key(e),
+                     f(m[key(e)],
+                       val(e)) if contains_(m, key(e)) else val(e))
+    return reduce(partial(reduce, merge_entry), maps)
+
+
+effect = aid.curry(2, comp(last,
+                           last,
+                           juxt(aid.funcall,
+                                vector)))
+
+
+def get_progress(model_name, get_model):
+    checkpoint = merge(
         torch.load(get_resources_path(model_name,
                                       get_selection(model_name)["run"],
                                       append_extension(
@@ -79,3 +137,12 @@ def get_checkpoint(model_name):
                         json_name))))["training"]) if path.exists(
         get_resources_path(model_name,
                            get_selection(model_name)["run"])) else {}
+    return merge(checkpoint,
+                 effect(partial(s.transform_,
+                                "optimizer",
+                                aid.flip(set_lr)(get_tuned(model_name)["lr"])),
+                        effect(partial(merge_with, load_state, checkpoint),
+                               zipmap(("model",
+                                       "optimizer"),
+                                      juxt(identity,
+                                           get_optimizer)(get_model())))))
