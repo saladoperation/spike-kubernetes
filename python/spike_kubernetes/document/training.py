@@ -39,6 +39,27 @@ get_steps = comp(partial(map, comp(convert_list,
 steps = get_steps(repeatedly(partial(channel.basic_get, queue, True)))
 
 
+def decode(crf, logits):
+    return crf.viterbi_tags(logits,
+                            torch.ones(tuple(drop_last(logits.size())),
+                                       dtype=torch.uint8))
+
+
+get_inference = aid.build(decode,
+                          partial(s.select_, ("model", "crf")),
+                          partial(aid.flip(get), "output"))
+
+
+def transfer_(apath, f, m):
+    return s.setval_(apath, f(m), m)
+
+
+set_inference = partial(transfer_, "inference", get_inference)
+
+mod = comp(second,
+           divmod)
+
+
 def run_step(reduction, step):
     reduction["model"].train()
     reduction["model"].zero_grad()
@@ -51,6 +72,10 @@ def run_step(reduction, step):
     reduction["optimizer"].step()
     reduction["model"].eval()
     # TODO: implement this function
-    return merge(reduction,
-                 step,
-                 forwarded)
+    return (set_inference if
+            zero_(
+                mod(step["global_step"],
+                    document_helpers.tuned["validation-interval"])) else
+            identity)(merge(reduction,
+                            step,
+                            forwarded))

@@ -39,8 +39,7 @@ def vals(m):
 
 
 MAP_VALS = RichNavigator(comp(tuple,
-                              vals,
-                              first),
+                              vals),
                          walk_values)
 
 
@@ -48,7 +47,7 @@ def setval_(path, val, structure):
     return transform_(path, constantly(val), structure)
 
 
-ALL = RichNavigator(first, walk)
+ALL = RichNavigator(vector, walk)
 
 
 def multi_path(*paths):
@@ -62,3 +61,19 @@ def multi_path(*paths):
                                                      aid.flip(get)),
                                            paths))),
                          transform_continuation_)
+
+
+def get_select_continuation(continuation, element):
+    def continuation_(structure):
+        return continuation(get(
+            structure,
+            element)) if isinstance(
+            element,
+            builtins.str) else element.select_(structure)
+    return continuation_
+
+
+def select_(path, structure):
+    return reduce(get_select_continuation,
+                  identity,
+                  reverse(coerce_path(path)))(structure)
