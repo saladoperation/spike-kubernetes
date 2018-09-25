@@ -61,6 +61,10 @@ mod = comp(second,
            divmod)
 
 
+def select_keys(m, ks):
+    return funcy.select_keys(partial(contains_, ks), m)
+
+
 def run_step(reduction, step):
     reduction["model"].train()
     reduction["model"].zero_grad()
@@ -73,7 +77,13 @@ def run_step(reduction, step):
     reduction["optimizer"].step()
     reduction["model"].eval()
     # TODO: implement this function
-    return (set_inference if
+    return (comp(partial(aid.flip(select_keys),
+                         {"global_step",
+                          "inference",
+                          "loss",
+                          "mask",
+                          "minimum"}),
+                 set_inference) if
             zero_(
                 mod(step["global_step"],
                     document_helpers.tuned["validation-interval"])) else
