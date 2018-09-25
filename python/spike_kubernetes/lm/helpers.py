@@ -1,5 +1,4 @@
 import itertools
-import os.path as path
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -46,8 +45,7 @@ def make_attribute_call(s_):
 
 get_states = comp(nn.ParameterList,
                   partial(map, nn.Parameter))
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-move = partial(aid.flip(make_attribute_call("to")), device)
+move = partial(aid.flip(make_attribute_call("to")), helpers.device)
 get_character_vector = comp(move,
                             partial(get, vocab.CharNGram()))
 character_vector_size = count(first(get_character_vector("")))
@@ -135,12 +133,7 @@ selected_pth_path = helpers.get_selected_pth_path(lm_name,
 selected_json_path = helpers.get_selected_json_path(lm_name,
                                                     selection["run"],
                                                     step_selection)
-checkpoint = merge(
-    torch.load(selected_pth_path, map_location=device),
-    parse_string(
-        slurp(
-            selected_json_path))["training"]) if path.exists(
-    selected_pth_path) else {}
+checkpoint = helpers.get_checkpoint_path(selected_pth_path, selected_json_path) 
 
 
 def transpose_batch(x):

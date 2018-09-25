@@ -4,6 +4,7 @@ import torch
 from spike_kubernetes.clojure.core import *
 import spike_kubernetes.clojure.string as str_
 import spike_kubernetes.aid as aid
+from spike_kubernetes.cheshire import *
 
 torch.manual_seed(0)
 get_stoi_name = "get-stoi"
@@ -50,3 +51,15 @@ def get_selected_json_path(model_name, run, step_selection):
 
 def get_tuned_path(model_name, run):
     return get_run_path(model_name, run, tuned_name)
+
+
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+
+def get_checkpoint_path(selected_pth_path, selected_json_path):
+    return merge(
+        torch.load(selected_pth_path, map_location=device),
+        parse_string(
+            slurp(
+                selected_json_path))["training"]) if path.exists(
+        selected_pth_path) else {}
