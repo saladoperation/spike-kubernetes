@@ -200,15 +200,9 @@ convert_list = partial(
                                             "reference"))),
                  comp(move,
                       torch.tensor))))
-
-
-def convert_tensor_(x):
-    return x.tolist() if isinstance(x, torch.Tensor) else x
-
-
 evaluate = comp(tuple,
                 partial(map,
-                        comp(convert_tensor_,
+                        comp(helpers.convert_tensor,
                              forward,
                              partial(merge, progress),
                              convert_list)))

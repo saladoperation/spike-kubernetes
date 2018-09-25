@@ -5,6 +5,7 @@ from spike_kubernetes.clojure.core import *
 import spike_kubernetes.aid as aid
 from spike_kubernetes.cheshire import *
 import spike_kubernetes.specter as s
+import spike_kubernetes.helpers as helpers
 import spike_kubernetes.document.helpers as document_helpers
 
 app = Flask(__name__)
@@ -77,7 +78,8 @@ def run_step(reduction, step):
     reduction["optimizer"].step()
     reduction["model"].eval()
     # TODO: implement this function
-    return (comp(partial(aid.flip(select_keys),
+    return (comp(helpers.convert_tensor,
+                 partial(aid.flip(select_keys),
                          {"global_step",
                           "inference",
                           "loss",

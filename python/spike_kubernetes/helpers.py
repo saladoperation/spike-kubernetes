@@ -4,6 +4,7 @@ import torch
 import torch.optim as optim
 from spike_kubernetes.clojure.core import *
 import spike_kubernetes.clojure.string as str_
+import spike_kubernetes.clojure.walk as walk
 import spike_kubernetes.aid as aid
 from spike_kubernetes.cheshire import *
 import spike_kubernetes.specter as s
@@ -145,3 +146,10 @@ def get_progress(model_name, get_model, default):
                           "optimizer"),
                          juxt(identity,
                               get_optimizer)(get_model())))))
+
+
+def convert_tensor_(x):
+    return x.tolist() if isinstance(x, torch.Tensor) else x
+
+
+convert_tensor = partial(walk.prewalk, convert_tensor_)
