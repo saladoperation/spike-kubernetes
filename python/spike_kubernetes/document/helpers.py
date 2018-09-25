@@ -19,6 +19,8 @@ def get_embedding_vectors(unk_vector):
 
 get_embedding = comp(partial(aid.flip(nn.Embedding.from_pretrained), False),
                      get_embedding_vectors)
+get_states = comp(nn.ParameterList,
+                  partial(map, partial(aid.flip(nn.Parameter), False)))
 multiply = comp(partial(reduce, operator.mul, 1),
                 vector)
 get_bidirectional_size = partial(multiply, 2)
@@ -27,10 +29,18 @@ num_tags = multiply(3, 2)
 
 def get_model():
     # TODO possibly use embedding dropout
-    model = nn.ModuleDict(
+    return nn.ModuleDict(
         {"embedding": get_embedding(
             init.kaiming_normal_(torch.zeros(1,
                                              pretrained.dim))),
+            "states": get_states(
+                # TODO possibly don't use kaiming_normal_
+                map(init.kaiming_normal_,
+                    repeat(2,
+                           torch.zeros(
+                               get_bidirectional_size(tuned["num_layers"]),
+                               tuned["batch-size"],
+                               tuned["hidden_size"])))),
             # TODO possibly use variational dropout
             # TODO possibly use layer normalization
             "lstm": nn.LSTM(pretrained.dim,
@@ -43,18 +53,8 @@ def get_model():
                 get_bidirectional_size(tuned["hidden_size"]),
                 num_tags),
             "crf": conditional_random_field.ConditionalRandomField(num_tags)})
-    return model
 
 
-def get_states(batch_size):
-    return tuple(
-        # TODO possibly don't use kaiming_normal_
-        map(init.kaiming_normal_,
-            repeat(2,
-                   torch.zeros(get_bidirectional_size(tuned["num_layers"]),
-                               batch_size,
-                               tuned["hidden_size"]))))
-
-
+progress = helpers.get_progress(document_name, get_model)
 index_ = helpers.make_index_(
     {helpers.get_stoi_name: constantly(pretrained.stoi)})
