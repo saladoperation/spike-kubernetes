@@ -37,10 +37,10 @@ def get_run_path(model_name, run, filename):
     return get_resources_path(model_name, "runs", run, filename)
 
 
-def get_selected_pth_path(model_name, run, step_selection):
+def get_selected_pt_path(model_name, run, step_selection):
     return get_resources_path(model_name,
                               run,
-                              append_extension(step_selection, "pth"))
+                              append_extension(step_selection, "pt"))
 
 
 def get_selected_json_path(model_name, run, step_selection):
