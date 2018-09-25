@@ -19,8 +19,6 @@ def get_embedding_vectors(unk_vector):
 
 get_embedding = comp(partial(aid.flip(nn.Embedding.from_pretrained), False),
                      get_embedding_vectors)
-get_states = comp(nn.ParameterList,
-                  partial(map, partial(aid.flip(nn.Parameter), False)))
 multiply = comp(partial(reduce, operator.mul, 1),
                 vector)
 get_bidirectional_size = partial(multiply, 2)
@@ -33,14 +31,6 @@ def get_model():
         {"embedding": get_embedding(
             init.kaiming_normal_(torch.zeros(1,
                                              pretrained.dim))),
-            "states": get_states(
-                # TODO possibly don't use kaiming_normal_
-                map(init.kaiming_normal_,
-                    repeat(2,
-                           torch.zeros(
-                               get_bidirectional_size(tuned["num_layers"]),
-                               tuned["batch-size"],
-                               tuned["hidden_size"])))),
             # TODO possibly use variational dropout
             # TODO possibly use layer normalization
             "lstm": nn.LSTM(pretrained.dim,
@@ -58,13 +48,26 @@ def get_model():
 def forward(m):
     lstm_output, states = m["model"]["lstm"](
         m["model"]["embedding"](m["source"]),
-        m["model"]["states"])
+        m["states"])
     output = m["model"]["linear"](lstm_output)
     return {"loss": -m["model"]["crf"](output, m["reference"]),
             "output": output,
             "states": states}
 
 
-progress = helpers.get_progress(document_name, get_model)
+def get_states(batch_size):
+    # TODO possibly don't use kaiming_normal_
+    return tuple(
+        map(init.kaiming_normal_,
+            repeat(2,
+                   torch.zeros(
+                       get_bidirectional_size(tuned["num_layers"]),
+                       batch_size,
+                       tuned["hidden_size"]))))
+
+
+progress = helpers.get_progress(document_name,
+                                get_model,
+                                {"states": get_states(tuned["batch-size"])})
 index_ = helpers.make_index_(
     {helpers.get_stoi_name: constantly(pretrained.stoi)})

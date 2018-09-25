@@ -115,7 +115,3 @@
             zero?)
      (lb/publish channel "" queue-name %)
      (recur %)))
-
-(publish-if-zero! (first (get-training-steps {:token-offset    [0 0]
-                                              :document-offset [0 0]
-                                              :global_step     0})))

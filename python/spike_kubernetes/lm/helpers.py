@@ -173,7 +173,7 @@ def forward(m):
                    ("forth", "back"))
 
 
-progress = helpers.get_progress(lm_name, get_model)
+progress = helpers.get_progress(lm_name, get_model, {})
 convert_list = partial(
     s.transform_,
     s.multi_path("forth", "back"),

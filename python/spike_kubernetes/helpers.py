@@ -117,37 +117,31 @@ effect = aid.curry(2, comp(last,
                                 vector)))
 
 
-def get_checkpoint(model_name):
-    return merge(
-        torch.load(get_resources_path(model_name,
-                                      get_selection(model_name)["run"],
-                                      append_extension(
-                                          get_step_selection(
-                                              get_selection(model_name)),
-                                          "pt")),
-                   device),
-        parse_string(
-            slurp(
-                get_resources_path(
-                    model_name,
-                    get_selection(model_name)["run"],
-                    append_extension(
-                        get_step_selection(
-                            get_selection(model_name)),
-                        json_name))))["training"]) if path.exists(
-        get_resources_path(model_name,
-                           get_selection(model_name)["run"])) else {}
+def get_pt_path(model_name):
+    return get_resources_path(model_name,
+                              get_selection(model_name)["run"],
+                              append_extension(
+                                  get_step_selection(
+                                      get_selection(model_name)),
+                                  "pt"))
 
 
-def get_progress(model_name, get_model):
-    return merge(get_tuned(model_name),
-                 effect(partial(s.transform_,
-                                "optimizer",
-                                aid.flip(set_lr)(get_tuned(model_name)["lr"])),
-                        effect(partial(merge_with,
-                                       load_state,
-                                       get_checkpoint(model_name)),
-                               zipmap(("model",
-                                       "optimizer"),
-                                      juxt(identity,
-                                           get_optimizer)(get_model())))))
+def get_progress(model_name, get_model, default):
+    return effect(
+        partial(s.transform_,
+                "optimizer",
+                aid.flip(set_lr)(get_tuned(model_name)["lr"])),
+        merge(get_tuned(model_name),
+              default,
+              effect(
+                  partial(
+                      merge_with,
+                      load_state,
+                      torch.load(get_pt_path(model_name),
+                                 device) if
+                      path.exists(get_pt_path(model_name)) else
+                      {}),
+                  zipmap(("model",
+                          "optimizer"),
+                         juxt(identity,
+                              get_optimizer)(get_model())))))
