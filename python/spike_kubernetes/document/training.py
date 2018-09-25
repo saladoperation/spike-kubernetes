@@ -40,9 +40,10 @@ steps = get_steps(repeatedly(partial(channel.basic_get, queue, True)))
 
 
 def decode(crf, logits):
-    return crf.viterbi_tags(logits,
-                            torch.ones(tuple(drop_last(logits.size())),
-                                       dtype=torch.uint8))
+    return map(first,
+               crf.viterbi_tags(logits,
+                                torch.ones(tuple(drop_last(logits.size())),
+                                           dtype=torch.uint8)))
 
 
 get_inference = aid.build(decode,
