@@ -1272,9 +1272,14 @@
                                      :alternative
                                      %))))
 
+     (def filter-map
+       (comp (partial into {})
+             filter))
+
      (def generate-document-inference
        (comp str/join
              (partial map consolidate)
              separate
-             (partial s/transform* :inference flatten)
-             #(dissoc % :loss :source :reference)))))
+             (partial s/transform* [s/MAP-VALS sequential?] flatten)
+             (partial filter-map (comp sequential?
+                                       val))))))
