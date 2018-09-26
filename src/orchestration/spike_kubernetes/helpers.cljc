@@ -748,17 +748,17 @@
            (parse/parse sentence)))
 
      (defn recursively-get-variants*
-       [original replacement before accumulation]
+       [originals replacements before accumulation]
        (let [after (->> before
                         (mapcat (partial get-variants*
-                                         original
-                                         replacement))
+                                         originals
+                                         replacements))
                         set)]
          (aid/casep after
                     empty? accumulation
                     (->> (concat accumulation after)
                          set
-                         (recur original replacement after)))))
+                         (recur originals replacements after)))))
 
      (def get-variants
        (aid/build mapcat
