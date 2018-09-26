@@ -3,7 +3,6 @@
             [clojure.string :as str]
             [cljs.tools.reader :as reader]
             [aid.core :as aid]
-            [com.rpl.specter :as s]
             [en-inflectors]
             [macchiato.server :as server]
             [macchiato.util.response :as r]
