@@ -23,7 +23,7 @@
                        (.conjugate (inflectors. verb)))))
 
 (def verb-tags
-  #{:vbd :vbg :vbn :vbp})
+  #{:vbd :vbg :vbn :vbp :vbz})
 
 (aid/defcurried inflect
                 [lemma k]
@@ -44,6 +44,52 @@
   {lemma (->> lm-tags
               (mapcat (juxt identity (inflect lemma)))
               (apply array-map))})
+
+(def bijection
+  (set/map-invert helpers/bijection))
+
+(def surjection
+  {"'re" "'s"
+   "'ve" "'s"})
+
+(def plural-noun?
+  (aid/build and
+             helpers/noun?
+             (partial (aid/flip str/ends-with?) "S")))
+
+(def singular-noun?
+  (aid/build and
+             helpers/noun?
+             (complement plural-noun?)))
+
+(def pluralize
+  #(-> %
+       inflectors.
+       .toPlural))
+
+(def get-document-alternative
+  #(->> %
+        :whitespace_
+        (str (get (merge bijection surjection)
+                  (:source %)
+                  (case (:source %)
+                    "it" (case (:dep_ %)
+                           "nsubj" "they"
+                           "them")
+                    "its" (case (:tag_ %)
+                            "PRP" "theirs"
+                            "their")
+                    (aid/casep
+                      (:tag_ %)
+                      (aid/build or
+                                 plural-noun?
+                                 (partial = "VBZ"))
+                      (:lower_ %)
+                      ((aid/casep (:tag_ %)
+                                  singular-noun? pluralize
+                                  (partial = "VBP") ((aid/flip inflect) :vbz)
+                                  identity)
+                        (:source %))))))))
 
 (def handle
   (aid/build aid/funcall

@@ -1,31 +1,54 @@
 (ns spike-kubernetes.helpers
-  #?(:clj
-     (:require [clojure.java.io :as io]
-               [clojure.java.shell :as sh]
-               [clojure.set :as set]
-               [clojure.string :as str]
-               [clojure.tools.reader.edn :as edn]
-               [aid.core :as aid]
-               [buddy.core.hash :as hash]
-               [buddy.core.codecs :refer :all]
-               [cats.builtin]
-               [cats.core :as m]
-               [cats.monad.either :as either]
-               [cheshire.core :refer :all]
-               [clj-http.client :as client]
-               [com.rpl.specter :as s]
-               [compliment.utils :as utils]
-               [environ.core :refer [env]]
-               [incanter.core :as incanter]
-               [me.raynes.fs :as fs]
-               [spike-kubernetes.command :as command]
-               [spike-kubernetes.parse.core :as parse])))
+  (:require [clojure.string :as str]
+            [aid.core :as aid]
+    #?@(:clj [
+            [clojure.java.io :as io]
+            [clojure.java.shell :as sh]
+            [clojure.set :as set]
+            [clojure.tools.reader.edn :as edn]
+            [buddy.core.hash :as hash]
+            [buddy.core.codecs :refer :all]
+            [cats.builtin]
+            [cats.core :as m]
+            [cats.monad.either :as either]
+            [cheshire.core :refer :all]
+            [clj-http.client :as client]
+            [com.rpl.specter :as s]
+            [compliment.utils :as utils]
+            [environ.core :refer [env]]
+            [incanter.core :as incanter]
+            [me.raynes.fs :as fs]
+            [spike-kubernetes.command :as command]
+            [spike-kubernetes.parse.core :as parse]])))
 
 (def alteration-port
   3000)
 
 (def app-name
   "app")
+
+(def uncountable
+  {"few"    "little"
+   "fewer"  "less"
+   "fewest" "least"
+   "many"   "much"})
+
+(def be
+  {"is"  "are"
+   "was" "were"})
+
+(def bijective-singular
+  {"these" "this"
+   "those" "that"})
+
+(def bijection
+  (merge uncountable be bijective-singular))
+
+(def noun-prefix
+  "NN")
+
+(def noun?
+  (partial (aid/flip str/starts-with?) noun-prefix))
 
 #?(:clj
    (do
@@ -175,9 +198,6 @@
              (partial s/transform* s/LAST reverse)
              vector))
 
-     (def noun-prefix
-       "NN")
-
      (defn set-proper
        [tokens token]
        (->> token
@@ -263,23 +283,6 @@
              set-propers
              set-quotes
              set-starts))
-
-     (def uncountable
-       {"few"    "little"
-        "fewer"  "less"
-        "fewest" "least"
-        "many"   "much"})
-
-     (def be
-       {"is"  "are"
-        "was" "were"})
-
-     (def bijective-singular
-       {"these" "this"
-        "those" "that"})
-
-     (def bijection
-       (merge uncountable be bijective-singular))
 
      (def it
        "it")
@@ -504,9 +507,6 @@
                                 (complement conjunction?)
                                 removable?
                                 :original))
-
-     (def noun?
-       (partial (aid/flip str/starts-with?) noun-prefix))
 
      (def get-replaceable
        #(comp parse/satisfy
