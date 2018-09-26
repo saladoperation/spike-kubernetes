@@ -381,8 +381,12 @@
      (def preparation-name
        "preparation")
 
+     (def append-extension
+       (comp (partial str/join ".")
+             vector))
+
      (def preparation-filename
-       (str preparation-name ".edn"))
+       (append-extension preparation-name "edn"))
 
      (utils/defmemoized get-preparation
                         []
@@ -880,10 +884,6 @@
      (defn get-runs-path
        [model & more]
        (apply get-resources-path model "runs" more))
-
-     (def append-extension
-       (comp (partial str/join ".")
-             vector))
 
      (aid/defcurried get-tuned-path
                      [model timestamp extension]
