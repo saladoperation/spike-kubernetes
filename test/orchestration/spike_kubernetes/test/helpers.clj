@@ -1,8 +1,6 @@
 (ns spike-kubernetes.test.helpers
   (:require [clojure.test :as test]
             [aid.core :as aid]
-            [cats.builtin]
-            [cats.core :as m]
             [com.rpl.specter :as s]
             [spike-kubernetes.helpers :as helpers]))
 
