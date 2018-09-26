@@ -265,7 +265,6 @@
 
 (test/deftest insertion-lower-hyphen
   (test-generate {:alternative               ["they" "'s " "states" "-" "of" "-" "arts " "models" "."]
-                  :article                   [0 0 0 0 0 0 0 0 0]
                   :article-title             [false false false false false false false false false]
                   :character-with-whitespace ["it" "'re " "state" "-" "of" "-" "art " "model" "."]
                   :hyphen                    [false false false false true false true false false]
@@ -279,7 +278,6 @@
 
 (test/deftest insertion-title
   (test-generate {:alternative               ["answers " "is " "no" "."],
-                  :article                   [0 0 0 0],
                   :article-title             [false false false false],
                   :character-with-whitespace ["answer " "are " "no" "."],
                   :hyphen                    [false false false false],
