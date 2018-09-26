@@ -1221,7 +1221,8 @@
              (partial s/transform* [s/ALL :source] get-document-index)))
 
      (def grade-document
-       (comp (aid/build merge
+       (comp (partial s/transform* [s/MAP-VALS sequential?] flatten)
+             (aid/build merge
                         identity
                         (comp :body
                               (partial client/post (get-origin document-port))
@@ -1279,6 +1280,5 @@
        (comp str/join
              (partial map consolidate)
              separate
-             (partial s/transform* [s/MAP-VALS sequential?] flatten)
              (partial filter-map (comp sequential?
                                        val))))))
