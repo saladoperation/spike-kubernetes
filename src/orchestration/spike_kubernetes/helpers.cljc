@@ -331,10 +331,15 @@
        (transfer* :mask (aid/build or
                                    :quote
                                    :proper)))
+     (def set-character-with-ws
+       (transfer* :character-with-whitespace (aid/build str
+                                                        :source
+                                                        :whitespace_)))
 
      (def arrange-document-tokens
        (comp (partial map (comp set-mask
                                 set-reference
+                                set-character-with-ws
                                 set-source))
              arrange-tokens))
 
@@ -1270,7 +1275,7 @@
                                     identity)
                           (command/if-then-else (comp even?
                                                       :inference)
-                                                :text_with_ws
+                                                :character-with-whitespace
                                                 :alternative
                                                 %)))))
 

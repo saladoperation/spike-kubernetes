@@ -255,3 +255,24 @@
 
 (test/deftest superlative
   (test-structure "I'm nicest with you." "I'm nicest to you."))
+
+(defn test-generate
+  [m sentence]
+  (-> m
+      helpers/generate-document-inference
+      (= sentence)
+      test/is))
+
+(test/deftest insertion-lower-hyphen
+  (test-generate {:alternative               ["they" "'s " "states" "-" "of" "-" "arts " "models" "."]
+                  :article                   [0 0 0 0 0 0 0 0 0]
+                  :article-title             [false false false false false false false false false]
+                  :character-with-whitespace ["it" "'re " "state" "-" "of" "-" "art " "model" "."]
+                  :hyphen                    [false false false false true false true false false]
+                  :inference                 [0 1 4 0 0 0 2 0 0]
+                  :is_title                  [true false false false false false false false false]
+                  :mask                      [false false false false false false false false false]
+                  :proper                    [false false false false false false false false false]
+                  :start                     [true nil nil nil nil nil nil nil nil]
+                  :text_with_ws              ["It" "'s " "state" "-" "of" "-" "art " "model" "."]}
+                 "It's a state-of-the-art model."))
