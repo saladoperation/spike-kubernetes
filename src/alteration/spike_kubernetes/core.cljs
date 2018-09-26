@@ -91,11 +91,17 @@
                                   identity)
                         (:source %))))))))
 
+(def set-alternatives
+  (partial map
+           (helpers/transfer* :alternative
+                              get-document-alternative)))
+
 (def handle
   (aid/build aid/funcall
              ;TODO implement this function
-             (comp {:get-alternative (comp (partial apply merge)
-                                           (partial map get-lm-alternative))}
+             (comp {:get-alternative  (comp (partial apply merge)
+                                            (partial map get-lm-alternative))
+                    :set-alternatives set-alternatives}
                    :action)
              :data))
 

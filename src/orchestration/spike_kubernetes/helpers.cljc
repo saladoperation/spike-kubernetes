@@ -1,6 +1,7 @@
 (ns spike-kubernetes.helpers
   (:require [clojure.string :as str]
             [aid.core :as aid]
+            [com.rpl.specter :as s]
     #?@(:clj [
             [clojure.java.io :as io]
             [clojure.java.shell :as sh]
@@ -13,7 +14,6 @@
             [cats.monad.either :as either]
             [cheshire.core :refer :all]
             [clj-http.client :as client]
-            [com.rpl.specter :as s]
             [compliment.utils :as utils]
             [environ.core :refer [env]]
             [incanter.core :as incanter]
@@ -50,6 +50,10 @@
 (def noun?
   (partial (aid/flip str/starts-with?) noun-prefix))
 
+(aid/defcurried transfer*
+                [apath f m]
+                (s/setval apath (f m) m))
+
 #?(:clj
    (do
      (def orchestration-name
@@ -80,10 +84,6 @@
                                                                  (subs 1))
                                            (singleton? *command-line-args*) ""
                                            :else (last *command-line-args*)))))
-
-     (aid/defcurried transfer*
-                     [apath f m]
-                     (s/setval apath (f m) m))
 
      (defn deep-merge-with
        [f & more]
@@ -1144,9 +1144,23 @@
                 "datasets"
                 (:dataset hyperparameter)))
 
+     (def get-edn-request
+       (comp (partial array-map :as :clojure :body)
+             pr-str))
+
+     (def post-macchiato
+       (partial client/post (get-origin alteration-port)))
+
+     (def alter-remotely
+       (comp :body
+             post-macchiato
+             get-edn-request))
+
      (def structure-document
        ;TODO implement this function
-       (comp arrange-document-tokens
+       (comp alter-remotely
+             (partial array-map :action :set-alternatives :data)
+             arrange-document-tokens
              parse-remotely))
 
      (def make-+
@@ -1202,16 +1216,4 @@
      (def get-document-evaluation-steps
        (comp (partial s/transform* (s/multi-path :source :reference) vector)
              consolidate-into-vector
-             (partial s/transform* [s/ALL :source] get-document-index)))
-
-     (def get-edn-request
-       (comp (partial array-map :as :clojure :body)
-             pr-str))
-
-     (def post-macchiato
-       (partial client/post (get-origin alteration-port)))
-
-     (def alter-remotely
-       (comp :body
-             post-macchiato
-             get-edn-request))))
+             (partial s/transform* [s/ALL :source] get-document-index)))))
