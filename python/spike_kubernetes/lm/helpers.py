@@ -173,7 +173,6 @@ def forward(m):
                    ("forth", "back"))
 
 
-progress = helpers.get_progress(lm_name, get_model, {})
 convert_list = partial(
     s.transform_,
     s.multi_path("forth", "back"),
@@ -200,6 +199,7 @@ convert_list = partial(
                                             "reference"))),
                  comp(move,
                       torch.tensor))))
+progress = helpers.get_training_progress(lm_name)(get_model())
 evaluate = comp(tuple,
                 partial(map,
                         comp(helpers.get_serializable,

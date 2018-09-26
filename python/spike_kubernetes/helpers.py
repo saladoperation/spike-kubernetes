@@ -133,25 +133,24 @@ def effects(*more):
     return last(more)
 
 
-def get_progress(model_name, get_model, default):
-    return s.transform_(
-        "training",
-        partial(merge,
-                get_tuned(model_name),
-                effects(partial(s.transform_,
-                                "optimizer",
-                                aid.flip(set_lr)(get_tuned(model_name)["lr"])),
-                        partial(merge_with,
-                                load_state,
-                                torch.load(get_pt_path(model_name),
-                                           device) if
-                                path.exists(get_pt_path(model_name)) else
-                                {}),
-                        zipmap(("model",
-                                "optimizer"),
-                               juxt(identity,
-                                    get_optimizer)(get_model())))),
-        default)
+def get_training_progress_(model_name, model):
+    return merge(get_tuned(model_name),
+                 effects(partial(s.transform_,
+                                 "optimizer",
+                                 aid.flip(set_lr)(get_tuned(model_name)["lr"])),
+                         partial(merge_with,
+                                 load_state,
+                                 torch.load(get_pt_path(model_name),
+                                            device) if
+                                 path.exists(get_pt_path(model_name)) else
+                                 {}),
+                         zipmap(("model",
+                                 "optimizer"),
+                                juxt(identity,
+                                     get_optimizer)(model))))
+
+
+get_training_progress = aid.curry(2, get_training_progress_)
 
 
 def convert_tensor(x):

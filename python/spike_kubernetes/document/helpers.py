@@ -67,13 +67,28 @@ def get_states(batch_size):
                        tuned["hidden_size"]))))
 
 
+true_ = partial(equal, True)
+every_ = comp(empty_,
+              partial(remove, true_),
+              map)
+
+
+def deep_merge_with(f, *more):
+    return merge_with(partial(deep_merge_with, f),
+                      *more) if every_(map_, more) else f(*more)
+
+
+deep_merge = partial(deep_merge_with, comp(last,
+                                           vector))
+
 evaluation_batch_size = 1
-progress = helpers.get_progress(
-    document_name,
-    get_model,
+progress = deep_merge(
     {"training": {"states": get_states(tuned["batch-size"])},
      "evaluation": {"batch-size": evaluation_batch_size,
-                    "states": get_states(evaluation_batch_size)}})
+                    "states": get_states(evaluation_batch_size)}},
+    {"training": helpers.get_training_progress(
+        document_name)(get_model())})
+
 convert_list = partial(s.transform_,
                        s.multi_path("source", "reference"),
                        torch.tensor)
