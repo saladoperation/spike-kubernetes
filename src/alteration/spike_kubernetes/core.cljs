@@ -15,12 +15,12 @@
 (aid/defcurried conjugate
                 [verb tag]
                 ;TODO delete if when en-inflectors is fixed
-                (if (and (= tag :vbp) (= verb "be"))
-                  "are"
-                  (->> tag
-                       name
-                       str/upper-case
-                       (.conjugate (inflectors. verb)))))
+                (cond (and (= tag :vbp) (= verb "be")) "are"
+                      (and (= tag :vbz) (= verb "are")) "is"
+                      :else (->> tag
+                                 name
+                                 str/upper-case
+                                 (.conjugate (inflectors. verb)))))
 
 (def verb-tags
   #{:vbd :vbg :vbn :vbp :vbz})

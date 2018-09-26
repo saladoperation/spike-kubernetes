@@ -1,5 +1,6 @@
 (ns spike-kubernetes.test.core
-  (:require [cljs.test :as test]
+  (:require [clojure.set :as set]
+            [cljs.test :as test]
             [aid.core :as aid]
             [doo.runner :refer-macros [doo-all-tests]]
             [spike-kubernetes.core :as core]))
@@ -15,7 +16,9 @@
                     test/is))
 
 (def test-verb-alternative
-  (test-alternative core/verb-tags))
+  (-> core/verb-tags
+      (set/difference #{:vbz})
+      test-alternative))
 
 (test/deftest do
   (test-verb-alternative "do" {:vbd "did"
