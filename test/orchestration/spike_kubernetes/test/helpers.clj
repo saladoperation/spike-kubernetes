@@ -48,7 +48,11 @@
    {:dep_   "attr"
     :lemma_ "model"
     :lower_ "model"
-    :tag_   "NN"}])
+    :tag_   "NN"}
+   {:dep_   "punct"
+    :lemma_ "."
+    :lower_ "."
+    :tag_   "."}])
 
 (aid/defcurried test-arrangement
                 [sentence k vs]
@@ -63,14 +67,14 @@
 
 (test/deftest aritcle-source
   (test-article-sentence :source
-                         ["it" "'re" "state" "-" "of" "-" "art" "model"]))
+                         ["it" "'re" "state" "-" "of" "-" "art" "model" "."]))
 
 (test/deftest aritcle-reference
-  (test-article-sentence :reference [0 1 4 0 0 0 2 0]))
+  (test-article-sentence :reference [0 1 4 0 0 0 2 0 0]))
 
 (test/deftest aritcle-hyphen
   (test-article-sentence :hyphen
-                         [false false false false true false true false]))
+                         [false false false false true false true false false]))
 
 (def alternative-sentence
   [{:dep_   "ROOT"
