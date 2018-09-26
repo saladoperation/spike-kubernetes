@@ -1075,7 +1075,7 @@
                                          vector)
                                 transform-string))))
 
-     (def get-evaluation-steps
+     (def get-lm-evaluation-steps
        #(mapcat (comp (partial map get-batch)
                       (partial partition-all (:batch-size (get-lm-tuned))))
                 %))
@@ -1206,4 +1206,9 @@
                                     bytes->hex)
                                word2vecf-sha (either/right "")
                                (either/left "Checksums don't match."))
-                (command/bzip2 "-df" word2vecf-filename))))))
+                (command/bzip2 "-df" word2vecf-filename))))
+
+     (def get-document-evaluation-steps
+       (comp (partial s/transform* (s/multi-path :source :reference) vector)
+             consolidate-into-vector
+             (partial s/transform* [s/ALL :source] get-document-index)))))
