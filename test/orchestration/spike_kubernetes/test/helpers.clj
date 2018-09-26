@@ -207,13 +207,9 @@
        f
        (test-arrangement quote-sentence k)))
 
-(defn <$
-  [v fv]
-  (m/<$> (constantly v) fv))
-
 (test/deftest quote-mask
   (test-quote-sentence :mask (comp (partial s/setval* s/FIRST false)
-                                   (partial <$ true))))
+                                   (partial helpers/<$ true))))
 
 (test/deftest quote-source
   (test-quote-sentence :source (partial map :lower_)))
