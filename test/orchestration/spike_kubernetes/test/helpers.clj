@@ -290,14 +290,14 @@
                  "The answer is no."))
 
 (test/deftest deletion-title
-  (test-generate {:character-with-whitespace ["coding " "are " "art" "."],
-                  :text_with_ws              ["coding " "is " "art" "."],
-                  :mask                      [false false false false],
-                  :alternative               ["codings " "is " "arts" "."],
-                  :start                     [nil nil nil nil],
+  (test-generate {:alternative               ["codings " "is " "arts" "."],
                   :article-title             [true false false false],
-                  :inference                 [0 1 4 0],
+                  :character-with-whitespace ["coding " "are " "art" "."],
                   :hyphen                    [false false false false],
+                  :inference                 [0 1 4 0],
+                  :is_title                  [false false false false],
+                  :mask                      [false false false false],
                   :proper                    [false false false false],
-                  :is_title                  [false false false false]}
+                  :start                     [nil nil nil nil],
+                  :text_with_ws              ["coding " "is " "art" "."]}
                  "Coding is a art."))
