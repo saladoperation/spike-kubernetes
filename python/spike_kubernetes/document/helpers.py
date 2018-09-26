@@ -67,9 +67,11 @@ def get_states(batch_size):
                        tuned["hidden_size"]))))
 
 
-progress = helpers.get_progress(document_name,
-                                get_model,
-                                {"states": get_states(tuned["batch-size"])})
+progress = helpers.get_progress(
+    document_name,
+    get_model,
+    {"training": {"states": get_states(tuned["batch-size"])},
+     "evaluation": {"states": get_states(1)}})
 convert_list = partial(s.transform_,
                        s.multi_path("source", "reference"),
                        torch.tensor)

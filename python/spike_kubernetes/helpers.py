@@ -128,25 +128,30 @@ def get_pt_path(model_name):
                                   "pt"))
 
 
+def effects(*more):
+    run_(partial(aid.flip(aid.funcall), last(more)), drop_last(more))
+    return last(more)
+
+
 def get_progress(model_name, get_model, default):
-    return effect(
-        partial(s.transform_,
-                "optimizer",
-                aid.flip(set_lr)(get_tuned(model_name)["lr"])),
-        merge(get_tuned(model_name),
-              default,
-              effect(
-                  partial(
-                      merge_with,
-                      load_state,
-                      torch.load(get_pt_path(model_name),
-                                 device) if
-                      path.exists(get_pt_path(model_name)) else
-                      {}),
-                  zipmap(("model",
-                          "optimizer"),
-                         juxt(identity,
-                              get_optimizer)(get_model())))))
+    return s.transform_(
+        "training",
+        partial(merge,
+                get_tuned(model_name),
+                effects(partial(s.transform_,
+                                "optimizer",
+                                aid.flip(set_lr)(get_tuned(model_name)["lr"])),
+                        partial(merge_with,
+                                load_state,
+                                torch.load(get_pt_path(model_name),
+                                           device) if
+                                path.exists(get_pt_path(model_name)) else
+                                {}),
+                        zipmap(("model",
+                                "optimizer"),
+                               juxt(identity,
+                                    get_optimizer)(get_model())))),
+        default)
 
 
 def convert_tensor_(x):
