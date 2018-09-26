@@ -1109,7 +1109,8 @@
                         (comp (partial map (partial array-map :output))
                               :body
                               (partial client/post (get-origin lm-port))
-                              get-evaluate-request))))
+                              get-evaluate-request))
+             get-lm-evaluation-steps))
 
      (def consolidate-text
        (comp (partial str/join "")

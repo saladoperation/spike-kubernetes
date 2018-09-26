@@ -21,7 +21,6 @@
            :body
            slurp
            helpers/structure-lm
-           helpers/get-lm-evaluation-steps
            helpers/grade-lm
            helpers/generate-lm-inference))))
 
