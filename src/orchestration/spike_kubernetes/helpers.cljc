@@ -299,7 +299,7 @@
      (def altering-tags
        #{(str noun-prefix "S") (str verb-prefix "Z")})
 
-     (def possessive-s
+     (def apostrophe-s
        "'s")
 
      (def get-source
@@ -310,8 +310,8 @@
                                    :lower_)
              (get (merge bijection
                          surjection
-                         {possessive-s (aid/case-eval (:lemma_ %)
-                                                      possessive-s possessive-s
+                         {apostrophe-s (aid/case-eval (:lemma_ %)
+                                                      apostrophe-s apostrophe-s
                                                       "be" "'re"
                                                       "'ve")})
                   (:lower_ %))))
