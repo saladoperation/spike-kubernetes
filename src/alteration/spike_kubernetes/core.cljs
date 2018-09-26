@@ -57,7 +57,7 @@
              :data))
 
 (defn index
-  [req res raise]
+  [req res _]
   (let [data (atom "")]
     (-> req
         :body
