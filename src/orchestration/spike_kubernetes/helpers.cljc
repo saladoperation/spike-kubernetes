@@ -1220,7 +1220,6 @@
              (partial s/transform* [s/ALL :source] get-document-index)))
 
      (def grade-document
-       ;TODO implement this function
        (comp (aid/build merge
                         identity
                         (comp :body
