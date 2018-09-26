@@ -90,8 +90,8 @@
     :lower_ "many"
     :tag_   "JJ"}
    {:dep_   "attr"
-    :lemma_ "hero"
-    :lower_ "heroes"
+    :lemma_ "coder"
+    :lower_ "coders"
     :tag_   "NNS"}
    {:dep_   "punct"
     :lemma_ "?"
@@ -102,7 +102,7 @@
   (test-arrangement alternative-sentence))
 
 (test/deftest alternative-source
-  (test-alternative-sentence :source ["are" "there" "much" "hero" "?"]))
+  (test-alternative-sentence :source ["are" "there" "much" "coder" "?"]))
 
 (test/deftest alternative-reference
   (test-alternative-sentence :reference [0 0 1 1 0]))
