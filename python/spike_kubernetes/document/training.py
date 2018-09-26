@@ -1,6 +1,5 @@
 from flask import Flask
 import pika
-import torch
 from spike_kubernetes.clojure.core import *
 import spike_kubernetes.aid as aid
 from spike_kubernetes.cheshire import *
@@ -29,35 +28,12 @@ def make_attribute_call(s_):
                 vector)
 
 
-convert_list = partial(s.transform_,
-                       s.multi_path("source", "reference"),
-                       torch.tensor)
-get_steps = comp(partial(map, comp(convert_list,
+get_steps = comp(partial(map, comp(document_helpers.convert_list,
                                    parse_string,
                                    make_attribute_call("decode"))),
                  partial(remove, partial(equal, None)),
                  partial(map, last))
 steps = get_steps(repeatedly(partial(channel.basic_get, queue, True)))
-
-
-def decode(crf, logits):
-    return map(first,
-               crf.viterbi_tags(logits,
-                                torch.ones(tuple(drop_last(logits.size())),
-                                           dtype=torch.uint8)))
-
-
-get_inference = aid.build(decode,
-                          partial(s.select_, ("model", "crf")),
-                          partial(aid.flip(get), "output"))
-
-
-def transfer_(apath, f, m):
-    return s.setval_(apath, f(m), m)
-
-
-set_inference = partial(transfer_, "inference", get_inference)
-
 mod = comp(second,
            divmod)
 
@@ -86,7 +62,7 @@ def run_step(reduction, step):
                           "loss",
                           "mask",
                           "minimum"}),
-                 set_inference) if
+                 document_helpers.set_inference) if
             zero_(mod(step["global_step"],
                       document_helpers.tuned["validation-interval"])) else
             identity)(merge(reduction,

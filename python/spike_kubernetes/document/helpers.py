@@ -4,8 +4,9 @@ import torch.nn as nn
 import torch.nn.init as init
 import torchtext.vocab as vocab
 from spike_kubernetes.clojure.core import *
-import spike_kubernetes.helpers as helpers
 import spike_kubernetes.aid as aid
+import spike_kubernetes.specter as s
+import spike_kubernetes.helpers as helpers
 
 pretrained = vocab.Vectors("deps.words")
 document_name = "document"
@@ -69,5 +70,27 @@ def get_states(batch_size):
 progress = helpers.get_progress(document_name,
                                 get_model,
                                 {"states": get_states(tuned["batch-size"])})
+convert_list = partial(s.transform_,
+                       s.multi_path("source", "reference"),
+                       torch.tensor)
+
+
+def decode(crf, logits):
+    return map(first,
+               crf.viterbi_tags(logits,
+                                torch.ones(tuple(drop_last(logits.size())),
+                                           dtype=torch.uint8)))
+
+
+get_inference = aid.build(decode,
+                          partial(s.select_, ("model", "crf")),
+                          partial(aid.flip(get), "output"))
+
+
+def transfer_(apath, f, m):
+    return s.setval_(apath, f(m), m)
+
+
+set_inference = partial(transfer_, "inference", get_inference)
 index_ = helpers.make_index_(
     {helpers.get_stoi_name: constantly(pretrained.stoi)})

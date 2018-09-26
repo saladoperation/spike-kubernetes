@@ -11,6 +11,7 @@ import spike_kubernetes.specter as s
 
 torch.manual_seed(0)
 get_stoi_name = "get-stoi"
+evaluate_name = "evaluate"
 
 
 def make_index_(m):
