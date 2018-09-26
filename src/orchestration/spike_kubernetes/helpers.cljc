@@ -763,12 +763,10 @@
      (def get-variants
        (aid/build mapcat
                   (aid/curriedfn [sentence [originals replacements]]
-                                 (->> sentence
-                                      (get-variants* originals replacements)
-                                      (repeat 2)
-                                      (apply recursively-get-variants*
-                                             originals
-                                             replacements)))
+                                 (recursively-get-variants* originals
+                                                            replacements
+                                                            [sentence]
+                                                            []))
                   screen))
 
      (def concatenate-into-vector
