@@ -1196,7 +1196,7 @@
        "deps.words.bz2")
 
      (def word2vecf-url
-       (str "http://u.cs.biu.ac.il/~yogo/data/syntemb/" word2vecf-filename))
+       (get-path "http://u.cs.biu.ac.il/~yogo/data/syntemb" word2vecf-filename))
 
      (def word2vecf-sha
        "38281adc0a0ee1abf50c2cc6c90372bdef968cb08d4e3a2d4c68c2924b639e64")
