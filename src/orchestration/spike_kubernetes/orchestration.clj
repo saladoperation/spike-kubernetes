@@ -22,7 +22,10 @@
            slurp
            helpers/structure-lm
            helpers/grade-lm
-           helpers/generate-lm-inference))))
+           helpers/generate-lm-inference
+           helpers/structure-document
+           helpers/grade-document
+           helpers/generate-document-inference))))
 
 (def start
   (partial web/run (wrap-resource handler "public") {:host "0.0.0.0"}))

@@ -67,6 +67,19 @@ def get_states(batch_size):
                        tuned["hidden_size"]))))
 
 
+key = first
+val = second
+
+
+def merge_with(f, *maps):
+    def merge_entry(m, e):
+        return assoc(m,
+                     key(e),
+                     f(m[key(e)],
+                       val(e)) if contains_(m, key(e)) else val(e))
+    return reduce(partial(reduce, merge_entry), maps)
+
+
 true_ = partial(equal, True)
 every_ = comp(empty_,
               partial(remove, true_),
