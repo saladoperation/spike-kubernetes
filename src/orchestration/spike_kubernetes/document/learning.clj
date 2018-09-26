@@ -75,7 +75,7 @@
             "]")
        edn/read-string
        (s/transform [s/ALL :source] helpers/get-document-index)
-       helpers/consolidate-into-vector
+       helpers/concatenate-into-vector
        (merge {:file            (get-file m)
                :document-offset (get-document-offset m)
                :token-offset    (get-token-offset m)})))
@@ -87,7 +87,7 @@
     (aid/build (partial map (partial s/setval* :global_step))
                (comp #(map (partial + %) helpers/integers)
                      :global_step)
-               (comp (partial map helpers/consolidate-into-vector)
+               (comp (partial map helpers/concatenate-into-vector)
                      rest
                      (partial iterate (partial map get-step))
                      helpers/separate

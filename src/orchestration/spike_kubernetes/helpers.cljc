@@ -771,14 +771,14 @@
                                              replacements)))
                   screen))
 
-     (def consolidate-into-vector
+     (def concatenate-into-vector
        (comp (partial apply merge-with concat)
              (partial s/transform* [s/ALL s/MAP-VALS] vector)))
 
-     (def consolidate-into-sentence
+     (def concatenate-into-sentence
        (comp (partial s/transform* :text_with_ws (comp vector
                                                        str/join))
-             consolidate-into-vector))
+             concatenate-into-vector))
 
      (def eos
        "<eos>")
@@ -812,7 +812,7 @@
                                        rest
                                        :source))
                       set-character
-                      consolidate-into-vector)))
+                      concatenate-into-vector)))
 
      (def consolidate-original
        (partial s/transform* :original (comp vector
@@ -822,7 +822,7 @@
        (comp consolidate-original
              set-back
              augment-forth
-             consolidate-into-sentence))
+             concatenate-into-sentence))
 
      (defn set-index
        [index sentences]
@@ -1112,12 +1112,12 @@
                               get-evaluate-request))
              get-lm-evaluation-steps))
 
-     (def consolidate-text
-       (comp (partial str/join "")
+     (def join-text
+       (comp str/join
              (partial map :text_with_ws)))
 
      (def generate-lm-inference
-       (comp consolidate-text
+       (comp join-text
              (partial map
                       (partial apply min-key :negative-log-probability))))
 
@@ -1216,7 +1216,7 @@
 
      (def get-document-evaluation-steps
        (comp (partial s/transform* (s/multi-path :source :reference) vector)
-             consolidate-into-vector
+             concatenate-into-vector
              (partial s/transform* [s/ALL :source] get-document-index)))
 
      (def grade-document
