@@ -55,7 +55,7 @@
 (aid/defcurried test-arrangement
                 [sentence k vs]
                 (->> sentence
-                     helpers/arrange-tokens
+                     helpers/arrange-document-tokens
                      (map k)
                      (= vs)
                      test/is))

@@ -258,7 +258,7 @@
                                           :article-title false
                                           :hyphen        false}))))
 
-     (def arrange-tokens*
+     (def arrange-tokens
        (comp set-remove-tokens
              set-propers
              set-quotes
@@ -338,11 +338,11 @@
                                    :quote
                                    :proper)))
 
-     (def arrange-tokens
+     (def arrange-document-tokens
        (comp (partial map (comp set-mask
                                 set-reference
                                 set-source))
-             arrange-tokens*))
+             arrange-tokens))
 
      (def partition-sentences
        (comp (partial map flatten)
@@ -855,7 +855,7 @@
                                            get-variants)
                                 arrange-original-sentence))
              partition-sentences
-             arrange-tokens*
+             arrange-tokens
              parse-remotely))
 
      (def get-selection-path
@@ -1155,7 +1155,7 @@
 
      (def structure-document
        ;TODO implement this function
-       (comp arrange-tokens
+       (comp arrange-document-tokens
              parse-remotely))
 
      (def make-+
