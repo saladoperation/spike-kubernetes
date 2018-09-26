@@ -276,3 +276,17 @@
                   :start                     [true nil nil nil nil nil nil nil nil]
                   :text_with_ws              ["It" "'s " "state" "-" "of" "-" "art " "model" "."]}
                  "It's a state-of-the-art model."))
+
+(test/deftest insertion-title
+  (test-generate {:alternative               ["answers " "is " "no" "."],
+                  :article                   [0 0 0 0],
+                  :article-title             [false false false false],
+                  :character-with-whitespace ["answer " "are " "no" "."],
+                  :hyphen                    [false false false false],
+                  :inference                 [2 1 0 0],
+                  :is_title                  [true false false false],
+                  :mask                      [false false false false],
+                  :proper                    [false false false false],
+                  :text_with_ws              ["Answer " "is " "no" "."],
+                  :start                     [true nil nil nil]}
+                 "The answer is no."))

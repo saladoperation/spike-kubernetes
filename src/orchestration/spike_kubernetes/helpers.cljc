@@ -1234,10 +1234,17 @@
                               get-evaluate-request))
              get-document-evaluation-steps))
 
+     (def get-article
+       (comp {0 ""
+              1 "the"
+              2 "a"}
+             (partial (aid/flip quot) 2)
+             :inference))
+
      (def title?
        (command/if-then-else (aid/build and
-                                        (comp zero?
-                                              :article)
+                                        (comp (partial = "")
+                                              get-article)
                                         (aid/build or
                                                    :article-title
                                                    :start))
@@ -1247,13 +1254,6 @@
                              (aid/build and
                                         :proper
                                         :is_title)))
-
-     (def get-article
-       (comp {0 ""
-              1 "the"
-              2 "a"}
-             (partial (aid/flip quot) 2)
-             :inference))
 
      (def consolidate
        #(aid/casep %
