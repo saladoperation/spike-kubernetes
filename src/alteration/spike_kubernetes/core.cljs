@@ -45,14 +45,11 @@
               (mapcat (juxt identity (inflect lemma)))
               (apply array-map))})
 
-(def act
-  ;TODO implement this function
-  {:get-alternative (comp (partial apply merge)
-                          (partial map get-lm-alternative))})
-
 (def handle
   (aid/build aid/funcall
-             (comp act
+             ;TODO implement this function
+             (comp {:get-alternative (comp (partial apply merge)
+                                           (partial map get-lm-alternative))}
                    :action)
              :data))
 
