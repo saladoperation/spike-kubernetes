@@ -16,7 +16,10 @@
                  [environ "1.1.0"]
                  [funcool/cats "2.2.0"]
                  [hiccup "1.0.5"]
-                 [incanter "1.9.3"]
+                 ;Including all incanter modules seems to give the following exception.
+                 ;[incanter "1.9.3"]
+                 ;Caused by: java.lang.SecurityException: class "org.bouncycastle.crypto.digests.SHA3Digest"'s signer information does not match signer information of other classes in the same package
+                 [incanter/incanter-core "1.9.3"]
                  [macchiato/core "0.2.14"]
                  [me.raynes/fs "1.4.6"]
                  [mount "0.1.13"]
