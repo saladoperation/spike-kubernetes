@@ -20,7 +20,7 @@
        (-> %
            :body
            slurp
-           helpers/structure-evaluation-sentences
+           helpers/structure-lm
            helpers/get-lm-evaluation-steps
            helpers/grade-lm
            helpers/generate-lm-inference))))

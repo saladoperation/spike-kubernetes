@@ -222,7 +222,7 @@
   [original candidate]
   (-> candidate
       ((->> original
-            helpers/structure-evaluation-sentences
+            helpers/structure-lm
             flatten
             (mapcat :text_with_ws)
             set))

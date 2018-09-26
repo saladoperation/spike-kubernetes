@@ -845,7 +845,7 @@
        (aid/curry 2 (comp vals
                           group-by)))
 
-     (def structure-evaluation-sentences
+     (def structure-lm
        (comp (group-by-vals (comp count
                                   :lemma_))
              (partial mapcat-indexed set-index)
