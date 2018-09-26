@@ -277,40 +277,40 @@
                  "It's a state-of-the-art model."))
 
 (test/deftest insertion-title
-  (test-generate {:alternative               ["answers " "is " "no" "."],
-                  :article-title             [false false false false],
-                  :character-with-whitespace ["answer " "are " "no" "."],
-                  :hyphen                    [false false false false],
-                  :inference                 [2 1 0 0],
-                  :is_title                  [true false false false],
-                  :mask                      [false false false false],
-                  :proper                    [false false false false],
-                  :text_with_ws              ["Answer " "is " "no" "."],
+  (test-generate {:alternative               ["answers " "is " "no" "."]
+                  :article-title             [false false false false]
+                  :character-with-whitespace ["answer " "are " "no" "."]
+                  :hyphen                    [false false false false]
+                  :inference                 [2 1 0 0]
+                  :is_title                  [true false false false]
+                  :mask                      [false false false false]
+                  :proper                    [false false false false]
+                  :text_with_ws              ["Answer " "is " "no" "."]
                   :start                     [true nil nil nil]}
                  "The answer is no."))
 
 (test/deftest deletion-title
-  (test-generate {:alternative               ["codings " "is " "arts" "."],
-                  :article-title             [true false false false],
-                  :character-with-whitespace ["coding " "are " "art" "."],
-                  :hyphen                    [false false false false],
-                  :inference                 [0 1 4 0],
-                  :is_title                  [false false false false],
-                  :mask                      [false false false false],
-                  :proper                    [false false false false],
-                  :start                     [nil nil nil nil],
+  (test-generate {:alternative               ["codings " "is " "arts" "."]
+                  :article-title             [true false false false]
+                  :character-with-whitespace ["coding " "are " "art" "."]
+                  :hyphen                    [false false false false]
+                  :inference                 [0 1 4 0]
+                  :is_title                  [false false false false]
+                  :mask                      [false false false false]
+                  :proper                    [false false false false]
+                  :start                     [nil nil nil nil]
                   :text_with_ws              ["coding " "is " "art" "."]}
                  "Coding is a art."))
 
 (test/deftest deletion-camel
-  (test-generate {:character-with-whitespace ["iphone " "user " "rock" "."],
-                  :text_with_ws              ["iPhone " "user " "rocks" "."],
-                  :mask                      [false false false false],
-                  :alternative               ["iphones " "users " "rocks" "."],
-                  :start                     [nil nil nil nil],
-                  :article-title             [true false false false],
-                  :inference                 [0 1 0 0],
-                  :hyphen                    [false false false false],
-                  :proper                    [true false false false],
+  (test-generate {:character-with-whitespace ["iphone " "user " "rock" "."]
+                  :text_with_ws              ["iPhone " "user " "rocks" "."]
+                  :mask                      [false false false false]
+                  :alternative               ["iphones " "users " "rocks" "."]
+                  :start                     [nil nil nil nil]
+                  :article-title             [true false false false]
+                  :inference                 [0 1 0 0]
+                  :hyphen                    [false false false false]
+                  :proper                    [true false false false]
                   :is_title                  [false false false false]}
                  "iPhone users rock."))
