@@ -1202,4 +1202,16 @@
      (def get-document-evaluation-steps
        (comp (partial s/transform* (s/multi-path :source :reference) vector)
              consolidate-into-vector
-             (partial s/transform* [s/ALL :source] get-document-index)))))
+             (partial s/transform* [s/ALL :source] get-document-index)))
+
+     (def get-edn-request
+       (comp (partial array-map :as :clojure :body)
+             pr-str))
+
+     (def post-macchiato
+       (partial client/post (get-origin alteration-port)))
+
+     (def alter-remotely
+       (comp :body
+             post-macchiato
+             get-edn-request))))

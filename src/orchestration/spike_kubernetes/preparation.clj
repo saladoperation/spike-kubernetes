@@ -78,14 +78,6 @@
                         vector))
         (apply merge-with concat)))
 
-
-(def get-edn-request
-  (comp (partial array-map :as :clojure :body)
-        pr-str))
-
-(def post-macchiato
-  (partial client/post (helpers/get-origin helpers/alteration-port)))
-
 (def get-alternative
   #(->> (get-confusion)
         graph/nodes
@@ -94,9 +86,7 @@
         (map :lower_)
         set
         (array-map :action :get-alternative :data)
-        get-edn-request
-        post-macchiato
-        :body))
+        helpers/alter-remotely))
 
 (def prepare
   #(spit (helpers/get-resources-path helpers/preparation-filename)
