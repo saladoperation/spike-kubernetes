@@ -288,3 +288,16 @@
                   :text_with_ws              ["Answer " "is " "no" "."],
                   :start                     [true nil nil nil]}
                  "The answer is no."))
+
+(test/deftest deletion-title
+  (test-generate {:character-with-whitespace ["coding " "are " "art" "."],
+                  :text_with_ws              ["coding " "is " "art" "."],
+                  :mask                      [false false false false],
+                  :alternative               ["codings " "is " "arts" "."],
+                  :start                     [nil nil nil nil],
+                  :article-title             [true false false false],
+                  :inference                 [0 1 4 0],
+                  :hyphen                    [false false false false],
+                  :proper                    [false false false false],
+                  :is_title                  [false false false false]}
+                 "Coding is a art."))
