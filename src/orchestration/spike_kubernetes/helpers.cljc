@@ -1250,24 +1250,26 @@
              :inference))
 
      (def consolidate
-       #(str ((aid/casep %
-                         (aid/build or
-                                    :article-title
-                                    :start)
-                         str/capitalize
-                         identity)
-               (get-article %))
-             (aid/casep %
-                        :hyphen "-"
-                        " ")
-             ((aid/casep %
-                         title? str/capitalize
-                         identity)
-               (command/if-then-else (comp even?
-                                           :inference)
-                                     :text_with_ws
-                                     :alternative
-                                     %))))
+       #(aid/casep %
+                   :mask (:text_with_ws %)
+                   (str ((aid/casep %
+                                    (aid/build or
+                                               :article-title
+                                               :start)
+                                    str/capitalize
+                                    identity)
+                          (get-article %))
+                        (aid/casep %
+                                   :hyphen "-"
+                                   " ")
+                        ((aid/casep %
+                                    title? str/capitalize
+                                    identity)
+                          (command/if-then-else (comp even?
+                                                      :inference)
+                                                :text_with_ws
+                                                :alternative
+                                                %)))))
 
      (def filter-map
        (comp (partial into {})
