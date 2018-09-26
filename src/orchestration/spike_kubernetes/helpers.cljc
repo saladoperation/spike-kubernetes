@@ -1260,9 +1260,11 @@
                                     str/capitalize
                                     identity)
                           (get-article %))
-                        (aid/casep %
-                                   :hyphen "-"
-                                   " ")
+                        (case (get-article %)
+                          "" ""
+                          (aid/casep %
+                                     :hyphen "-"
+                                     " "))
                         ((aid/casep %
                                     title? str/capitalize
                                     identity)
