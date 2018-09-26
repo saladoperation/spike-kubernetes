@@ -192,26 +192,29 @@
      (def set-quotes
        (partial reduce set-quote []))
 
+     (def set-proper
+       (transfer* :proper (comp (partial (aid/flip str/starts-with?)
+                                         (str noun-prefix "P"))
+                                :tag_)))
+
      (def reverse-reduce
        (comp reverse
              (partial apply reduce)
              (partial s/transform* s/LAST reverse)
              vector))
 
-     (defn set-proper
+     (defn set-masked-proper
        [tokens token]
        (->> token
-            (s/setval :proper (and (-> token
-                                       :tag_
-                                       (str/starts-with? (str noun-prefix "P")))
-                                   (or (-> token
-                                           :dep_
-                                           (not= "compound"))
-                                       (last? :proper tokens))))
+            (s/setval :masked-proper (and (:proper token)
+                                          (or (-> token
+                                                  :dep_
+                                                  (not= "compound"))
+                                              (last? :masked-proper tokens))))
             (conj tokens)))
 
-     (def set-propers
-       (partial reverse-reduce set-proper []))
+     (def set-masked-propers
+       (partial reverse-reduce set-masked-proper []))
 
      (def hyphen?
        (comp (partial = "-")
@@ -248,10 +251,13 @@
                                    (partial (aid/flip select-keys)
                                             #{:article :article-title}))))
 
+     (def mask?
+       (aid/build or
+                  :masked-proper
+                  :quote))
+
      (def removable?
-       (complement (aid/build or
-                              :proper
-                              :quote)))
+       (complement mask?))
 
      (defn set-remove-token
        [tokens token]
@@ -280,7 +286,8 @@
 
      (def arrange-tokens
        (comp set-remove-tokens
-             set-propers
+             set-masked-propers
+             (partial map set-proper)
              set-quotes
              set-starts))
 
@@ -328,9 +335,8 @@
                                    :article))))
 
      (def set-mask
-       (transfer* :mask (aid/build or
-                                   :quote
-                                   :proper)))
+       (transfer* :mask mask?))
+
      (def set-character-with-ws
        (transfer* :character-with-whitespace (aid/build str
                                                         :source
@@ -352,11 +358,11 @@
        "<sos>")
 
      (def set-sos
-       (partial s/setval* s/BEFORE-ELEM {:forth        {:source sos}
-                                         :lemma_       sos
-                                         :proper       false
-                                         :quote        false
-                                         :text_with_ws ""}))
+       (partial s/setval* s/BEFORE-ELEM {:forth         {:source sos}
+                                         :lemma_        sos
+                                         :masked-proper false
+                                         :quote         false
+                                         :text_with_ws  ""}))
 
      (def set-forth-source
        (transfer* [:forth :source] get-source))
@@ -1254,28 +1260,31 @@
                              (constantly false)))
 
      (def consolidate
-       #(aid/casep %
-                   :mask (:text_with_ws %)
-                   (str ((aid/casep %
-                                    (aid/build or
-                                               :article-title
-                                               :start)
-                                    str/capitalize
-                                    identity)
-                          (get-article %))
-                        (case (get-article %)
-                          "" ""
-                          (aid/casep %
-                                     :hyphen "-"
-                                     " "))
-                        ((aid/casep %
-                                    title? str/capitalize
-                                    identity)
-                          (command/if-then-else (comp even?
-                                                      :inference)
-                                                :character-with-whitespace
-                                                :alternative
-                                                %)))))
+       #(aid/casep
+          %
+          :mask (:text_with_ws %)
+          (str ((aid/casep %
+                           (aid/build or
+                                      :article-title
+                                      :start)
+                           str/capitalize
+                           identity)
+                 (get-article %))
+               (case (get-article %)
+                 "" ""
+                 (aid/casep %
+                            :hyphen "-"
+                            " "))
+               (aid/casep %
+                          :proper (:text_with_ws %)
+                          ((aid/casep %
+                                      title? str/capitalize
+                                      identity)
+                            (command/if-then-else (comp even?
+                                                        :inference)
+                                                  :character-with-whitespace
+                                                  :alternative
+                                                  %))))))
 
      (def filter-map
        (comp (partial into {})

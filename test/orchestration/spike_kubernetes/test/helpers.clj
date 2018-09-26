@@ -301,3 +301,16 @@
                   :start                     [nil nil nil nil],
                   :text_with_ws              ["coding " "is " "art" "."]}
                  "Coding is a art."))
+
+(test/deftest deletion-camel
+  (test-generate {:character-with-whitespace ["iphone " "user " "rock" "."],
+                  :text_with_ws              ["iPhone " "user " "rocks" "."],
+                  :mask                      [false false false false],
+                  :alternative               ["iphones " "users " "rocks" "."],
+                  :start                     [nil nil nil nil],
+                  :article-title             [true false false false],
+                  :inference                 [0 1 0 0],
+                  :hyphen                    [false false false false],
+                  :proper                    [true false false false],
+                  :is_title                  [false false false false]}
+                 "iPhone users rock."))
