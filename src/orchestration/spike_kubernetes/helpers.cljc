@@ -1217,4 +1217,13 @@
      (def get-document-evaluation-steps
        (comp (partial s/transform* (s/multi-path :source :reference) vector)
              consolidate-into-vector
-             (partial s/transform* [s/ALL :source] get-document-index)))))
+             (partial s/transform* [s/ALL :source] get-document-index)))
+
+     (def grade-document
+       ;TODO implement this function
+       (comp (aid/build merge
+                        identity
+                        (comp :body
+                              (partial client/post (get-origin document-port))
+                              get-evaluate-request))
+             get-document-evaluation-steps))))
