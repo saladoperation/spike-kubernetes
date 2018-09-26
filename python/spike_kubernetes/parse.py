@@ -20,6 +20,7 @@ def get_token(token):
                                                     "head",
                                                     "i",
                                                     "is_sent_start",
+                                                    "is_title",
                                                     "lemma_",
                                                     "lower_",
                                                     "tag_",
