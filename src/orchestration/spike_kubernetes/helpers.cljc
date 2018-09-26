@@ -878,10 +878,14 @@
        [model & more]
        (apply get-resources-path model "runs" more))
 
+     (def append-extension
+       (comp (partial str/join ".")
+             vector))
+
      (aid/defcurried get-tuned-path
                      [model timestamp extension]
                      (->> extension
-                          (str "tuned.")
+                          (append-extension "tuned")
                           (get-runs-path model timestamp)))
 
      (def slurp-read-string
