@@ -202,7 +202,7 @@ convert_list = partial(
                       torch.tensor))))
 evaluate = comp(tuple,
                 partial(map,
-                        comp(helpers.convert_tensor,
+                        comp(helpers.get_serializable,
                              forward,
                              partial(merge, progress),
                              convert_list)))

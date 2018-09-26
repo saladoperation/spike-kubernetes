@@ -95,3 +95,7 @@ map_ = partial(_flip(isinstance), dict)
 repeat = _flip(funcy.repeat)
 zipmap = comp(partial(apply, merge),
               partial(map, array_map))
+
+
+def select_keys(m, ks):
+    return funcy.select_keys(partial(contains_, ks), m)

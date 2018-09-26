@@ -38,10 +38,6 @@ mod = comp(second,
            divmod)
 
 
-def select_keys(m, ks):
-    return funcy.select_keys(partial(contains_, ks), m)
-
-
 def run_step(reduction, step):
     reduction["model"].train()
     reduction["model"].zero_grad()
@@ -55,7 +51,7 @@ def run_step(reduction, step):
     reduction["optimizer"].step()
     reduction["model"].eval()
     # TODO: implement this function
-    return (comp(helpers.convert_tensor,
+    return (comp(helpers.get_serializable,
                  partial(aid.flip(select_keys),
                          {"global_step",
                           "inference",

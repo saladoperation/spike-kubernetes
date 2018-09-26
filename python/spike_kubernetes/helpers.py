@@ -154,8 +154,13 @@ def get_progress(model_name, get_model, default):
         default)
 
 
-def convert_tensor_(x):
+def convert_tensor(x):
     return x.tolist() if isinstance(x, torch.Tensor) else x
 
 
-convert_tensor = partial(walk.prewalk, convert_tensor_)
+def convert_map(x):
+    return tuple(x) if isinstance(x, builtins.map) else x
+
+
+get_serializable = partial(walk.prewalk, comp(convert_map,
+                                              convert_tensor))

@@ -67,11 +67,13 @@ def get_states(batch_size):
                        tuned["hidden_size"]))))
 
 
+evaluation_batch_size = 1
 progress = helpers.get_progress(
     document_name,
     get_model,
     {"training": {"states": get_states(tuned["batch-size"])},
-     "evaluation": {"states": get_states(1)}})
+     "evaluation": {"batch-size": evaluation_batch_size,
+                    "states": get_states(evaluation_batch_size)}})
 convert_list = partial(s.transform_,
                        s.multi_path("source", "reference"),
                        torch.tensor)
@@ -94,5 +96,23 @@ def transfer_(apath, f, m):
 
 
 set_inference = partial(transfer_, "inference", get_inference)
+
+
+def convert_merge_(f, m):
+    return aid.build(merge,
+                     identity,
+                     f)(m)
+
+
+convert_merge = aid.curry(convert_merge_)
+evaluate = comp(helpers.get_serializable,
+                partial(aid.flip(select_keys), {"loss", "inference"}),
+                convert_merge(set_inference),
+                convert_merge(forward),
+                partial(merge,
+                        progress["training"],
+                        progress["evaluation"]),
+                convert_list)
 index_ = helpers.make_index_(
-    {helpers.get_stoi_name: constantly(pretrained.stoi)})
+    {helpers.get_stoi_name: constantly(pretrained.stoi),
+     helpers.evaluate_name: evaluate})
