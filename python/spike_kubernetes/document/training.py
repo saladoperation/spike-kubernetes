@@ -70,7 +70,8 @@ def run_step(reduction, step):
     reduction["model"].train()
     reduction["model"].zero_grad()
     forwarded = document_helpers.forward(
-        merge(s.transform_(("states", s.ALL),
+        merge(s.transform_(("states",
+                            s.ALL),
                            make_attribute_call("detach"),
                            reduction),
               step))
@@ -86,9 +87,8 @@ def run_step(reduction, step):
                           "mask",
                           "minimum"}),
                  set_inference) if
-            zero_(
-                mod(step["global_step"],
-                    document_helpers.tuned["validation-interval"])) else
+            zero_(mod(step["global_step"],
+                      document_helpers.tuned["validation-interval"])) else
             identity)(merge(reduction,
                             step,
                             forwarded))
