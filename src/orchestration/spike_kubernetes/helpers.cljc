@@ -814,12 +814,12 @@
                       set-character
                       concatenate-into-vector)))
 
-     (def consolidate-original
+     (def transform-original
        (partial s/transform* :original (comp vector
                                              (partial every? true?))))
 
      (def arrange-candidate-sentence
-       (comp consolidate-original
+       (comp transform-original
              set-back
              augment-forth
              concatenate-into-sentence))
