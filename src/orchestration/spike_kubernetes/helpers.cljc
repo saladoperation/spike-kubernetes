@@ -1225,4 +1225,52 @@
                         (comp :body
                               (partial client/post (get-origin document-port))
                               get-evaluate-request))
-             get-document-evaluation-steps))))
+             get-document-evaluation-steps))
+
+     (def title?
+       (command/if-then-else (aid/build and
+                                        (comp zero?
+                                              :article)
+                                        (aid/build or
+                                                   :article-title
+                                                   :start))
+                             (aid/build or
+                                        (complement :proper)
+                                        :is_title)
+                             (aid/build and
+                                        :proper
+                                        :is_title)))
+
+     (def get-article
+       (comp {0 ""
+              1 "the"
+              2 "a"}
+             (partial (aid/flip quot) 2)
+             :inference))
+
+     (def consolidate
+       #(str ((aid/casep %
+                         (aid/build or
+                                    :article-title
+                                    :start)
+                         str/capitalize
+                         identity)
+               (get-article %))
+             (aid/casep %
+                        :hyphen "-"
+                        " ")
+             ((aid/casep %
+                         title? str/capitalize
+                         identity)
+               (command/if-then-else (comp even?
+                                           :inference)
+                                     :text_with_ws
+                                     :alternative
+                                     %))))
+
+     (def generate-document-inference
+       (comp str/join
+             (partial map consolidate)
+             separate
+             (partial s/transform* :inference flatten)
+             #(dissoc % :loss :source :reference)))))
