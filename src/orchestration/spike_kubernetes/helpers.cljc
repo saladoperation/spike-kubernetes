@@ -284,26 +284,17 @@
              set-quotes
              set-starts))
 
-     (def it
-       "it")
-
-     (def its
-       "its")
-
      (def surjection
-       {"they"   it
-        "their"  its
-        "them"   it
-        "theirs" its})
+       {"they"   "it"
+        "their"  "its"
+        "them"   "it"
+        "theirs" "its"})
 
      (def verb-prefix
        "VB")
 
      (def altering-tags
        #{(str noun-prefix "S") (str verb-prefix "Z")})
-
-     (def apostrophe-s
-       "'s")
 
      (def get-source
        #(->> %
@@ -313,10 +304,10 @@
                                    :lower_)
              (get (merge bijection
                          surjection
-                         {apostrophe-s (aid/case-eval (:lemma_ %)
-                                                      apostrophe-s apostrophe-s
-                                                      "be" "'re"
-                                                      "'ve")})
+                         {"'s" (aid/case-eval (:lemma_ %)
+                                              "'s" "'s"
+                                              "be" "'re"
+                                              "'ve")})
                   (:lower_ %))))
 
      (def set-source
