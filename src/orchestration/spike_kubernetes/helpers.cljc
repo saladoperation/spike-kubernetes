@@ -1251,9 +1251,7 @@
                              (aid/build or
                                         (complement :proper)
                                         :is_title)
-                             (aid/build and
-                                        :proper
-                                        :is_title)))
+                             (constantly false)))
 
      (def consolidate
        #(aid/casep %
