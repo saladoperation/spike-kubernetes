@@ -1004,16 +1004,15 @@
                       :infimum   infimum
                       :length    (- upperbound infimum)
                       :mask      (get-mask reference infimum upperbound)
-                      :reference (->>
-                                   reference
-                                   ((aid/case-eval
-                                      infimum
-                                      lm-unk-index (partial map
-                                                            cut-off)
-                                      (partial filter
-                                               (make-within infimum
-                                                            upperbound))))
-                                   (map (partial (aid/flip -) infimum)))})
+                      :reference (->> reference
+                                      ((aid/case-eval
+                                         infimum
+                                         lm-unk-index (partial map
+                                                               cut-off)
+                                         (partial filter
+                                                  (make-within infimum
+                                                               upperbound))))
+                                      (map (partial (aid/flip -) infimum)))})
 
      (def get-clusters
        #(-> %
