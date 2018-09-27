@@ -103,3 +103,8 @@ def select_keys(m, ks):
 
 def filter(f, coll):
     return builtins.filter(f, _get_items(coll))
+
+
+minus = comp(partial(apply, (partial(reduce, operator.sub))),
+             juxt(first, rest),
+             vector)

@@ -23,11 +23,6 @@ def get_currying_arity(f):
     return max(2, count(inspect.signature(f).parameters))
 
 
-minus = comp(partial(apply, (partial(reduce, operator.sub))),
-             juxt(first, rest),
-             vector)
-
-
 def curry(x, *outer_more):
     def call_middle(*middle_more):
         def call_inner(*inner_more):
