@@ -94,22 +94,6 @@ def load_state(state, entity):
     entity.load_state_dict(state)
 
 
-def assoc(m, k, v):
-    return set_in(m, (k,), v)
-
-
-key = first
-val = second
-
-
-def merge_with(f, *maps):
-    def merge_entry(m, e):
-        return assoc(m, key(e), f(m[key(e)], val(e)) if
-        contains_(m, key(e)) else
-        val(e))
-    return reduce(partial(reduce, merge_entry), maps)
-
-
 effect = aid.curry(2, comp(last,
                            last,
                            juxt(aid.funcall,
