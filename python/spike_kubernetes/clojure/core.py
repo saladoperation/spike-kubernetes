@@ -141,3 +141,5 @@ every_ = comp(empty_,
               map)
 mod = comp(second,
            divmod)
+vector_ = comp(partial(equal, tuple),
+               type)

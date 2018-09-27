@@ -20,8 +20,7 @@ def get_transform_continuation(continuation, element):
     return continuation_
 
 
-coerce_path = aid.if_else(comp(partial(equal, tuple),
-                               type),
+coerce_path = aid.if_else(vector_,
                           vector)
 
 
