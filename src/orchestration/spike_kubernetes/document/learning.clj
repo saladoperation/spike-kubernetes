@@ -12,6 +12,7 @@
             [langohr.queue :as lq]
             [me.raynes.fs :as fs]
             [mount.core :refer [defstate]]
+            [spike-kubernetes.command :as command]
             [spike-kubernetes.helpers :as helpers]))
 
 (utils/defmemoized get-length
@@ -68,7 +69,7 @@
                                get-document-offset*
                                inc))
                      (map slurp)
-                     str/join
+                     command/join-newline
                      str/split-lines
                      (drop (:token-offset m))
                      (take (:step-size (helpers/get-document-tuned)))
