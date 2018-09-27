@@ -137,6 +137,14 @@ def convert_tensor(x):
     return x.tolist() if isinstance(x, torch.Tensor) else x
 
 
+def make_attribute_call(s_):
+    return comp(aid.build(partial(apply, aid.funcall),
+                          comp(partial(aid.flip(getattr), s_),
+                               first),
+                          rest),
+                vector)
+
+
 convert_map = aid.if_then(comp(partial(equal, builtins.map),
                                type),
                           tuple)

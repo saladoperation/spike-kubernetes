@@ -25,19 +25,9 @@ def get_embedding_vectors(special_vectors):
 
 get_embedding = comp(partial(aid.flip(nn.Embedding.from_pretrained), False),
                      get_embedding_vectors)
-
-
-def make_attribute_call(s_):
-    return comp(aid.build(partial(apply, aid.funcall),
-                          comp(partial(aid.flip(getattr), s_),
-                               first),
-                          rest),
-                vector)
-
-
 get_states = comp(nn.ParameterList,
                   partial(map, nn.Parameter))
-move = partial(aid.flip(make_attribute_call("to")), helpers.device)
+move = partial(aid.flip(helpers.make_attribute_call("to")), helpers.device)
 get_character_vector = comp(move,
                             partial(get, vocab.CharNGram()))
 character_vector_size = count(first(get_character_vector("")))
@@ -62,7 +52,7 @@ def get_direction_model():
 def get_model():
     return move(
         helpers.effect(
-            make_attribute_call("eval"),
+            helpers.make_attribute_call("eval"),
             nn.ModuleDict(
                 merge(
                     zipmap(("forth", "back"),
@@ -176,7 +166,7 @@ convert_list = partial(
                                            get_character_vector))))),
          partial(s.transform_,
                  ("clusters", s.ALL, "mask"),
-                 make_attribute_call("byte")),
+                 helpers.make_attribute_call("byte")),
          partial(s.transform_,
                  s.multi_path("source",
                               ("clusters",
