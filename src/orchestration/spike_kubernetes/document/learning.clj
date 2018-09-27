@@ -12,6 +12,7 @@
             [langohr.queue :as lq]
             [me.raynes.fs :as fs]
             [mount.core :refer [defstate]]
+            [ring.util.response :refer [response]]
             [spike-kubernetes.command :as command]
             [spike-kubernetes.helpers :as helpers]))
 
@@ -135,9 +136,27 @@
         (partial remove :mask)
         helpers/separate))
 
+(def set-precision
+  (helpers/transfer* :precision get-precision))
+
 (def handler
   ;TODO implement this function
-  #(get-evaluation-tokens :validation))
+  #(-> {:validation (->> :validation
+                         get-evaluation-tokens
+                         helpers/grade-document
+                         (helpers/transfer* :precision get-precision)
+                         (helpers/transfer* :inference
+                                            helpers/generate-document-inference)
+                         (helpers/transfer* :reference generate-reference))
+        :training   (->> %
+                         :body
+                         slurp
+                         parse-string
+                         helpers/flatten-sequential
+                         set-precision)}
+       :training
+       generate-string
+       response))
 
 (def start
   (partial web/run handler helpers/option))

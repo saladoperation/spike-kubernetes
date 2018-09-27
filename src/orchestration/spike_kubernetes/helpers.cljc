@@ -1234,8 +1234,11 @@
              concatenate-into-vector
              (partial s/transform* [s/ALL :source] get-document-index)))
 
+     (def flatten-sequential
+       (partial s/transform* [s/MAP-VALS sequential?] flatten))
+
      (def grade-document
-       (comp (partial s/transform* [s/MAP-VALS sequential?] flatten)
+       (comp flatten-sequential
              (aid/build merge
                         identity
                         (comp :body

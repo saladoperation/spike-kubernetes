@@ -43,11 +43,9 @@ def post_json(url, json_):
     return requests.post(url, json=json_)
 
 
-post_process_remotely = comp(make_attribute_call("json"),
-                             partial(post_json, "http://localhost:8080"),
-                             partial(s.setval_, "action", "postprocess"),
-                             partial(array_map, "data"),
-                             helpers.get_serializable, )
+assess_remotely = comp(make_attribute_call("json"),
+                       partial(post_json, "http://localhost:8080"),
+                       helpers.get_serializable, )
 
 def run_step(reduction, step):
     reduction["model"].train()
@@ -62,7 +60,8 @@ def run_step(reduction, step):
     reduction["optimizer"].step()
     reduction["model"].eval()
     # TODO: implement this function
-    return (comp(post_process_remotely,
+    return (comp(assess_remotely,
+                 # TODO: don't use select_keys
                  partial(aid.flip(select_keys), {"global_step",
                                                  "inference",
                                                  "loss",
