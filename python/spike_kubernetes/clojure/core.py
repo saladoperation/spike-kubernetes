@@ -84,8 +84,7 @@ def array_map(*more):
     return dict(zip(*map(partial(take_nth, 2), (more, tuple(rest(more))))))
 
 
-map_ = comp(partial(equal, dict),
-            type)
+map_ = is_mapping
 
 
 def repeat(n, x):
@@ -141,5 +140,4 @@ every_ = comp(empty_,
               map)
 mod = comp(second,
            divmod)
-vector_ = comp(partial(equal, tuple),
-               type)
+vector_ = is_tuple
