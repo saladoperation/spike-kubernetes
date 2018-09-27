@@ -23,8 +23,6 @@ def make_index_(m):
     return index_
 
 
-str = comp(str_join,
-           vector)
 append_extension = comp(partial(str__.join, "."),
                         vector)
 json_name = "json"
