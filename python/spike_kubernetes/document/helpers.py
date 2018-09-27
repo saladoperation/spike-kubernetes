@@ -59,10 +59,9 @@ def get_states(batch_size):
     return tuple(
         map(init.kaiming_normal_,
             repeat(2,
-                   torch.zeros(
-                       get_bidirectional_size(tuned["num_layers"]),
-                       batch_size,
-                       tuned["hidden_size"]))))
+                   torch.zeros(get_bidirectional_size(tuned["num_layers"]),
+                               batch_size,
+                               tuned["hidden_size"]))))
 
 
 def deep_merge_with(f, *more):
