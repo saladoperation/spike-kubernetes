@@ -23,7 +23,7 @@ channel.queue_declare(queue)
 
 get_steps = comp(partial(map, comp(document_helpers.convert_list,
                                    parse_string,
-                                   helpers.make_attribute_call("decode"))),
+                                   aid.make_attribute_call("decode"))),
                  partial(remove, partial(equal, None)),
                  partial(map, last))
 steps = get_steps(repeatedly(partial(channel.basic_get, queue, True)))
@@ -33,7 +33,7 @@ def post_json(url, json_):
     return requests.post(url, json=json_)
 
 
-assess_remotely = comp(helpers.make_attribute_call("json"),
+assess_remotely = comp(aid.make_attribute_call("json"),
                        partial(post_json, "http://localhost:8080"),
                        helpers.get_serializable)
 
@@ -44,7 +44,7 @@ def run_step(reduction, step):
     forwarded = document_helpers.forward(
         merge(s.transform_(("states",
                             s.ALL),
-                           helpers.make_attribute_call("detach"),
+                           aid.make_attribute_call("detach"),
                            reduction),
               step))
     forwarded["loss"].backward()

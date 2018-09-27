@@ -56,3 +56,11 @@ def if_else_(if_function, else_function, then):
 
 
 if_else = curry(3, if_else_)
+
+
+def make_attribute_call(s_):
+    return comp(build(partial(apply, funcall),
+                      comp(partial(flip(getattr), s_),
+                           first),
+                      rest),
+                vector)

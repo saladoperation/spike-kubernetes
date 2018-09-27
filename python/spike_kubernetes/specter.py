@@ -31,10 +31,7 @@ def transform_(path, transform_fn, structure):
                   reverse(coerce_path(path)))(structure)
 
 
-def vals(m):
-    return m.values()
-
-
+vals = aid.make_attribute_call("values")
 MAP_VALS = RichNavigator(comp(tuple,
                               vals),
                          walk_values)

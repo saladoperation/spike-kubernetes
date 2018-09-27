@@ -131,19 +131,9 @@ def get_training_progress_(model_name, model):
 
 
 get_training_progress = aid.curry(2, get_training_progress_)
-
-
-def make_attribute_call(s_):
-    return comp(aid.build(partial(apply, aid.funcall),
-                          comp(partial(aid.flip(getattr), s_),
-                               first),
-                          rest),
-                vector)
-
-
 convert_tensor = aid.if_then(comp(partial(equal, torch.Tensor),
                                   type),
-                             make_attribute_call("toList"))
+                             aid.make_attribute_call("toList"))
 convert_map = aid.if_then(comp(partial(equal, builtins.map),
                                type),
                           tuple)
