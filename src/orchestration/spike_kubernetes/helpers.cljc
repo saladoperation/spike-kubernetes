@@ -337,7 +337,7 @@
      (def set-mask
        (transfer* :mask mask?))
 
-     (def set-character-with-ws
+     (def set-character-with-whitespace
        (transfer* :character-with-whitespace (aid/build str
                                                         :source
                                                         :whitespace_)))
@@ -345,7 +345,7 @@
      (def arrange-document-tokens
        (comp (partial map (comp set-mask
                                 set-reference
-                                set-character-with-ws
+                                set-character-with-whitespace
                                 set-source))
              arrange-tokens))
 
