@@ -1,4 +1,3 @@
-import itertools
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -10,15 +9,10 @@ import spike_kubernetes.helpers as helpers
 import spike_kubernetes.specter as s
 
 pretrained = vocab.pretrained_aliases["glove.6B.300d"]()
-range = itertools.count
 special_tokens = ("<unk>", "<sos>", "<eos>")
-mapcat = comp(partial(apply, concat),
-              map)
 extension = apply(array_map, mapcat(vector,
                                     special_tokens,
                                     range()))
-plus = comp(partial(reduce, operator.add, 0),
-            vector)
 stoi = merge(s.transform_(s.MAP_VALS,
                           partial(plus, count(special_tokens)),
                           pretrained.stoi),
@@ -63,11 +57,6 @@ def get_direction_model():
                         batch_first=True,
                         dropout=tuned["dropout"]),
         "linear": nn.Linear(tuned["hidden_size"], pretrained.dim)})
-
-
-repeatedly = comp(partial(apply, funcy.repeatedly),
-                  reverse,
-                  vector)
 
 
 def get_model():

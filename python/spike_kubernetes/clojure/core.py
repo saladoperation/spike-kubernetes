@@ -1,5 +1,6 @@
 import builtins
 import functools
+import itertools
 import operator
 import funcy
 from funcy import *
@@ -112,3 +113,13 @@ minus = comp(partial(apply, (partial(reduce, operator.sub))),
 
 def update(m, k, f):
     return update_in(m, [k], f)
+
+
+range = itertools.count
+mapcat = comp(partial(apply, concat),
+              map)
+plus = comp(partial(reduce, operator.add, 0),
+            vector)
+repeatedly = comp(partial(apply, funcy.repeatedly),
+                  reverse,
+                  vector)
