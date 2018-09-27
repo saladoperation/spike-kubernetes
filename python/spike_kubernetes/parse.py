@@ -4,6 +4,7 @@ from spike_kubernetes.clojure.core import *
 import spike_kubernetes.clojure.set as set_
 import spike_kubernetes.aid as aid
 import spike_kubernetes.specter as s
+import spike_kubernetes.helpers as helpers
 
 app = Flask(__name__)
 
@@ -35,6 +36,6 @@ parse = comp(tuple,
              nlp)
 
 
-@app.route("/", methods=["POST"])
+@app.route(helpers.root_path, methods=helpers.methods)
 def index():
     return jsonify(parse(request.get_json()))

@@ -149,3 +149,5 @@ filter_map_serializable = aid.if_then(map_,
 get_serializable = partial(walk.prewalk, comp(filter_map_serializable,
                                               convert_tensor,
                                               convert_map))
+root_path = "/"
+methods = ("POST",)
