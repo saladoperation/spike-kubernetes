@@ -99,3 +99,7 @@ zipmap = comp(partial(apply, merge),
 
 def select_keys(m, ks):
     return funcy.select_keys(partial(contains_, ks), m)
+
+
+def filter(f, coll):
+    return builtins.filter(f, get_items(coll))
