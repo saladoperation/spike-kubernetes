@@ -131,11 +131,23 @@ def get_training_progress_(model_name, model):
 
 
 get_training_progress = aid.curry(2, get_training_progress_)
-convert_tensor = aid.if_then(comp(partial(equal, torch.Tensor),
-                                  type),
-                             aid.make_attribute_call("tolist"))
 convert_map = aid.if_then(comp(partial(equal, builtins.map),
                                type),
                           tuple)
-get_serializable = partial(walk.prewalk, comp(convert_map,
-                                              convert_tensor))
+convert_tensor = aid.if_then(comp(partial(equal, torch.Tensor),
+                                  type),
+                             aid.make_attribute_call("tolist"))
+filter_map = comp(partial(into, {}),
+                  filter)
+serializable_ = aid.build(or_,
+                          number_,
+                          string_,
+                          is_seqcoll,
+                          map_)
+filter_map_serializable = aid.if_then(map_,
+                                      partial(filter_map,
+                                              comp(serializable_,
+                                                   val)))
+get_serializable = partial(walk.prewalk, comp(filter_map_serializable,
+                                              convert_tensor,
+                                              convert_map))

@@ -1,6 +1,7 @@
 import builtins
 import functools
 import itertools
+import numbers
 import operator
 import funcy
 from funcy import *
@@ -141,3 +142,27 @@ every_ = comp(empty_,
 mod = comp(second,
            divmod)
 vector_ = is_tuple
+
+
+def conj_(coll, v):
+    return assoc(coll, first(v), last(v))
+
+
+def conj(coll, *more):
+    return reduce(conj_, coll, more)
+
+
+def into(to, from_):
+    return reduce(conj, to, from_)
+
+
+def or_(*more):
+    return reduce(operator.or_, more)
+
+
+def number_(x):
+    return isinstance(x, numbers.Number)
+
+
+string_ = comp(partial(equal, builtins.str),
+               type)

@@ -19,8 +19,6 @@ def index():
 channel = pika.BlockingConnection().channel()
 queue = "queue"
 channel.queue_declare(queue)
-
-
 get_steps = comp(partial(map, comp(document_helpers.convert_list,
                                    parse_string,
                                    aid.make_attribute_call("decode"))),
@@ -53,11 +51,6 @@ def run_step(reduction, step):
     # TODO: implement this function
     return (comp(assess_remotely,
                  # TODO: don't use select_keys
-                 partial(aid.flip(select_keys), {"global_step",
-                                                 "inference",
-                                                 "loss",
-                                                 "mask",
-                                                 "minimum"}),
                  document_helpers.set_inference) if
             zero_(mod(step["global_step"],
                       document_helpers.tuned["validation-interval"])) else
