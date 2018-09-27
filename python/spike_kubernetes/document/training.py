@@ -52,15 +52,12 @@ def run_step(reduction, step):
     reduction["model"].eval()
     # TODO: implement this function
     return (comp(helpers.get_serializable,
-                 partial(aid.flip(select_keys),
-                         {"global_step",
-                          "inference",
-                          "loss",
-                          "mask",
-                          "minimum"}),
+                 partial(aid.flip(select_keys), {"global_step",
+                                                 "inference",
+                                                 "loss",
+                                                 "mask",
+                                                 "minimum"}),
                  document_helpers.set_inference) if
             zero_(mod(step["global_step"],
                       document_helpers.tuned["validation-interval"])) else
-            identity)(merge(reduction,
-                            step,
-                            forwarded))
+            identity)(merge(reduction, step, forwarded))
