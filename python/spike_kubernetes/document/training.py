@@ -45,7 +45,8 @@ def post_json(url, json_):
 
 assess_remotely = comp(make_attribute_call("json"),
                        partial(post_json, "http://localhost:8080"),
-                       helpers.get_serializable, )
+                       helpers.get_serializable)
+
 
 def run_step(reduction, step):
     reduction["model"].train()
