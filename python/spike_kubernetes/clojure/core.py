@@ -108,3 +108,7 @@ def filter(f, coll):
 minus = comp(partial(apply, (partial(reduce, operator.sub))),
              juxt(first, rest),
              vector)
+
+
+def update(m, k, f):
+    return update_in(m, [k], f)

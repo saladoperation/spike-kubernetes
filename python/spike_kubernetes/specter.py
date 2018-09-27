@@ -8,10 +8,6 @@ class RichNavigator:
         self.transform_ = transform__
 
 
-def update(m, k, f):
-    return update_in(m, [k], f)
-
-
 def get_transform_continuation(continuation, element):
     def continuation_(structure):
         return update(
