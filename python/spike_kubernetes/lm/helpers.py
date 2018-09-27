@@ -131,8 +131,7 @@ def make_adaptive_cross_entropy(m):
                 F.linear(
                     m["model"][m["direction"]]["linear"](
                         m["hidden"])[cluster["mask"]],
-                    (make_cat_tail(
-                        m["model"]["parameter"]["tail"]) if
+                    (make_cat_tail(m["model"]["parameter"]["tail"]) if
                      zero_(cluster["infimum"]) else
                      identity)(
                         m["model"]["embedding"].weight.narrow(
