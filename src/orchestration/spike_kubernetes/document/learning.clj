@@ -121,10 +121,6 @@
         slurp
         helpers/get-evaluation-path))
 
-(def handler
-  ;TODO implement this function
-  #(get-evaluation-tokens :validation))
-
 (def generate-reference
   (comp str/join
         :text_with_ws))
@@ -138,6 +134,10 @@
               identity)
         (partial remove :mask)
         helpers/separate))
+
+(def handler
+  ;TODO implement this function
+  #(get-evaluation-tokens :validation))
 
 (def start
   (partial web/run handler helpers/option))
