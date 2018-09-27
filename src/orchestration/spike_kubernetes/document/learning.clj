@@ -148,12 +148,12 @@
                          (helpers/transfer* :inference
                                             helpers/generate-document-inference)
                          (helpers/transfer* :reference generate-reference))
-        :training   (->> %
-                         :body
-                         slurp
-                         parse-string
-                         helpers/flatten-sequential
-                         set-precision)}
+        :training   (-> %
+                        :body
+                        slurp
+                        parse-string
+                        helpers/flatten-sequential
+                        set-precision)}
        :training
        generate-string
        response))
