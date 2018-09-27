@@ -49,3 +49,10 @@ def if_then_(if_function, then_function, else_):
 
 
 if_then = curry(3, if_then_)
+
+
+def if_else_(if_function, else_function, then):
+    return if_then_else(if_function, identity, else_function, then)
+
+
+if_else = curry(3, if_else_)
