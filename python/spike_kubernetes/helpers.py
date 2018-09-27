@@ -3,7 +3,7 @@ from flask import jsonify, request
 import torch
 import torch.optim as optim
 from spike_kubernetes.clojure.core import *
-import spike_kubernetes.clojure.string as str_
+import spike_kubernetes.clojure.string as str__
 import spike_kubernetes.clojure.walk as walk
 import spike_kubernetes.aid as aid
 from spike_kubernetes.cheshire import *
@@ -25,7 +25,7 @@ def make_index_(m):
 
 str = comp(str_join,
            vector)
-append_extension = comp(partial(str_.join, "."),
+append_extension = comp(partial(str__.join, "."),
                         vector)
 json_name = "json"
 get_json_filename = partial(aid.flip(append_extension), json_name)
