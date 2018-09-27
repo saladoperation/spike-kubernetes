@@ -35,3 +35,17 @@ def curry(x, *outer_more):
                                                  call_inner)
     return curry(get_currying_arity(x),
                  x) if empty_(outer_more) else call_middle
+
+
+def if_then_else_(if_function, then_funciton, else_function, x):
+    return then_funciton(x) if if_function(x) else else_function(x)
+
+
+if_then_else = curry(4, if_then_else_)
+
+
+def if_then_(if_function, then_function, else_):
+    return if_then_else(if_function, then_function, identity, else_)
+
+
+if_then = curry(3, if_then_)

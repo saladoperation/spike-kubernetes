@@ -137,9 +137,8 @@ def convert_tensor(x):
     return x.tolist() if isinstance(x, torch.Tensor) else x
 
 
-def convert_map(x):
-    return tuple(x) if isinstance(x, builtins.map) else x
-
-
+convert_map = aid.if_then(comp(partial(equal, builtins.map),
+                               type),
+                          tuple)
 get_serializable = partial(walk.prewalk, comp(convert_map,
                                               convert_tensor))
