@@ -10,8 +10,8 @@
             [langohr.channel :as lc]
             [langohr.core :as rmq]
             [langohr.queue :as lq]
-            [mount.core :refer [defstate]]
             [me.raynes.fs :as fs]
+            [mount.core :refer [defstate]]
             [spike-kubernetes.helpers :as helpers]))
 
 (utils/defmemoized get-length
