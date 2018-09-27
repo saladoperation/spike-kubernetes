@@ -18,22 +18,12 @@
 (def evaluation-ids
   (set/union test-ids validation-ids))
 
-(def get-evaluation-organized-path
-  (comp helpers/get-organized-path
-        (partial (aid/flip str) ".edn")))
-
-(def test-name
-  "test")
-
-(def validation-name
-  "validation")
-
 (def make-spit-evaluation
-  #(comp (partial spit (get-evaluation-organized-path %))
+  #(comp (partial spit (helpers/get-evaluation-path %))
          vec
          (partial mapcat :text)
-         (partial filter (comp ({test-name       test-ids
-                                 validation-name validation-ids} %)
+         (partial filter (comp ({:test       test-ids
+                                 :validation validation-ids} %)
                                edn/read-string
                                :id))))
 
@@ -65,7 +55,7 @@
     ((apply juxt
             (comp (juxt (partial run!
                                  (aid/build spit-edn-lines+
-                                            (comp helpers/training-path
+                                            (comp helpers/get-training-path
                                                   (partial (aid/flip str)
                                                            ".txt")
                                                   first)
@@ -80,4 +70,4 @@
                   (partial remove (comp evaluation-ids
                                         edn/read-string
                                         :id)))
-            (map make-spit-evaluation [test-name validation-name])))))
+            (map make-spit-evaluation [:test :validation])))))

@@ -5,11 +5,12 @@
             [cheshire.core :refer :all]
             [com.rpl.specter :as s]
             [compliment.utils :as utils]
-            [mount.core :refer [defstate]]
+            [immutant.web :as web]
             [langohr.basic :as lb]
             [langohr.channel :as lc]
             [langohr.core :as rmq]
             [langohr.queue :as lq]
+            [mount.core :refer [defstate]]
             [me.raynes.fs :as fs]
             [spike-kubernetes.helpers :as helpers]))
 
@@ -93,7 +94,7 @@
                      helpers/separate
                      (partial (aid/flip dissoc) :global_step)
                      (helpers/transfer* :file
-                                        #(->> helpers/training-path
+                                        #(->> (helpers/get-training-path)
                                               helpers/get-files
                                               partition-into-batches
                                               (map drop
@@ -115,3 +116,19 @@
             zero?)
      (lb/publish channel "" queue-name %)
      (recur %)))
+
+(def get-evaluation-tokens
+  (comp edn/read-string
+        slurp
+        helpers/get-evaluation-path))
+
+(def handler
+  ;TODO implement this function
+  #(get-evaluation-tokens :validation))
+
+(def start
+  (partial web/run handler helpers/option))
+
+(defstate server
+          :start (start)
+          :stop (web/stop))

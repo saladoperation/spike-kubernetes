@@ -28,7 +28,7 @@
            helpers/generate-document-inference))))
 
 (def start
-  (partial web/run (wrap-resource handler "public") {:host "0.0.0.0"}))
+  (partial web/run (wrap-resource handler "public") helpers/option))
 
 (defstate server
           :start (start)

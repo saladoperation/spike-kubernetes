@@ -1,5 +1,6 @@
 from flask import Flask
 import pika
+import requests
 from spike_kubernetes.clojure.core import *
 import spike_kubernetes.aid as aid
 from spike_kubernetes.cheshire import *
@@ -38,6 +39,16 @@ mod = comp(second,
            divmod)
 
 
+def post_json(url, json_):
+    return requests.post(url, json=json_)
+
+
+post_process_remotely = comp(make_attribute_call("json"),
+                             partial(post_json, "http://localhost:8080"),
+                             partial(s.setval_, "action", "postprocess"),
+                             partial(array_map, "data"),
+                             helpers.get_serializable, )
+
 def run_step(reduction, step):
     reduction["model"].train()
     reduction["model"].zero_grad()
@@ -51,7 +62,7 @@ def run_step(reduction, step):
     reduction["optimizer"].step()
     reduction["model"].eval()
     # TODO: implement this function
-    return (comp(helpers.get_serializable,
+    return (comp(post_process_remotely,
                  partial(aid.flip(select_keys), {"global_step",
                                                  "inference",
                                                  "loss",

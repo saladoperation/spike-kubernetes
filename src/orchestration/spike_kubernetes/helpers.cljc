@@ -1189,8 +1189,8 @@
      (def get-organized-path
        (partial get-dataset-path "organized"))
 
-     (def training-path
-       (get-organized-path "training"))
+     (def get-training-path
+       (partial get-organized-path "training"))
 
      (def length-path
        (get-organized-path "length.edn"))
@@ -1295,4 +1295,12 @@
              (partial map consolidate)
              separate
              (partial filter-map (comp sequential?
-                                       val))))))
+                                       val))))
+
+     (def option
+       {:host "0.0.0.0"})
+
+     (def get-evaluation-path
+       (comp get-organized-path
+             (partial (aid/flip append-extension) "edn")
+             name))))
