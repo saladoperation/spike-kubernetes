@@ -61,26 +61,25 @@
              get-document-offset*
              :document-offset))
 
-(defn get-step
-  [m]
-  (->> (str "[" (->> m
-                     :file
-                     (take (-> m
-                               get-document-offset*
-                               inc))
-                     (map slurp)
-                     command/join-newline
-                     str/split-lines
-                     (drop (:token-offset m))
-                     (take (:step-size (helpers/get-document-tuned)))
-                     str/join)
-            "]")
-       edn/read-string
-       (s/transform [s/ALL :source] helpers/get-document-index)
-       helpers/concatenate-into-vector
-       (merge {:file            (get-file m)
-               :document-offset (get-document-offset m)
-               :token-offset    (get-token-offset m)})))
+(def get-step
+  #(->> (str "[" (->> %
+                      :file
+                      (take (-> %
+                                get-document-offset*
+                                inc))
+                      (map slurp)
+                      command/join-newline
+                      str/split-lines
+                      (drop (:token-offset %))
+                      (take (:step-size (helpers/get-document-tuned)))
+                      str/join)
+             "]")
+        edn/read-string
+        (s/transform [s/ALL :source] helpers/get-document-index)
+        helpers/concatenate-into-vector
+        (merge {:file            (get-file %)
+                :document-offset (get-document-offset %)
+                :token-offset    (get-token-offset %)})))
 
 (def get-training-steps
   (comp
