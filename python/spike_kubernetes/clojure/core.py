@@ -11,7 +11,7 @@ def apply(f, *more):
     return f(*drop_last(more), *last(more))
 
 
-def get_items(coll):
+def _get_items(coll):
     return coll.items() if isinstance(coll, dict) else coll
 
 
@@ -19,7 +19,7 @@ comp = compose
 
 
 def map(f, *colls):
-    return builtins.map(f, *builtins.map(get_items, colls))
+    return builtins.map(f, *builtins.map(_get_items, colls))
 
 
 contains_ = operator.contains
@@ -36,7 +36,7 @@ def equal(*more):
 
 
 def reduce(f, *more):
-    return functools.reduce(f, get_items(last(more)), *() if
+    return functools.reduce(f, _get_items(last(more)), *() if
     equal(count(more), 1) else
     (first(more),))
 
@@ -102,4 +102,4 @@ def select_keys(m, ks):
 
 
 def filter(f, coll):
-    return builtins.filter(f, get_items(coll))
+    return builtins.filter(f, _get_items(coll))
