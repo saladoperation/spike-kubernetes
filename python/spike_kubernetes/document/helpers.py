@@ -20,8 +20,6 @@ def get_embedding_vectors(unk_vector):
 
 get_embedding = comp(partial(aid.flip(nn.Embedding.from_pretrained), False),
                      get_embedding_vectors)
-multiply = comp(partial(reduce, operator.mul, 1),
-                vector)
 get_bidirectional_size = partial(multiply, 2)
 num_tags = multiply(3, 2)
 
@@ -65,24 +63,6 @@ def get_states(batch_size):
                        get_bidirectional_size(tuned["num_layers"]),
                        batch_size,
                        tuned["hidden_size"]))))
-
-
-key = first
-val = second
-
-
-def merge_with(f, *maps):
-    def merge_entry(m, e):
-        return assoc(m, key(e), f(m[key(e)], val(e)) if
-        contains_(m, key(e)) else
-        val(e))
-    return reduce(partial(reduce, merge_entry), maps)
-
-
-true_ = partial(equal, True)
-every_ = comp(empty_,
-              partial(remove, true_),
-              map)
 
 
 def deep_merge_with(f, *more):
