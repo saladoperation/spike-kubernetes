@@ -36,9 +36,9 @@ def equal(*more):
 
 
 def reduce(f, *more):
-    return functools.reduce(f,
-                            get_items(last(more)),
-                            *() if equal(count(more), 1) else (first(more),))
+    return functools.reduce(f, get_items(last(more)), *() if
+    equal(count(more), 1) else
+    (first(more),))
 
 
 def vector(*more):

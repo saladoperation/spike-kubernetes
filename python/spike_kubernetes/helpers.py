@@ -17,9 +17,9 @@ evaluate_name = "evaluate"
 def make_index_(m):
     def index_():
         return jsonify(apply(m[request.get_json()["action"]],
-                             ((request.get_json()["data"]),
-                              ) if contains_(request.get_json(),
-                                             "data") else ()))
+                             ((request.get_json()["data"]),) if
+                             contains_(request.get_json(), "data")
+                             else ()))
     return index_
 
 
@@ -106,10 +106,9 @@ val = second
 
 def merge_with(f, *maps):
     def merge_entry(m, e):
-        return assoc(m,
-                     key(e),
-                     f(m[key(e)],
-                       val(e)) if contains_(m, key(e)) else val(e))
+        return assoc(m, key(e), f(m[key(e)], val(e)) if
+        contains_(m, key(e)) else
+        val(e))
     return reduce(partial(reduce, merge_entry), maps)
 
 
@@ -140,8 +139,7 @@ def get_training_progress_(model_name, model):
                                  aid.flip(set_lr)(get_tuned(model_name)["lr"])),
                          partial(merge_with,
                                  load_state,
-                                 torch.load(get_pt_path(model_name),
-                                            device) if
+                                 torch.load(get_pt_path(model_name), device) if
                                  path.exists(get_pt_path(model_name)) else
                                  {}),
                          zipmap(("model",
