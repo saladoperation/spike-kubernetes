@@ -35,8 +35,6 @@ get_steps = comp(partial(map, comp(document_helpers.convert_list,
                  partial(remove, partial(equal, None)),
                  partial(map, last))
 steps = get_steps(repeatedly(partial(channel.basic_get, queue, True)))
-mod = comp(second,
-           divmod)
 
 
 def post_json(url, json_):

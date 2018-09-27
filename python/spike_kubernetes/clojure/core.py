@@ -141,3 +141,5 @@ true_ = partial(equal, True)
 every_ = comp(empty_,
               partial(remove, true_),
               map)
+mod = comp(second,
+           divmod)
