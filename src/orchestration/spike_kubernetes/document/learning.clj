@@ -92,7 +92,6 @@
                      rest
                      (partial iterate (partial map get-step))
                      helpers/separate
-                     (partial (aid/flip dissoc) :global_step)
                      (helpers/transfer* :file
                                         #(->> (helpers/get-training-path)
                                               helpers/get-files
@@ -125,6 +124,20 @@
 (def handler
   ;TODO implement this function
   #(get-evaluation-tokens :validation))
+
+(def generate-reference
+  (comp str/join
+        :text_with_ws))
+
+(def get-precision
+  (comp (partial apply /)
+        (partial map count)
+        (juxt (partial filter (aid/build =
+                                         :inference
+                                         :reference))
+              identity)
+        (partial remove :mask)
+        helpers/separate))
 
 (def start
   (partial web/run handler helpers/option))

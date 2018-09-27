@@ -1090,12 +1090,21 @@
        (comp get-json-request
              (partial array-map :action :evaluate :data)))
 
-     (def separate
+     (def separate*
        (comp (partial apply map merge)
              (partial map (aid/build map
                                      (comp (aid/curry 2 array-map)
                                            first)
                                      last))))
+
+     (def filter-map
+       (comp (partial into {})
+             filter))
+
+     (def separate
+       (comp separate*
+             (partial filter-map (comp sequential?
+                                       val))))
 
      (def set-negative-log-probability
        (transfer* :negative-log-probability (comp (partial map incanter/sum)
@@ -1108,12 +1117,6 @@
      (def grade-lm
        (comp (group-by-vals :index)
              (partial mapcat (comp separate
-                                   (partial (aid/flip select-keys)
-                                            #{:index
-                                              :negative-log-probability
-                                              :output
-                                              :original
-                                              :text_with_ws})
                                    set-negative-log-probability))
              (aid/build (partial map (comp partition-output
                                            merge))
@@ -1286,16 +1289,10 @@
                                                   :alternative
                                                   %))))))
 
-     (def filter-map
-       (comp (partial into {})
-             filter))
-
      (def generate-document-inference
        (comp str/join
              (partial map consolidate)
-             separate
-             (partial filter-map (comp sequential?
-                                       val))))
+             separate))
 
      (def option
        {:host "0.0.0.0"})
