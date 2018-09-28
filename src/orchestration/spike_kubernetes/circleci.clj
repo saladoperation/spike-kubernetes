@@ -143,7 +143,7 @@
       :port     %
       :cmd      [(helpers/get-path script-name
                                    python-name
-                                   (helpers/python-name %)
+                                   (helpers/python-port-name %)
                                    "evaluation.sh")]}))
 
 ;docker doesn't seem to support symlinks for -f
@@ -190,13 +190,12 @@
   #(m/>> (command/lein "npm" "install")
          (build-clojurescript helpers/alteration-name)))
 
-(defn run-dependencies
-  []
-  (m/>> (-> main-path
-            command/node
-            future
-            either/right)
-        (run-parse)))
+(def run-dependencies
+  #(m/>> (-> main-path
+             command/node
+             future
+             either/right)
+         (run-parse)))
 
 (def build-orchestration
   #(m/>> (build-alteration)
@@ -217,9 +216,9 @@
   (make-+ first spit))
 
 (def spit-dockerfiles+
-  #(->> helpers/python-name
+  #(->> helpers/python-port-name
         keys
-        (mapcat (juxt helpers/python-name
+        (mapcat (juxt helpers/python-port-name
                       get-python-dockerfile))
         (apply array-map
                helpers/orchestration-name
@@ -254,7 +253,7 @@
   ["-qO-" s "|" "tar" "x"])
 
 (def download-extract-arguments
-  (->> helpers/model-name
+  (->> helpers/model-port-name
        vals
        (map (comp get-download-extract-argument get-tar-path))))
 

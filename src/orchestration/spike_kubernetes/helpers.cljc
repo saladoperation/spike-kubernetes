@@ -122,15 +122,15 @@
      (def document-port
        8002)
 
-     (def model-name
+     (def model-port-name
        {lm-port       lm-name
         document-port document-name})
 
-     (def python-name
-       (s/setval parse-port parse-name model-name))
+     (def python-port-name
+       (s/setval parse-port parse-name model-port-name))
 
      (def image-names
-       (->> python-name
+       (->> python-port-name
             vals
             set
             (set/union #{orchestration-name
