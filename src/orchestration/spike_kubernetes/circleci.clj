@@ -97,9 +97,6 @@
                    :port     helpers/alteration-port
                    :cmd      alteration-cmd}))
 
-(def python-name
-  "python")
-
 (def script-name
   "script")
 
@@ -117,7 +114,7 @@
   #(get-dockerfile
      {:image    conda-image
       :from-tos (get-from-tos #{(helpers/get-resources-path)
-                                python-name
+                                helpers/python-name
                                 script-name})
       :runs     [[apt-name "update"]
                  [apt-name
@@ -129,20 +126,20 @@
                   "env"
                   "create"
                   "-f"
-                  (helpers/get-path python-name
+                  (helpers/get-path helpers/python-name
                                     "environments"
                                     "cpu.yml")]
                  ["/bin/bash" "-c" (get-shell-script [["source"
                                                        "activate"
                                                        "spike-kubernetes"]
-                                                      [python-name
+                                                      [helpers/python-name
                                                        "-m"
                                                        "spacy"
                                                        "download"
                                                        "en"]])]]
       :port     %
       :cmd      [(helpers/get-path script-name
-                                   python-name
+                                   helpers/python-name
                                    (helpers/python-port-name %)
                                    "evaluation.sh")]}))
 
