@@ -1,6 +1,5 @@
 (ns spike-kubernetes.install
-  (:require [clojure.java.shell :as sh]
-            [cats.core :as m]
+  (:require [cats.core :as m]
             [spike-kubernetes.command :as command]
             [spike-kubernetes.helpers :as helpers]))
 
