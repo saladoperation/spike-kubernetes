@@ -1,6 +1,10 @@
 (ns spike-kubernetes.install
-  (:require [cats.core :as m]
-            [spike-kubernetes.command :as command]))
+  (:require [clojure.java.shell :as sh]
+            [aid.core :as aid]
+            [cats.core :as m]
+            [cats.monad.either :as either]
+            [spike-kubernetes.command :as command]
+            [spike-kubernetes.helpers :as helpers]))
 
 (def apt-get
   (partial command/sudo "apt-get"))
@@ -21,3 +25,28 @@
                   "silversearcher-ag"
                   "tmux"
                   "vim")))
+
+(def python-path
+  "python")
+
+(defn python
+  [& more]
+  (sh/with-sh-dir python-path
+                  (apply command/export
+                         "PYTHONPATH=$(pwd)"
+                         "&&"
+                         "source"
+                         "activate"
+                         "spike-kubernetes"
+                         "&&"
+                         "python"
+                         more)))
+
+(def install-python
+  #(m/>> (->> "pu.yml"
+              (str (aid/casep (command/nvidia-smi)
+                              either/right "g"
+                              "c"))
+              (helpers/get-path python-path "environments")
+              (command/conda "env" "create" "--force" "-f"))
+         (python "-m" "spacy" "download" "en")))
