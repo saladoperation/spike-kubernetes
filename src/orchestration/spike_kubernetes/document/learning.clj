@@ -175,7 +175,7 @@
             (map (comp (partial get-run-path "checkpoints")
                        ((aid/flip helpers/append-extension) extension))
                  ["recent" "minimum"]))
-          ["json" "pt"])))
+          ["edn" "pt"])))
 
 (declare flatten-map)
 
