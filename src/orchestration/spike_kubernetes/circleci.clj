@@ -247,7 +247,7 @@
 (def get-tar-path
   (comp (partial helpers/get-path
                  "https://storage.googleapis.com/wikipediadataset")
-        (partial (aid/flip str) ".tar")))
+        (partial (aid/flip helpers/append-extension) "tar")))
 
 (defn get-download-extract-argument
   [s]
