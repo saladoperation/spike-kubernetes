@@ -110,9 +110,7 @@
                        "-y"
                        "build-essential"
                        "libffi-dev"]
-                      (s/setval s/BEFORE-ELEM
-                                "conda"
-                                helpers/conda-arguments)
+                      helpers/conda-command
                       ["source"
                        "activate"
                        "spike-kubernetes"]

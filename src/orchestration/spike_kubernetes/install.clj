@@ -39,6 +39,12 @@
                          helpers/python-name
                          more)))
 
+(def bash-c
+  (comp (partial command/bash "-c")
+        #(str "\"" % "\"")))
+
 (def install-python
-  #(m/>> (apply command/conda helpers/conda-arguments)
+  #(m/>> (-> helpers/conda-command
+             command/join-whitespace
+             bash-c)
          (python "-m" "spacy" "download" "en")))

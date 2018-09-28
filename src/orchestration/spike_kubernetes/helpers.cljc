@@ -1298,10 +1298,14 @@
      (def python-name
        "python")
 
-     (def conda-arguments
-       (->> "pu.yml"
-            (str (aid/casep (command/hash "nvidia-smi")
-                            either/right "g"
-                            "c"))
-            (get-path python-name "environments")
-            (vector "env" "create" "--force" "-f")))))
+     (def conda-command
+       ["conda"
+        "env"
+        "create"
+        "--force"
+        "-f"
+        (->> "pu.yml"
+             (str (aid/casep (command/hash "nvidia-smi")
+                             either/right "g"
+                             "c"))
+             (get-path python-name "environments"))])))
