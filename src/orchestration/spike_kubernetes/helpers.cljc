@@ -574,15 +574,12 @@
                                            else-function
                                            then))
 
-     (def whitespace
-       " ")
-
      (def ensure-whitespace
        (if-else empty?
                 (partial s/transform*
                          [s/LAST :text_with_ws]
-                         (if-else (partial (aid/flip str/ends-with?) whitespace)
-                                  (partial (aid/flip str) whitespace)))))
+                         (if-else (partial (aid/flip str/ends-with?) " ")
+                                  (partial (aid/flip str) " ")))))
 
      (defn make-parse-singleton-c
        [child? replacements]
