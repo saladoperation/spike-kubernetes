@@ -28,15 +28,11 @@
 (defn python
   [& more]
   (sh/with-sh-dir helpers/python-name
-                  (apply command/export
-                         "PYTHONPATH=$(pwd)"
-                         "&&"
-                         "source"
-                         "activate"
-                         "spike-kubernetes"
-                         "&&"
-                         helpers/python-name
-                         more)))
+                  (-> [["PYTHONPATH=$(pwd)"]
+                       helpers/source-command
+                       (cons helpers/python-name more)]
+                      helpers/get-shell-script
+                      command/export)))
 
 (def bash-c
   (comp (partial command/bash "-c")

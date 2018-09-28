@@ -1308,4 +1308,11 @@
              (str (aid/casep (command/hash "nvidia-smi")
                              either/right "g"
                              "c"))
-             (get-path python-name "environments"))])))
+             (get-path python-name "environments"))])
+
+     (def get-shell-script
+       (comp (partial str/join " && ")
+             (partial map command/join-whitespace)))
+
+     (def source-command
+       ["source" "activate" "spike-kubernetes"])))
