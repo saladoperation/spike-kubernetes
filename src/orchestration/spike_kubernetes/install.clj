@@ -7,11 +7,7 @@
   (partial command/sudo "apt-get"))
 
 (def apt-packages
-  #{"inotify-tools"
-    "nodejs"
-    "silversearcher-ag"
-    "tmux"
-    "vim"})
+  #{"inotify-tools" "nodejs" "silversearcher-ag" "tmux" "vim"})
 
 (def install-apt
   #(m/>> (apt-get "update")
