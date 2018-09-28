@@ -1298,10 +1298,24 @@
      (def python-name
        "python")
 
-     (def conda-arguments
-       (->> "pu.yml"
-            (str (aid/casep (command/hash "nvidia-smi")
-                            either/right? "g"
-                            "c"))
-            (get-path python-name "environments")
-            (vector "env" "create" "--force" "-f")))))
+     (def conda-command
+       ["conda"
+        "env"
+        "create"
+        "--force"
+        "-f"
+        (->> "pu.yml"
+             (str (aid/casep (command/hash "nvidia-smi")
+                             either/right? "g"
+                             "c"))
+             (get-path python-name "environments"))])
+
+     (def get-shell-script
+       (comp (partial str/join " && ")
+             (partial map command/join-whitespace)))
+
+     (def source-command
+       ["source" "activate" "spike-kubernetes"])
+
+     (def spacy-command
+       [python-name "-m" "spacy" "download" "en"])))

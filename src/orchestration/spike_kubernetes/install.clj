@@ -25,15 +25,11 @@
                        "-")
          (apply apt-get "install" "-y" apt-packages)))
 
-(defn python
-  [& more]
-  (sh/with-sh-dir helpers/python-name
-                  (apply command/export
-                         "PYTHONPATH=$(pwd)"
-                         "&&"
-                         "source"
-                         "activate"
-                         "spike-kubernetes"
-                         "&&"
-                         helpers/python-name
-                         more)))
+(def bash-c
+  (comp (partial command/bash "-c")
+        #(str "\"" % "\"")))
+
+(def install-python
+  #(-> [helpers/conda-command helpers/source-command helpers/spacy-command]
+       helpers/get-shell-script
+       bash-c))

@@ -106,10 +106,6 @@
 (def apt-name
   "apt")
 
-(def get-shell-script
-  (comp (partial str/join " && ")
-        (partial map command/join-whitespace)))
-
 (def get-python-dockerfile
   #(get-dockerfile
      {:image    conda-image
@@ -122,15 +118,11 @@
                   "-y"
                   "build-essential"
                   "libffi-dev"]
-                 (s/setval s/BEFORE-ELEM "conda" helpers/conda-arguments)
-                 ["/bin/bash" "-c" (get-shell-script [["source"
-                                                       "activate"
-                                                       "spike-kubernetes"]
-                                                      [helpers/python-name
-                                                       "-m"
-                                                       "spacy"
-                                                       "download"
-                                                       "en"]])]]
+                 helpers/conda-command
+                 ["/bin/bash"
+                  "-c"
+                  (helpers/get-shell-script [helpers/source-command
+                                             helpers/spacy-command])]]
       :port     %
       :cmd      [(helpers/get-path script-name
                                    helpers/python-name

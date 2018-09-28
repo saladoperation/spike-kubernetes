@@ -16,21 +16,22 @@
 
 (defn tune
   []
-  (aid/mlet [commit (command/git "rev-parse" "HEAD")]
-            (->
-              (t/now)
-              get-timestamp
-              ((juxt
-                 #(->> helpers/hyperparameter
-                       (s/setval :commit commit)
-                       ((juxt pr-str
-                              generate-string))
-                       (map helpers/spit+
-                            (map (helpers/get-tuned-path helpers/document-name
-                                                         %)
-                                 ["edn" "json"]))
-                       dorun)
-                 (comp (partial spit helpers/document-selection-path)
-                       generate-string
-                       get-selection)))
-              either/right)))
+  (aid/mlet
+    [commit (command/git "rev-parse" "HEAD")]
+    (-> (t/now)
+        get-timestamp
+        ((juxt
+           #(->> helpers/hyperparameter
+                 (s/setval :commit commit)
+                 ((juxt pr-str
+                        generate-string))
+                 (map helpers/spit+
+                      (map (helpers/get-tuned-path helpers/document-name
+                                                   %)
+                           ["edn" "json"]))
+                 dorun)
+           (comp (partial spit
+                          (helpers/get-selection-path helpers/document-name))
+                 generate-string
+                 get-selection)))
+        either/right)))
