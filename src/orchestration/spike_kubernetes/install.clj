@@ -7,6 +7,13 @@
 (def apt-get
   (partial command/sudo "apt-get"))
 
+(def apt-packages
+  #{"inotify-tools"
+    "nodejs"
+    "silversearcher-ag"
+    "tmux"
+    "vim"})
+
 (def install-apt
   #(m/>> (apt-get "update")
          (command/curl "-sL"
@@ -16,13 +23,7 @@
                        "-E"
                        "bash"
                        "-")
-         (apt-get "install"
-                  "-y"
-                  "inotify-tools"
-                  "nodejs"
-                  "silversearcher-ag"
-                  "tmux"
-                  "vim")))
+         (apply apt-get "install" "-y" apt-packages)))
 
 (defn python
   [& more]
