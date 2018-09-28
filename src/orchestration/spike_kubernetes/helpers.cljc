@@ -381,7 +381,7 @@
      (def get-resources-path
        (partial get-path "resources"))
 
-     (def n-infimum
+     (def n-minimum
        1)
 
      (def preparation-name
@@ -405,7 +405,7 @@
        [sentence]
        (->> (get-preparation)
             :n-upperbound
-            (range n-infimum)
+            (range n-minimum)
             (mapcat #(->> sentence
                           (map :lemma_)
                           (partition % 1)))
@@ -912,9 +912,9 @@
        (map inc integers))
 
      (defn make-within
-       [infimum upperbound]
+       [minimum upperbound]
        (aid/build and
-                  (partial <= infimum)
+                  (partial <= minimum)
                   (partial > upperbound)))
 
      (defn <$
@@ -925,13 +925,13 @@
        0)
 
      (defn get-mask
-       [reference infimum upperbound]
-       (aid/case-eval infimum
+       [reference minimum upperbound]
+       (aid/case-eval minimum
                       lm-unk-index (-> true
                                        integer
                                        (<$ reference))
                       (map (comp integer
-                                 (make-within infimum upperbound))
+                                 (make-within minimum upperbound))
                            reference)))
 
      (utils/defmemoized get-index-upperbounds
@@ -985,26 +985,26 @@
           %))
 
      (aid/defcurried get-cluster
-                     [reference infimum upperbound]
+                     [reference minimum upperbound]
                      {:index     (->> (map *
                                            (get-mask reference
-                                                     infimum
+                                                     minimum
                                                      upperbound)
                                            positive-integers)
                                       (filter pos?)
                                       (map dec))
-                      :infimum   infimum
-                      :length    (- upperbound infimum)
-                      :mask      (get-mask reference infimum upperbound)
+                      :minimum   minimum
+                      :length    (- upperbound minimum)
+                      :mask      (get-mask reference minimum upperbound)
                       :reference (->> reference
                                       ((aid/case-eval
-                                         infimum
+                                         minimum
                                          lm-unk-index (partial map
                                                                cut-off)
                                          (partial filter
-                                                  (make-within infimum
+                                                  (make-within minimum
                                                                upperbound))))
-                                      (map (partial (aid/flip -) infimum)))})
+                                      (map (partial (aid/flip -) minimum)))})
 
      (def get-clusters
        #(-> %
