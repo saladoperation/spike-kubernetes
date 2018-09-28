@@ -100,21 +100,15 @@
       :from-tos (get-from-tos #{(helpers/get-resources-path)
                                 helpers/python-name
                                 script-name})
-      :run      (->> [[apt-name "update"]
-                      [apt-name
-                       "install"
-                       "-y"
-                       "build-essential"
-                       "libffi-dev"]
-                      helpers/conda-command
-                      helpers/source-command
-                      [helpers/python-name
-                       "-m"
-                       "spacy"
-                       "download"
-                       "en"]]
-                     helpers/get-shell-script
-                     (vector "/bin/bash" "-c"))
+      :run      ["/bin/bash"
+                 "-c"
+                 (helpers/get-shell-script (concat [[apt-name "update"]
+                                                    [apt-name
+                                                     "install"
+                                                     "-y"
+                                                     "build-essential"
+                                                     "libffi-dev"]]
+                                                   helpers/python-commands))]
       :port     %
       :cmd      [(helpers/get-path script-name
                                    helpers/python-name

@@ -1,6 +1,5 @@
 (ns spike-kubernetes.install
-  (:require [clojure.java.shell :as sh]
-            [cats.core :as m]
+  (:require [cats.core :as m]
             [spike-kubernetes.command :as command]
             [spike-kubernetes.helpers :as helpers]))
 
@@ -25,21 +24,11 @@
                        "-")
          (apply apt-get "install" "-y" apt-packages)))
 
-(defn python
-  [& more]
-  (sh/with-sh-dir helpers/python-name
-                  (-> [["PYTHONPATH=$(pwd)"]
-                       helpers/source-command
-                       (cons helpers/python-name more)]
-                      helpers/get-shell-script
-                      command/export)))
-
 (def bash-c
   (comp (partial command/bash "-c")
         #(str "\"" % "\"")))
 
 (def install-python
-  #(m/>> (-> helpers/conda-command
-             command/join-whitespace
-             bash-c)
-         (python "-m" "spacy" "download" "en")))
+  #(-> helpers/python-commands
+       helpers/get-shell-script
+       bash-c))

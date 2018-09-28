@@ -1315,4 +1315,10 @@
              (partial map command/join-whitespace)))
 
      (def source-command
-       ["source" "activate" "spike-kubernetes"])))
+       ["source" "activate" "spike-kubernetes"])
+
+     (def spacy-command
+       [python-name "-m" "spacy" "download" "en"])
+
+     (def python-commands
+       [conda-command source-command spacy-command])))
