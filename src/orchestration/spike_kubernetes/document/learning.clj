@@ -158,13 +158,6 @@
   ;TODO implement this function
   generate-string)
 
-(def get-recent-to-minimum
-  #(map (fn [extension]
-          (map (comp (partial helpers/get-runs-path % "checkpoints")
-                     ((aid/flip helpers/append-extension) extension))
-               ["recent" "minimum"]))
-        ["json" "pt"]))
-
 (defn get-run-path
   [& more]
   (apply helpers/get-runs-path
