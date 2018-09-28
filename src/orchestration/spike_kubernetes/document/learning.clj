@@ -139,24 +139,41 @@
 (def set-precision
   (helpers/transfer* :precision get-precision))
 
+(def get-validation-loss
+  (comp :loss
+        :validation))
+
+(def get-training-minimum
+  (comp :minimum
+        :training))
+
+(def get-minimum
+  (command/if-then-else get-training-minimum
+                        (aid/build min
+                                   get-training-minimum
+                                   get-validation-loss)
+                        get-validation-loss))
+
 (def handler
   ;TODO implement this function
-  #(-> {:validation (->> :validation
-                         get-evaluation-tokens
-                         helpers/grade-document
-                         (helpers/transfer* :precision get-precision)
-                         (helpers/transfer* :inference
-                                            helpers/generate-document-inference)
-                         (helpers/transfer* :reference generate-reference))
-        :training   (-> %
-                        :body
-                        slurp
-                        parse-string
-                        helpers/flatten-sequential
-                        set-precision)}
-       :training
-       generate-string
-       response))
+  #(->>
+     {:validation (->> :validation
+                       get-evaluation-tokens
+                       helpers/grade-document
+                       (helpers/transfer* :precision get-precision)
+                       (helpers/transfer* :inference
+                                          helpers/generate-document-inference)
+                       (helpers/transfer* :reference generate-reference))
+      :training   (-> %
+                      :body
+                      slurp
+                      parse-string
+                      helpers/flatten-sequential
+                      set-precision)}
+     (helpers/transfer* [:training :minimum] get-minimum)
+     :training
+     generate-string
+     response))
 
 (def start
   (partial web/run handler helpers/option))
