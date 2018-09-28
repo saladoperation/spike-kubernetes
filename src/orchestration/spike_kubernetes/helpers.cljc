@@ -1173,7 +1173,6 @@
              get-edn-request))
 
      (def structure-document
-       ;TODO implement this function
        (comp alter-remotely
              (partial array-map :action :set-alternatives :data)
              arrange-document-tokens
