@@ -876,19 +876,19 @@
        (apply get-resources-path model-name "runs" more))
 
      (aid/defcurried get-tuned-path
-                     [model-name timestamp extension]
+                     [model-name* timestamp extension]
                      (->> extension
                           (append-extension "tuned")
-                          (get-runs-path model-name timestamp)))
+                          (get-runs-path model-name* timestamp)))
 
      (def slurp-read-string
        (comp read-string
              slurp))
 
      (utils/defmemoized get-tuned
-                        [model-name]
-                        (-> (get-tuned-path model-name
-                                            (get-run model-name)
+                        [model-name*]
+                        (-> (get-tuned-path model-name*
+                                            (get-run model-name*)
                                             "edn")
                             slurp
                             edn/read-string))
