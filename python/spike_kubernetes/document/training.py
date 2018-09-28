@@ -50,7 +50,6 @@ def run_step(reduction, step):
     reduction["model"].eval()
     # TODO: implement this function
     return (comp(assess_remotely,
-                 # TODO: don't use select_keys
                  document_helpers.set_inference) if
             zero_(mod(step["global_step"],
                       document_helpers.tuned["validation-interval"])) else
