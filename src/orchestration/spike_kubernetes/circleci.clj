@@ -122,13 +122,7 @@
                   "-y"
                   "build-essential"
                   "libffi-dev"]
-                 ["conda"
-                  "env"
-                  "create"
-                  "-f"
-                  (helpers/get-path helpers/python-name
-                                    "environments"
-                                    "cpu.yml")]
+                 (s/setval s/BEFORE-ELEM "conda" helpers/conda-arguments)
                  ["/bin/bash" "-c" (get-shell-script [["source"
                                                        "activate"
                                                        "spike-kubernetes"]

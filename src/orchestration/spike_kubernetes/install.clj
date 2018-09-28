@@ -40,10 +40,5 @@
                          more)))
 
 (def install-python
-  #(m/>> (->> "pu.yml"
-              (str (aid/casep (command/nvidia-smi)
-                              either/right "g"
-                              "c"))
-              (helpers/get-path helpers/python-name "environments")
-              (command/conda "env" "create" "--force" "-f"))
+  #(m/>> (apply command/conda helpers/conda-arguments)
          (python "-m" "spacy" "download" "en")))
