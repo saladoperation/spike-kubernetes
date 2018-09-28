@@ -1,8 +1,6 @@
 (ns spike-kubernetes.install
   (:require [clojure.java.shell :as sh]
-            [aid.core :as aid]
             [cats.core :as m]
-            [cats.monad.either :as either]
             [spike-kubernetes.command :as command]
             [spike-kubernetes.helpers :as helpers]))
 
@@ -38,7 +36,3 @@
                          "&&"
                          helpers/python-name
                          more)))
-
-(def install-python
-  #(m/>> (apply command/conda helpers/conda-arguments)
-         (python "-m" "spacy" "download" "en")))
