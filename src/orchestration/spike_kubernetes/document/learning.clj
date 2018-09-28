@@ -241,7 +241,7 @@
                    (partial reorder-keys reverse))))
 
 (def make-get-file-to-generation
-  #(juxt (comp (partial (aid/flip str) ".txt")
+  #(juxt (comp (partial (aid/flip helpers/append-extension) "txt")
                (partial get-run-path "generation" (name %))
                str
                get-training-global-step)
