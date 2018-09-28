@@ -9,7 +9,7 @@
 (def apt-get
   (partial command/sudo "apt-get"))
 
-(def apt-update-install
+(def install-apt
   #(m/>> (apt-get "update")
          (command/curl "-sL"
                        "https://deb.nodesource.com/setup_8.x"
