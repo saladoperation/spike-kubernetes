@@ -154,6 +154,115 @@
                                    get-validation-loss)
                         get-validation-loss))
 
+(def log-recent
+  ;TODO implement this function
+  generate-string)
+
+(def get-recent-to-minimum
+  #(map (fn [extension]
+          (map (comp (partial helpers/get-runs-path % "checkpoints")
+                     ((aid/flip helpers/append-extension) extension))
+               ["recent" "minimum"]))
+        ["json" "pt"]))
+
+(defn get-run-path
+  [& more]
+  (apply helpers/get-runs-path
+         helpers/document-name
+         (helpers/get-document-run)
+         more))
+
+(def log-minimum
+  #(if ((aid/build =
+                   get-validation-loss
+                   get-minimum)
+         %)
+     ;TODO implment this function
+     (map (fn [extension]
+            (map (comp (partial get-run-path "checkpoints")
+                       ((aid/flip helpers/append-extension) extension))
+                 ["recent" "minimum"]))
+          ["json" "pt"])))
+
+(declare flatten-map)
+
+(def flatten-entry
+  #(->>
+     %
+     val
+     (command/if-then-else map?
+                           (comp (partial s/setval*
+                                          [s/ALL s/BEFORE-ELEM]
+                                          (key %))
+                                 (command/if-then-else (comp (partial not-every?
+                                                                      map?)
+                                                             vals)
+                                                       vec
+                                                       flatten-map))
+                           (partial vector (key %)))))
+
+(def flatten-map
+  (command/if-then map?
+                   (partial mapcat flatten-entry)))
+
+(def nest-vector
+  (command/if-then-else (comp (partial = 1)
+                              count)
+                        first
+                        (aid/build array-map
+                                   first
+                                   (comp nest-vector
+                                         rest))))
+
+(defn reorder-keys
+  [f m]
+  (->> m
+       flatten-map
+       (map (comp nest-vector
+                  (aid/build s/transform*
+                             (comp (partial s/srange 0)
+                                   dec
+                                   count)
+                             (constantly f)
+                             identity)))
+       (apply helpers/deep-merge)))
+
+(def get-training-global-step
+  (comp :global_step
+        :training))
+
+(def log-tensorboard
+  ;TODO implement this function
+  (aid/build s/setval*
+             (constantly [s/ALL s/AFTER-ELEM])
+             get-training-global-step
+             (comp vec
+                   (partial (aid/flip select-keys) #{:loss :precision})
+                   (partial reorder-keys reverse))))
+
+(def make-get-file-to-generation
+  #(juxt (comp (partial (aid/flip str) ".txt")
+               (partial get-run-path "generation" (name %))
+               str
+               get-training-global-step)
+         (comp %
+               :validation)))
+
+(def get-file-to-generations
+  (->> #{:reference :inference}
+       (map make-get-file-to-generation)
+       (apply juxt)))
+
+(def log-generation
+  ;TODO implement this function
+  get-file-to-generations)
+
+(def log
+  (juxt log-recent
+        log-minimum
+        log-tensorboard
+        log-generation))
+
 (def handler
   ;TODO implement this function
   #(->>
@@ -171,6 +280,7 @@
                       helpers/flatten-sequential
                       set-precision)}
      (helpers/transfer* [:training :minimum] get-minimum)
+     (command/effect log)
      :training
      generate-string
      response))

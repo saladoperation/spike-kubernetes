@@ -388,8 +388,8 @@
        "preparation")
 
      (def append-extension
-       (comp (partial str/join ".")
-             vector))
+       (aid/curry 2 (comp (partial str/join ".")
+                          vector)))
 
      (def preparation-filename
        (append-extension preparation-name "edn"))
