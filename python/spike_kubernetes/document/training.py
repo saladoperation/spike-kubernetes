@@ -49,8 +49,12 @@ def run_step(reduction, step):
     reduction["optimizer"].step()
     reduction["model"].eval()
     # TODO: implement this function
-    return (comp(assess_remotely,
-                 document_helpers.set_inference) if
-            zero_(mod(step["global_step"],
-                      document_helpers.tuned["validation-interval"])) else
-            identity)(merge(reduction, step, forwarded))
+    return aid.if_then(comp(zero_,
+                            aid.build(mod,
+                                      partial(aid.flip(get),
+                                              "global_step"),
+                                      partial(aid.flip(get),
+                                              "validation-interval"))),
+                       comp(assess_remotely,
+                            document_helpers.set_inference),
+                       merge(reduction, step, forwarded))
