@@ -26,12 +26,12 @@
                   "tmux"
                   "vim")))
 
-(def python-path
+(def python-name
   "python")
 
 (defn python
   [& more]
-  (sh/with-sh-dir python-path
+  (sh/with-sh-dir python-name
                   (apply command/export
                          "PYTHONPATH=$(pwd)"
                          "&&"
@@ -39,7 +39,7 @@
                          "activate"
                          "spike-kubernetes"
                          "&&"
-                         "python"
+                         python-name
                          more)))
 
 (def install-python
@@ -47,6 +47,6 @@
               (str (aid/casep (command/nvidia-smi)
                               either/right "g"
                               "c"))
-              (helpers/get-path python-path "environments")
+              (helpers/get-path python-name "environments")
               (command/conda "env" "create" "--force" "-f"))
          (python "-m" "spacy" "download" "en")))
