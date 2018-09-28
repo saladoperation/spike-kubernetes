@@ -264,7 +264,6 @@
         log-generation))
 
 (def handler
-  ;TODO implement this function
   #(->>
      {:validation (->> :validation
                        get-evaluation-tokens
