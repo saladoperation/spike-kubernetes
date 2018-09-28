@@ -27,8 +27,12 @@
         (partition (-> (get-length)
                        keys
                        count
-                       (quot (:batch-size (helpers/get-document-tuned)))))
-        (take (:batch-size (helpers/get-document-tuned)))))
+                       (quot (-> helpers/document-name
+                                 helpers/get-tuned
+                                 :batch-size))))
+        (take (-> helpers/document-name
+                  helpers/get-tuned
+                  :batch-size))))
 
 (def get-gaps
   #(->> %
@@ -39,7 +43,9 @@
         (reductions +)
         (cons 0)
         (map (partial -
-                      (+ (:step-size (helpers/get-document-tuned))
+                      (+ (-> helpers/document-name
+                             helpers/get-tuned
+                             :step-size)
                          (:token-offset %))))
         (take-while (complement neg?))))
 
@@ -72,7 +78,9 @@
                       command/join-newline
                       str/split-lines
                       (drop (:token-offset %))
-                      (take (:step-size (helpers/get-document-tuned)))
+                      (take (-> helpers/document-name
+                                helpers/get-tuned
+                                :step-size))
                       str/join)
              "]")
         edn/read-string
@@ -158,13 +166,6 @@
   ;TODO implement this function
   generate-string)
 
-(defn get-run-path
-  [& more]
-  (apply helpers/get-runs-path
-         helpers/document-name
-         (helpers/get-document-run)
-         more))
-
 (def log-minimum
   #(if ((aid/build =
                    get-validation-loss
@@ -172,7 +173,9 @@
          %)
      ;TODO implment this function
      (map (fn [extension]
-            (map (comp (partial get-run-path "checkpoints")
+            (map (comp (partial helpers/get-run-path
+                                helpers/document-name
+                                "checkpoints")
                        ((aid/flip helpers/append-extension) extension))
                  ["recent" "minimum"]))
           ["edn" "pt"])))
@@ -235,7 +238,10 @@
 
 (def make-get-file-to-generation
   #(juxt (comp (partial (aid/flip helpers/append-extension) "txt")
-               (partial get-run-path "generation" (name %))
+               (partial helpers/get-run-path
+                        helpers/document-name
+                        "generation"
+                        (name %))
                str
                get-training-global-step)
          (comp %

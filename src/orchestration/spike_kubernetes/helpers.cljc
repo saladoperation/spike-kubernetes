@@ -865,53 +865,36 @@
      (def get-selection-path
        (partial (aid/flip get-resources-path) "selection.json"))
 
-     (def lm-selection-path
-       (get-selection-path lm-name))
-
-     (def document-selection-path
-       (get-selection-path document-name))
-
      (def parse-keywordize
        (partial (aid/flip parse-string) true))
 
      (def get-run
-       (comp :run
-             parse-keywordize
-             slurp))
-
-     (utils/defmemoized get-lm-run
-                        []
-                        (get-run lm-selection-path))
-
-     (utils/defmemoized get-document-run
-                        []
-                        (get-run document-selection-path))
+       (memoize (comp :run
+                      parse-keywordize
+                      slurp
+                      get-selection-path)))
 
      (defn get-runs-path
-       [model & more]
-       (apply get-resources-path model "runs" more))
+       [model-name & more]
+       (apply get-resources-path model-name "runs" more))
 
      (aid/defcurried get-tuned-path
-                     [model timestamp extension]
+                     [model-name timestamp extension]
                      (->> extension
                           (append-extension "tuned")
-                          (get-runs-path model timestamp)))
+                          (get-runs-path model-name timestamp)))
 
      (def slurp-read-string
        (comp read-string
              slurp))
 
-     (utils/defmemoized get-lm-tuned
-                        []
-                        (slurp-read-string (get-tuned-path lm-name
-                                                           (get-lm-run)
-                                                           "edn")))
-
-     (utils/defmemoized get-document-tuned
-                        []
-                        (slurp-read-string (get-tuned-path document-name
-                                                           (get-document-run)
-                                                           "edn")))
+     (utils/defmemoized get-tuned
+                        [model-name]
+                        (-> (get-tuned-path model-name
+                                            (get-run model-name)
+                                            "edn")
+                            slurp
+                            edn/read-string))
 
      (def stoi-request
        {:body         (generate-string {:action :get-stoi})
@@ -956,7 +939,8 @@
 
      (utils/defmemoized get-index-upperbounds
                         []
-                        (->> (get-lm-tuned)
+                        (->> lm-name
+                             get-tuned
                              :cutoffs
                              (s/setval s/AFTER-ELEM (-> lm-port
                                                         get-stoi
@@ -1028,7 +1012,8 @@
      (def get-clusters
        #(-> %
             get-cluster
-            (map (->> (get-lm-tuned)
+            (map (->> lm-name
+                      get-tuned
                       :cutoffs
                       (cons lm-unk-index))
                  (get-index-upperbounds))))
@@ -1080,7 +1065,9 @@
 
      (def get-lm-evaluation-steps
        #(mapcat (comp (partial map get-batch)
-                      (partial partition-all (:batch-size (get-lm-tuned))))
+                      (partial partition-all (-> lm-name
+                                                 get-tuned
+                                                 :batch-size)))
                 %))
 
      (def kubernetes-name
@@ -1302,4 +1289,11 @@
      (def get-evaluation-path
        (comp get-organized-path
              (partial (aid/flip append-extension) "edn")
-             name))))
+             name))
+
+     (defn get-run-path
+       [model-name & more]
+       (apply get-runs-path
+              model-name
+              (get-run model-name)
+              more))))
