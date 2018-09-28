@@ -404,7 +404,7 @@
      (defn screen
        [sentence]
        (->> (get-preparation)
-            :n-upperbound
+            :n-supremum
             (range n-minimum)
             (mapcat #(->> sentence
                           (map :lemma_)
@@ -912,10 +912,10 @@
        (map inc integers))
 
      (defn make-within
-       [minimum upperbound]
+       [minimum supremum]
        (aid/build and
                   (partial <= minimum)
-                  (partial > upperbound)))
+                  (partial > supremum)))
 
      (defn <$
        [v fv]
@@ -925,16 +925,16 @@
        0)
 
      (defn get-mask
-       [reference minimum upperbound]
+       [reference minimum supremum]
        (aid/case-eval minimum
                       lm-unk-index (-> true
                                        integer
                                        (<$ reference))
                       (map (comp integer
-                                 (make-within minimum upperbound))
+                                 (make-within minimum supremum))
                            reference)))
 
-     (utils/defmemoized get-index-upperbounds
+     (utils/defmemoized get-index-suprema
                         []
                         (->> lm-name
                              get-tuned
@@ -952,7 +952,7 @@
      ;    time)
      ;"Elapsed time: 2503.398474 msecs"
      ;=> 7922
-     ;(def get-index-upperbounds
+     ;(def get-index-suprema
      ;  #(->> (get-lm-tuned)
      ;        :cutoffs
      ;        (s/setval s/AFTER-ELEM (-> lm-port
@@ -969,33 +969,33 @@
      ;"Elapsed time: 13249.900044 msecs"
      ;=> 7922
 
-     (def get-head-upperbound
-       #(first (get-index-upperbounds)))
+     (def get-head-supremum
+       #(first (get-index-suprema)))
 
      (def get-tail
-       #(->> (get-index-upperbounds)
+       #(->> (get-index-suprema)
              (take-while (partial >= %))
              count
              dec))
 
      (def cut-off
-       #((command/if-then (partial < (get-head-upperbound))
-                          (comp (partial + (get-head-upperbound))
+       #((command/if-then (partial < (get-head-supremum))
+                          (comp (partial + (get-head-supremum))
                                 get-tail))
           %))
 
      (aid/defcurried get-cluster
-                     [reference minimum upperbound]
+                     [reference minimum supremum]
                      {:index     (->> (map *
                                            (get-mask reference
                                                      minimum
-                                                     upperbound)
+                                                     supremum)
                                            positive-integers)
                                       (filter pos?)
                                       (map dec))
                       :minimum   minimum
-                      :length    (- upperbound minimum)
-                      :mask      (get-mask reference minimum upperbound)
+                      :length    (- supremum minimum)
+                      :mask      (get-mask reference minimum supremum)
                       :reference (->> reference
                                       ((aid/case-eval
                                          minimum
@@ -1003,7 +1003,7 @@
                                                                cut-off)
                                          (partial filter
                                                   (make-within minimum
-                                                               upperbound))))
+                                                               supremum))))
                                       (map (partial (aid/flip -) minimum)))})
 
      (def get-clusters
@@ -1013,7 +1013,7 @@
                       get-tuned
                       :cutoffs
                       (cons lm-unk-index))
-                 (get-index-upperbounds))))
+                 (get-index-suprema))))
 
      (def get-lm-index
        #(-> lm-port

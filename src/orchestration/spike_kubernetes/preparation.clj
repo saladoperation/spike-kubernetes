@@ -60,7 +60,7 @@
         (map get-graph [graph/digraph graph/graph])
         (apply graph/digraph)))
 
-(def get-n-upperbound
+(def get-n-supremum
   #(->> (get-confusion)
         graph/nodes
         (map (comp count
@@ -90,6 +90,6 @@
 
 (def prepare
   #(spit (helpers/get-resources-path helpers/preparation-filename)
-         {:n-upperbound (get-n-upperbound)
+         {:n-supremum (get-n-supremum)
           :confusions   (get-confusions)
           :alternative  (get-alternative)}))
