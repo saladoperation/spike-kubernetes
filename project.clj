@@ -32,7 +32,6 @@
             [lein-ancient "0.6.15"]
             [lein-cljsbuild "1.1.5"]
             [lein-doo "0.1.10"]
-            [lein-exec "0.3.7"]
             [lein-npm "0.6.2"]]
   :main spike-kubernetes.core
   :source-paths ["src/orchestration"]
