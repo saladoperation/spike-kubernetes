@@ -174,16 +174,8 @@
          (build-clojurescript helpers/orchestration-name)
          (command/lein uberjar-name)))
 
-(defn make-+
-  [f g]
-  (comp (juxt (comp fs/mkdirs
-                    fs/parent
-                    f)
-              (partial apply g))
-        vector))
-
 (def spit+
-  (make-+ first spit))
+  (helpers/make-+ spit))
 
 (def spit-dockerfiles+
   #(->> helpers/python-port-name
