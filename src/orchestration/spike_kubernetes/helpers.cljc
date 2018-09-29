@@ -1323,15 +1323,20 @@
      (def spacy-command
        [python-name "-m" "spacy" "download" "en"])
 
-     (def apt-packages
+     (def required-packages
        #{"build-essential"
          "libffi-dev"
-         "glances"
+         "nodejs"})
+
+     (def optional-packages
+       #{"glances"
          "inotify-tools"
-         "nodejs"
          "silversearcher-ag"
          "tmux"
          "vim"})
+
+     (def apt-packages
+       (set/union required-packages optional-packages))
 
      (def apt-name
        "apt-get")
