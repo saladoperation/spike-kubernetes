@@ -1337,7 +1337,5 @@
        "apt-get")
 
      (def apt-commands
-       (s/setval [s/ALL s/BEFORE-ELEM]
-                 apt-name
-                 [["update"]
-                  (concat ["install" "-y"] apt-packages)]))))
+       (map (partial cons apt-name) [["update"]
+                                     (concat ["install" "-y"] apt-packages)]))))

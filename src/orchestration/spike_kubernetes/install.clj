@@ -17,7 +17,7 @@
                        "bash"
                        "-")
          (->> helpers/apt-commands
-              (s/setval [s/ALL s/BEFORE-ELEM] "sudo")
+              (map (partial cons "sudo"))
               helpers/get-shell-script
               bash-c)))
 
