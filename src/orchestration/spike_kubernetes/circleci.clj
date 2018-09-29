@@ -113,8 +113,8 @@
                         [helpers/conda-command
                          ["/bin/bash"
                           "-c"
-                          (helpers/get-shell-script [helpers/source-command
-                                                     helpers/spacy-command])]])
+                          (helpers/get-shell-command [helpers/source-command
+                                                      helpers/spacy-command])]])
       :port     %
       :cmd      [(helpers/get-path script-name
                                    helpers/python-name
@@ -139,10 +139,6 @@
 (def build-clojurescript
   (partial command/lein "cljsbuild" "once"))
 
-(def get-forwarding
-  (comp (partial str/join ":")
-        (partial repeat 2)))
-
 (def parse-image
   (helpers/get-image helpers/parse-name))
 
@@ -157,7 +153,7 @@
   #(m/>> (command/docker "run"
                          "-d"
                          "-p"
-                         (get-forwarding helpers/parse-port)
+                         (helpers/get-forwarding helpers/parse-port)
                          parse-image)
          (wait "localhost" helpers/parse-port)))
 

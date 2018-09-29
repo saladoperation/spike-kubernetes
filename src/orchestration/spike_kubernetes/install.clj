@@ -4,9 +4,10 @@
             [spike-kubernetes.command :as command]
             [spike-kubernetes.helpers :as helpers]))
 
-(def bash-c
+(def run-commands
   (comp (partial command/bash "-c")
-        #(str "\"" % "\"")))
+        #(str "\"" % "\"")
+        helpers/get-shell-command))
 
 (def install-apt
   #(m/>> (command/curl "-sL"
@@ -18,10 +19,26 @@
                        "-")
          (->> helpers/apt-commands
               (map (partial cons "sudo"))
-              helpers/get-shell-script
-              bash-c)))
+              run-commands)))
 
 (def install-python
   #(-> [helpers/conda-command helpers/source-command helpers/spacy-command]
-       helpers/get-shell-script
-       bash-c))
+       run-commands))
+
+(def container-name
+  "rabbitmq")
+
+(def install-rabbitmq
+  #(->> [["kill" container-name]
+         ["rm" container-name]
+         ["run"
+          "-d"
+          "--name"
+          container-name
+          "-p"
+          (helpers/get-forwarding 5672)
+          "-p"
+          (helpers/get-forwarding 15672)
+          "rabbitmq:3-management"]]
+        (map (partial concat ["sudo" "docker"]))
+        run-commands))

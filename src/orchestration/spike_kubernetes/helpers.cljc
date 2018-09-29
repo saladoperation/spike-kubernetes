@@ -1313,7 +1313,7 @@
                              "c"))
              (get-path python-name "environments"))])
 
-     (def get-shell-script
+     (def get-shell-command
        (comp (partial str/join " && ")
              (partial map command/join-whitespace)))
 
@@ -1338,4 +1338,8 @@
 
      (def apt-commands
        (map (partial cons apt-name) [["update"]
-                                     (concat ["install" "-y"] apt-packages)]))))
+                                     (concat ["install" "-y"] apt-packages)]))
+
+     (def get-forwarding
+       (comp (partial str/join ":")
+             (partial repeat 2)))))
