@@ -9,16 +9,19 @@
         #(str "\"" % "\"")
         helpers/get-shell-command))
 
+(def sudo-name
+  "sudo")
+
 (def install-apt
   #(m/>> (command/curl "-sL"
                        "https://deb.nodesource.com/setup_8.x"
                        "|"
-                       "sudo"
+                       sudo-name
                        "-E"
                        "bash"
                        "-")
          (->> helpers/apt-commands
-              (map (partial cons "sudo"))
+              (map (partial cons sudo-name))
               run-commands)))
 
 (def install-conda
@@ -28,6 +31,9 @@
 (def container-name
   "rabbitmq")
 
+(def port-option-name
+  "-p")
+
 (def install-docker
   #(->> [["kill" container-name]
          ["rm" container-name]
@@ -35,12 +41,12 @@
           "-d"
           "--name"
           container-name
-          "-p"
+          port-option-name
           (helpers/get-forwarding 5672)
-          "-p"
+          port-option-name
           (helpers/get-forwarding 15672)
           "rabbitmq:3-management"]]
-        (map (partial concat ["sudo" "docker"]))
+        (map (partial concat [sudo-name "docker"]))
         run-commands))
 
 (def install
