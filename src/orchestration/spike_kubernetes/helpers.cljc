@@ -1359,4 +1359,8 @@
      (def get-cloud-storage-path
        (comp (partial get-path
                       "https://storage.googleapis.com/wikipediadataset")
-             (partial (aid/flip append-extension) "tar.gz")))))
+             (partial (aid/flip append-extension) "tar.gz")))
+
+     (def map->>
+       (comp (partial apply m/>>)
+             map))))

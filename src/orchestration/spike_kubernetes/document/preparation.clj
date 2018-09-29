@@ -3,6 +3,7 @@
             [clojure.java.io :as io]
             [clojure.set :as set]
             [aid.core :as aid]
+            [cats.core :as m]
             [com.rpl.specter :as s]
             [me.raynes.fs :as fs]
             [spike-kubernetes.command :as command]
@@ -40,7 +41,7 @@
   (fs/delete extracted-path)
   (->> downloaded-path
        helpers/get-files
-       (run! extract*)))
+       (helpers/map->> extract*)))
 
 (defn nondeterministically-shuf
   [from to]
@@ -80,18 +81,23 @@
 (def spit-edn-lines+
   (helpers/make-+ spit-edn-lines))
 
+(def juxt->>
+  (comp (partial comp (partial apply m/>>))
+        juxt))
+
 (defn organize
   []
   (fs/delete-dir (helpers/get-organized-path))
   (with-open [x (io/reader random-path)]
-    (->> x
-         line-seq
-         (map (comp (partial s/transform*
-                             :text
-                             helpers/structure-document)
-                    helpers/parse-keywordize))
-         ((apply juxt
-                 (comp (juxt (partial run!
+    (->>
+      x
+      line-seq
+      (map (comp (partial s/transform*
+                          :text
+                          helpers/structure-document)
+                 helpers/parse-keywordize))
+      ((apply juxt->>
+              (comp (juxt->> (partial run!
                                       (aid/build spit-edn-lines+
                                                  (comp helpers/get-training-path
                                                        (partial (aid/flip str)
@@ -103,9 +109,15 @@
                                    (partial mapcat (juxt first
                                                          (comp count
                                                                last)))))
-                       (partial map-indexed vector)
-                       (partial map :text)
-                       (partial remove (comp evaluation-ids
-                                             edn/read-string
-                                             :id)))
-                 (map make-spit-evaluation [:test :validation]))))))
+                    (partial map-indexed vector)
+                    (partial map :text)
+                    (partial remove (comp evaluation-ids
+                                          edn/read-string
+                                          :id)))
+              (map make-spit-evaluation [:test :validation]))))))
+
+(def prepare
+  (juxt->> download
+           extract
+           randomize
+           organize))

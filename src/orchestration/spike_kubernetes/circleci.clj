@@ -190,17 +190,13 @@
         (s/transform s/MAP-KEYS get-dockerfile-path)
         (run! (partial apply spit+))))
 
-(def map->>
-  (comp (partial apply m/>>)
-        map))
-
 (def push
   #(m/>> (->> env
               :docker-password
               (command/docker "login" "-u" helpers/username "-p"))
-         (map->> (comp (partial command/docker "push")
-                       helpers/get-image)
-                 helpers/image-names)))
+         (helpers/map->> (comp (partial command/docker "push")
+                               helpers/get-image)
+                         helpers/image-names)))
 
 (def test-argument-collection
   [["test"] ["doo" node-name "test" "once"]])
@@ -213,8 +209,8 @@
 
 (def download
   #(sh/with-sh-dir (helpers/get-resources-path)
-                   (map->> (partial apply command/wget)
-                           download-argument-collection)))
+                   (helpers/map->> (partial apply command/wget)
+                                   download-argument-collection)))
 
 (defn run-circleci
   []
@@ -232,13 +228,13 @@
                         (apply command/docker))
                    (build-orchestration)
                    (build-alteration)
-                   (map->> (partial apply
-                                    command/lein)
-                           test-argument-collection)
-                   (map->> (comp (partial apply
-                                          command/docker)
-                                 get-build-arguments)
-                           helpers/image-names))
+                   (helpers/map->> (partial apply
+                                            command/lein)
+                                   test-argument-collection)
+                   (helpers/map->> (comp (partial apply
+                                                  command/docker)
+                                         get-build-arguments)
+                                   helpers/image-names))
              #(aid/casep env
                          :circle-tag (push)
                          (m/pure %))))))
