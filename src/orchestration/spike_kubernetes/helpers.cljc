@@ -1321,4 +1321,21 @@
        ["source" "activate" "spike-kubernetes"])
 
      (def spacy-command
-       [python-name "-m" "spacy" "download" "en"])))
+       [python-name "-m" "spacy" "download" "en"])
+
+     (def apt-packages
+       #{"build-essential"
+         "libffi-dev"
+         "glances"
+         "inotify-tools"
+         "nodejs"
+         "silversearcher-ag"
+         "tmux"
+         "vim"})
+
+     (def apt-name
+       "apt-get")
+
+     (def apt-commands
+       [["sudo" apt-name "update"]
+        (concat [apt-name "install" "-y"] apt-packages)])))

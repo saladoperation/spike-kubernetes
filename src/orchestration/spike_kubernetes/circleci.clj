@@ -103,26 +103,18 @@
 (def conda-image
   "continuumio/miniconda:4.5.4@sha256:19d3eedab8b6301a0e1819476cfc50d53399881612183cf65208d7d43db99cd9")
 
-(def apt-name
-  "apt")
-
 (def get-python-dockerfile
   #(get-dockerfile
      {:image    conda-image
       :from-tos (get-from-tos #{(helpers/get-resources-path)
                                 helpers/python-name
                                 script-name})
-      :runs     [[apt-name "update"]
-                 [apt-name
-                  "install"
-                  "-y"
-                  "build-essential"
-                  "libffi-dev"]
-                 helpers/conda-command
-                 ["/bin/bash"
-                  "-c"
-                  (helpers/get-shell-script [helpers/source-command
-                                             helpers/spacy-command])]]
+      :runs     (concat helpers/apt-commands
+                        [helpers/conda-command
+                         ["/bin/bash"
+                          "-c"
+                          (helpers/get-shell-script [helpers/source-command
+                                                     helpers/spacy-command])]])
       :port     %
       :cmd      [(helpers/get-path script-name
                                    helpers/python-name
