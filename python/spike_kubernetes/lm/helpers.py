@@ -37,16 +37,17 @@ tuned = helpers.get_tuned(lm_name)
 
 
 def get_direction_model():
-    return nn.ModuleDict({"states": get_states(
-        init.kaiming_normal_(torch.zeros(2,
-                                         tuned["num_layers"],
-                                         tuned["hidden_size"]))),
-        "lstm": nn.LSTM(plus(pretrained.dim, character_vector_size),
-                        tuned["hidden_size"],
-                        tuned["num_layers"],
-                        batch_first=True,
-                        dropout=tuned["dropout"]),
-        "linear": nn.Linear(tuned["hidden_size"], pretrained.dim)})
+    return nn.ModuleDict(
+        {"states": get_states(
+            init.kaiming_normal_(torch.zeros(2,
+                                             tuned["num_layers"],
+                                             tuned["hidden_size"]))),
+            "lstm": nn.LSTM(plus(pretrained.dim, character_vector_size),
+                            tuned["hidden_size"],
+                            tuned["num_layers"],
+                            batch_first=True,
+                            dropout=tuned["dropout"]),
+            "linear": nn.Linear(tuned["hidden_size"], pretrained.dim)})
 
 
 def get_model():
