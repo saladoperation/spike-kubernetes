@@ -1342,4 +1342,7 @@
 
      (def get-forwarding
        (comp (partial str/join ":")
-             (partial repeat 2)))))
+             (partial repeat 2)))
+
+     (def install-npm
+       #(command/lein "npm" "install"))))

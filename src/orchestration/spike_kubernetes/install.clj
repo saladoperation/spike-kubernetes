@@ -21,14 +21,14 @@
               (map (partial cons "sudo"))
               run-commands)))
 
-(def install-python
+(def install-conda
   #(-> [helpers/conda-command helpers/source-command helpers/spacy-command]
        run-commands))
 
 (def container-name
   "rabbitmq")
 
-(def install-rabbitmq
+(def install-docker
   #(->> [["kill" container-name]
          ["rm" container-name]
          ["run"
@@ -42,3 +42,9 @@
           "rabbitmq:3-management"]]
         (map (partial concat ["sudo" "docker"]))
         run-commands))
+
+(def install
+  #(m/>> (install-apt)
+         (install-conda)
+         (helpers/install-npm)
+         (install-docker)))

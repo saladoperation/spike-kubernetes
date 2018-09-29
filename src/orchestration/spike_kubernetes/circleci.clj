@@ -157,7 +157,7 @@
          (wait "localhost" helpers/parse-port)))
 
 (def build-alteration
-  #(m/>> (command/lein "npm" "install")
+  #(m/>> (helpers/install-npm)
          (build-clojurescript helpers/alteration-name)))
 
 (def run-dependencies
