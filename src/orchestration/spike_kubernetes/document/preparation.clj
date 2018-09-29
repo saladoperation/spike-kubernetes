@@ -43,6 +43,16 @@
        helpers/get-files
        (run! extract*)))
 
+(defn nondeterministically-shuf
+  [from to]
+  (command/shuf "--random-source" from "-o" to from))
+
+(def random-path
+  (helpers/get-dataset-path "random.txt"))
+
+(def randomize
+  #(nondeterministically-shuf extracted-path random-path))
+
 (def test-ids
   #{19961})
 
