@@ -1,6 +1,5 @@
 (ns spike-kubernetes.circleci
   (:require [clojure.java.shell :as sh]
-            [clojure.string :as str]
             [aid.core :as aid]
             [cats.core :as m]
             [cats.monad.either :as either]
