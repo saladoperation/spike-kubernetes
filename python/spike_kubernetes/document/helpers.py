@@ -78,7 +78,7 @@ progress = deep_merge(
      "evaluation": {"batch-size": evaluation_batch_size,
                     "states": get_states(evaluation_batch_size)}},
     {"training": helpers.get_training_progress(
-        document_name)(get_model())})
+        document_name, get_model())})
 
 convert_list = partial(s.transform_,
                        s.multi_path("source", "reference"),

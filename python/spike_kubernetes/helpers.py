@@ -112,7 +112,7 @@ def effects(*more):
     return last(more)
 
 
-def get_training_progress_(model_name, model):
+def get_training_progress(model_name, model):
     return merge(get_tuned(model_name),
                  effects(partial(s.transform_,
                                  "optimizer",
@@ -128,7 +128,6 @@ def get_training_progress_(model_name, model):
                                      get_optimizer)(model))))
 
 
-get_training_progress = aid.curry(2, get_training_progress_)
 convert_map = aid.if_then(comp(partial(equal, builtins.map),
                                type),
                           tuple)
