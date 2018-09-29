@@ -9,6 +9,19 @@
             [spike-kubernetes.helpers :as helpers]
             [spike-kubernetes.random :as random]))
 
+(def downloaded-path
+  (helpers/get-dataset-path "downloaded"))
+
+(defn download
+  []
+  (fs/delete-dir downloaded-path)
+  (helpers/with-sh-dir+ downloaded-path
+                        (->> helpers/hyperparameter
+                             :dataset
+                             helpers/get-cloud-storage-path
+                             helpers/get-download-argument
+                             (apply command/wget))))
+
 (def test-ids
   #{19961})
 

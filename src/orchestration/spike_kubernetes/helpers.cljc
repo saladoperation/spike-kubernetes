@@ -1350,4 +1350,13 @@
              (partial repeat 2)))
 
      (def install-npm
-       #(command/lein "npm" "install"))))
+       #(command/lein "npm" "install"))
+
+     (defn get-download-argument
+       [s]
+       ["-qO-" s "|" "tar" "xz"])
+
+     (def get-cloud-storage-path
+       (comp (partial get-path
+                      "https://storage.googleapis.com/wikipediadataset")
+             (partial (aid/flip append-extension) "tar.gz")))))

@@ -213,24 +213,16 @@
 (def test-argument-collection
   [["test"] ["doo" node-name "test" "once"]])
 
-(def get-tar-path
-  (comp (partial helpers/get-path
-                 "https://storage.googleapis.com/wikipediadataset")
-        (partial (aid/flip helpers/append-extension) "tar")))
-
-(defn get-download-extract-argument
-  [s]
-  ["-qO-" s "|" "tar" "x"])
-
-(def download-extract-arguments
+(def download-arguments
   (->> helpers/model-port-name
        vals
-       (map (comp get-download-extract-argument get-tar-path))))
+       (map (comp helpers/get-download-argument
+                  helpers/get-cloud-storage-path))))
 
-(def download-extract
+(def download
   #(sh/with-sh-dir (helpers/get-resources-path)
                    (map->> (partial apply command/wget)
-                           download-extract-arguments)))
+                           download-arguments)))
 
 (defn run-circleci
   []
@@ -240,7 +232,7 @@
     :trace
     (timbre/spy
       (m/>>= (m/>> (aid/casep env
-                              :circle-tag (m/>> (download-extract)
+                              :circle-tag (m/>> (download)
                                                 (helpers/install-word2vecf))
                               (either/right ""))
                    (->> helpers/parse-name
