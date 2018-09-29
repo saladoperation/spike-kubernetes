@@ -19,7 +19,7 @@
                         (->> helpers/hyperparameter
                              :dataset
                              helpers/get-cloud-storage-path
-                             helpers/get-download-argument
+                             helpers/get-download-arguments
                              (apply command/wget))))
 
 (def test-ids

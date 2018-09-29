@@ -1352,7 +1352,7 @@
      (def install-npm
        #(command/lein "npm" "install"))
 
-     (defn get-download-argument
+     (defn get-download-arguments
        [s]
        ["-qO-" s "|" "tar" "xz"])
 

@@ -213,16 +213,16 @@
 (def test-argument-collection
   [["test"] ["doo" node-name "test" "once"]])
 
-(def download-arguments
+(def download-argument-collection
   (->> helpers/model-port-name
        vals
-       (map (comp helpers/get-download-argument
+       (map (comp helpers/get-download-arguments
                   helpers/get-cloud-storage-path))))
 
 (def download
   #(sh/with-sh-dir (helpers/get-resources-path)
                    (map->> (partial apply command/wget)
-                           download-arguments)))
+                           download-argument-collection)))
 
 (defn run-circleci
   []
