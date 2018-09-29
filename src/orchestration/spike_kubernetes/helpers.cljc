@@ -1333,10 +1333,11 @@
          "tmux"
          "vim"})
 
-     (def apt-prefix
-       ["sudo" "apt-get"])
+     (def apt-name
+       "apt-get")
 
      (def apt-commands
-       (map (partial concat apt-prefix)
-            [["update"]
-             (concat ["install" "-y"] apt-packages)]))))
+       (s/setval [s/ALL s/BEFORE-ELEM]
+                 apt-name
+                 [["update"]
+                  (concat ["install" "-y"] apt-packages)]))))

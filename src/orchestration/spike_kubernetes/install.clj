@@ -1,5 +1,6 @@
 (ns spike-kubernetes.install
   (:require [cats.core :as m]
+            [com.rpl.specter :as s]
             [spike-kubernetes.command :as command]
             [spike-kubernetes.helpers :as helpers]))
 
@@ -15,9 +16,10 @@
                        "-E"
                        "bash"
                        "-")
-         (-> helpers/apt-commands
-             helpers/get-shell-script
-             bash-c)))
+         (->> helpers/apt-commands
+              (s/setval [s/ALL s/BEFORE-ELEM] "sudo")
+              helpers/get-shell-script
+              bash-c)))
 
 (def install-python
   #(-> [helpers/conda-command helpers/source-command helpers/spacy-command]
