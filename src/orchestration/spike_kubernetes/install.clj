@@ -1,6 +1,5 @@
 (ns spike-kubernetes.install
   (:require [cats.core :as m]
-            [com.rpl.specter :as s]
             [spike-kubernetes.command :as command]
             [spike-kubernetes.helpers :as helpers]))
 
