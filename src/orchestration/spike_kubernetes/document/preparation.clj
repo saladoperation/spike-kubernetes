@@ -22,6 +22,27 @@
                              helpers/get-download-arguments
                              (apply command/wget))))
 
+(def extracted-path
+  (helpers/get-dataset-path "extracted.txt"))
+
+(def extract*
+  #(->> %
+        str
+        (command/python (helpers/get-path helpers/python-name
+                                          "WikiExtractor.py")
+                        "--json"
+                        "-o"
+                        "-"
+                        ">>"
+                        extracted-path)))
+
+(defn extract
+  []
+  (fs/delete extracted-path)
+  (->> downloaded-path
+       helpers/get-files
+       (run! extract*)))
+
 (def test-ids
   #{19961})
 
