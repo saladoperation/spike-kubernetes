@@ -5,6 +5,7 @@
             [mount.core :as mount]
             [spike-kubernetes.circleci :as circleci]
             [spike-kubernetes.document.tuning :as tuning]
+            [spike-kubernetes.document.preparation :as document-preparation]
             [spike-kubernetes.helpers :as helpers]
             [spike-kubernetes.kubernetes :as kubernetes]
             [spike-kubernetes.preparation :as preparation]))
@@ -13,7 +14,11 @@
   [command & more]
   (aid/case-eval
     command
-    helpers/preparation-name (preparation/prepare)
+    helpers/preparation-name
+    ((aid/case-eval
+       (first more)
+       helpers/document-name document-preparation/prepare
+       preparation/prepare))
     "tuning" (tuning/tune)
     helpers/orchestration-name (do (require 'spike-kubernetes.orchestration)
                                    (mount/start))
