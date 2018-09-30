@@ -6,7 +6,6 @@
             [cheshire.core :refer :all]
             [com.rpl.specter :as s]
             [environ.core :refer [env]]
-            [me.raynes.fs :as fs]
             [taoensso.timbre :as timbre]
             [spike-kubernetes.command :as command]
             [spike-kubernetes.helpers :as helpers]
