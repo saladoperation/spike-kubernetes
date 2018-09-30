@@ -49,7 +49,8 @@
         run-commands))
 
 (def install
-  #(m/>> (install-apt)
-         (install-conda)
-         (helpers/install-npm)
-         (install-docker)))
+  (helpers/juxt->> install-apt
+                   helpers/install-word2vecf
+                   install-conda
+                   helpers/install-npm
+                   install-docker))

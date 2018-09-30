@@ -81,10 +81,6 @@
 (def spit-edn-lines+
   (helpers/make-+ spit-edn-lines))
 
-(def juxt->>
-  (comp (partial comp (partial apply m/>>))
-        juxt))
-
 (defn organize
   []
   (fs/delete-dir (helpers/get-organized-path))
@@ -96,28 +92,30 @@
                           :text
                           helpers/structure-document)
                  helpers/parse-keywordize))
-      ((apply juxt->>
-              (comp (juxt->> (partial run!
-                                      (aid/build spit-edn-lines+
-                                                 (comp helpers/get-training-path
-                                                       (partial (aid/flip str)
-                                                                ".txt")
-                                                       first)
-                                                 last))
-                             (comp (partial spit helpers/length-path)
-                                   (partial apply hash-map)
-                                   (partial mapcat (juxt first
-                                                         (comp count
-                                                               last)))))
-                    (partial map-indexed vector)
-                    (partial map :text)
-                    (partial remove (comp evaluation-ids
-                                          edn/read-string
-                                          :id)))
-              (map make-spit-evaluation [:test :validation]))))))
+      ((apply
+         helpers/juxt->>
+         (comp
+           (helpers/juxt->> (partial run!
+                                     (aid/build spit-edn-lines+
+                                                (comp helpers/get-training-path
+                                                      (partial (aid/flip str)
+                                                               ".txt")
+                                                      first)
+                                                last))
+                            (comp (partial spit helpers/length-path)
+                                  (partial apply hash-map)
+                                  (partial mapcat (juxt first
+                                                        (comp count
+                                                              last)))))
+           (partial map-indexed vector)
+           (partial map :text)
+           (partial remove (comp evaluation-ids
+                                 edn/read-string
+                                 :id)))
+         (map make-spit-evaluation [:test :validation]))))))
 
 (def prepare
-  (juxt->> download
-           extract
-           randomize
-           organize))
+  (helpers/juxt->> download
+                   extract
+                   randomize
+                   organize))

@@ -1363,4 +1363,8 @@
 
      (def map->>
        (comp (partial apply m/>>)
-             map))))
+             map))
+
+     (def juxt->>
+       (comp (partial comp (partial apply m/>>))
+             juxt))))
