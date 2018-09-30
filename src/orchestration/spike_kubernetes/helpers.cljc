@@ -1205,18 +1205,24 @@
             (sh/with-sh-dir ~path
                             ~@body)))
 
+     (defn >>
+       ([mv]
+        mv)
+       ([mv & more]
+        (apply m/>> mv more)))
+
      (def install-word2vecf
        #(with-sh-dir+
           cache-path
-          (m/>> (command/wget word2vecf-url)
-                (aid/case-eval (->> word2vecf-filename
-                                    (get-path cache-path)
-                                    io/input-stream
-                                    hash/sha256
-                                    bytes->hex)
-                               word2vecf-sha (either/right "")
-                               (either/left "Checksums don't match."))
-                (command/bzip2 "-df" word2vecf-filename))))
+          (>> (command/wget word2vecf-url)
+              (aid/case-eval (->> word2vecf-filename
+                                  (get-path cache-path)
+                                  io/input-stream
+                                  hash/sha256
+                                  bytes->hex)
+                             word2vecf-sha (either/right "")
+                             (either/left "Checksums don't match."))
+              (command/bzip2 "-df" word2vecf-filename))))
 
      (def get-document-evaluation-steps
        (comp (partial s/transform* (s/multi-path :source :reference) vector)
@@ -1365,7 +1371,7 @@
              (partial (aid/flip append-extension) "tar.gz")))
 
      (def map->>
-       (comp (partial apply m/>>)
+       (comp (partial apply >>)
              map))
 
      (def txt-name

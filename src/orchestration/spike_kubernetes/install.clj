@@ -12,16 +12,16 @@
   "sudo")
 
 (def install-apt
-  #(m/>> (command/curl "-sL"
-                       "https://deb.nodesource.com/setup_8.x"
-                       "|"
-                       sudo-name
-                       "-E"
-                       "bash"
-                       "-")
-         (->> helpers/apt-commands
-              (map (partial cons sudo-name))
-              run-commands)))
+  #(helpers/>> (command/curl "-sL"
+                             "https://deb.nodesource.com/setup_8.x"
+                             "|"
+                             sudo-name
+                             "-E"
+                             "bash"
+                             "-")
+               (->> helpers/apt-commands
+                    (map (partial cons sudo-name))
+                    run-commands)))
 
 (def install-conda
   #(-> [helpers/conda-command helpers/source-command helpers/spacy-command]

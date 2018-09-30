@@ -148,30 +148,30 @@
        first))
 
 (def run-parse
-  #(m/>> (command/docker "run"
-                         "-d"
-                         "-p"
-                         (helpers/get-forwarding helpers/parse-port)
-                         parse-image)
-         (wait "localhost" helpers/parse-port)))
+  #(helpers/>> (command/docker "run"
+                               "-d"
+                               "-p"
+                               (helpers/get-forwarding helpers/parse-port)
+                               parse-image)
+               (wait "localhost" helpers/parse-port)))
 
 (def build-alteration
-  #(m/>> (helpers/install-npm)
-         (build-clojurescript helpers/alteration-name)))
+  #(helpers/>> (helpers/install-npm)
+               (build-clojurescript helpers/alteration-name)))
 
 (def run-dependencies
-  #(m/>> (-> main-path
-             command/node
-             future
-             either/right)
-         (run-parse)))
+  #(helpers/>> (-> main-path
+                   command/node
+                   future
+                   either/right)
+               (run-parse)))
 
 (def build-orchestration
-  #(m/>> (build-alteration)
-         (run-dependencies)
-         (command/lein "run" helpers/preparation-name)
-         (build-clojurescript helpers/orchestration-name)
-         (command/lein uberjar-name)))
+  #(helpers/>> (build-alteration)
+               (run-dependencies)
+               (command/lein "run" helpers/preparation-name)
+               (build-clojurescript helpers/orchestration-name)
+               (command/lein uberjar-name)))
 
 (def spit+
   (helpers/make-+ spit))
@@ -190,12 +190,12 @@
         (run! (partial apply spit+))))
 
 (def push
-  #(m/>> (->> env
-              :docker-password
-              (command/docker "login" "-u" helpers/username "-p"))
-         (helpers/map->> (comp (partial command/docker "push")
-                               helpers/get-image)
-                         helpers/image-names)))
+  #(helpers/>> (->> env
+                    :docker-password
+                    (command/docker "login" "-u" helpers/username "-p"))
+               (helpers/map->> (comp (partial command/docker "push")
+                                     helpers/get-image)
+                               helpers/image-names)))
 
 (def test-argument-collection
   [["test"] ["doo" node-name "test" "once"]])
@@ -218,22 +218,24 @@
   (timbre/with-level
     :trace
     (timbre/spy
-      (m/>>= (m/>> (aid/casep env
-                              :circle-tag (m/>> (download)
-                                                (helpers/install-word2vecf))
-                              (either/right ""))
-                   (->> helpers/parse-name
-                        get-build-arguments
-                        (apply command/docker))
-                   (build-orchestration)
-                   (build-alteration)
-                   (helpers/map->> (partial apply
-                                            command/lein)
-                                   test-argument-collection)
-                   (helpers/map->> (comp (partial apply
-                                                  command/docker)
-                                         get-build-arguments)
-                                   helpers/image-names))
-             #(aid/casep env
-                         :circle-tag (push)
-                         (m/pure %))))))
+      (m/>>=
+        (helpers/>>
+          (aid/casep env
+                     :circle-tag (helpers/>> (download)
+                                             (helpers/install-word2vecf))
+                     (either/right ""))
+          (->> helpers/parse-name
+               get-build-arguments
+               (apply command/docker))
+          (build-orchestration)
+          (build-alteration)
+          (helpers/map->> (partial apply
+                                   command/lein)
+                          test-argument-collection)
+          (helpers/map->> (comp (partial apply
+                                         command/docker)
+                                get-build-arguments)
+                          helpers/image-names))
+        #(aid/casep env
+                    :circle-tag (push)
+                    (m/pure %))))))
