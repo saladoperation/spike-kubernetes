@@ -21,4 +21,5 @@
                                 (shutdown-agents))
     (System/exit (aid/casep (circleci/run-circleci)
                             either/right? 0
-                            1))))
+                            1)))
+  (shutdown-agents))
