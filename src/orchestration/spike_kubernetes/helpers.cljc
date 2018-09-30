@@ -787,14 +787,15 @@
                                                             []))
                   screen))
 
-     (def concatenate-into-vector
-       (comp (partial apply merge-with concat)
+     (def merge-into-vector
+       ;Replacing into with (comp vec concat) seems too slow to wait for the benchmark to finish.
+       (comp (partial apply merge-with into)
              (partial s/transform* [s/ALL s/MAP-VALS] vector)))
 
      (def concatenate-into-sentence
        (comp (partial s/transform* :text_with_ws (comp vector
                                                        str/join))
-             concatenate-into-vector))
+             merge-into-vector))
 
      (def eos
        "<eos>")
@@ -828,7 +829,7 @@
                                        rest
                                        :source))
                       set-character
-                      concatenate-into-vector)))
+                      merge-into-vector)))
 
      (def transform-original
        (partial s/transform* :original (comp vector
@@ -1026,11 +1027,21 @@
             get-stoi
             (get % lm-unk-index)))
 
-     (def get-document-unk-index
-       #(-> document-port
-            get-stoi
-            keys
-            count))
+     (utils/defmemoized get-document-unk-index
+                        []
+                        (-> document-port
+                            get-stoi
+                            keys
+                            count))
+     ;(defn get-document-unk-index
+     ;  []
+     ;  (-> document-port
+     ;      get-stoi
+     ;      keys
+     ;      count))
+     ;(time (get-document-unk-index))
+     ;"Elapsed time: 39.880357 msecs"
+     ;=> 174015
 
      (def get-document-index
        #(-> document-port
@@ -1226,7 +1237,7 @@
 
      (def get-document-evaluation-steps
        (comp (partial s/transform* (s/multi-path :source :reference) vector)
-             concatenate-into-vector
+             merge-into-vector
              (partial s/transform* [s/ALL :source] get-document-index)))
 
      (def flatten-sequential
