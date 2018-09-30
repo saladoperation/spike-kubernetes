@@ -83,11 +83,11 @@ def deep_merge_with(f, *more):
 deep_merge = partial(deep_merge_with, comp(last,
                                            vector))
 
-evaluation_batch_size = 1
+validation_batch_size = 1
 progress = deep_merge(
     {"training": {"states": get_states(tuned["batch-size"])},
-     "evaluation": {"batch-size": evaluation_batch_size,
-                    "states": get_states(evaluation_batch_size)}},
+     "validation": {"batch-size": validation_batch_size,
+                    "states": get_states(validation_batch_size)}},
     {"training": helpers.get_training_progress(
         document_name, get_model())})
 
@@ -129,7 +129,7 @@ evaluate = comp(helpers.get_serializable,
                 convert_merge(forward),
                 partial(merge,
                         progress["training"],
-                        progress["evaluation"]),
+                        progress["validation"]),
                 convert_list)
 
 
