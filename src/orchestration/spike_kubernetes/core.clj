@@ -4,8 +4,9 @@
             [cats.monad.either :as either]
             [mount.core :as mount]
             [spike-kubernetes.circleci :as circleci]
-            [spike-kubernetes.document.tuning :as tuning]
+            [spike-kubernetes.document.learning :as learning]
             [spike-kubernetes.document.preparation :as document-preparation]
+            [spike-kubernetes.document.tuning :as tuning]
             [spike-kubernetes.helpers :as helpers]
             [spike-kubernetes.kubernetes :as kubernetes]
             [spike-kubernetes.preparation :as preparation]))
@@ -20,6 +21,7 @@
        helpers/document-name document-preparation/prepare
        preparation/prepare))
     "tuning" (tuning/tune)
+    "learning" (learning/learn)
     helpers/orchestration-name (do (require 'spike-kubernetes.orchestration)
                                    (mount/start))
     helpers/kubernetes-name (do (kubernetes/spit-kubernetes)
