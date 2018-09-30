@@ -12,17 +12,6 @@ import spike_kubernetes.specter as s
 torch.manual_seed(0)
 get_stoi_name = "get-stoi"
 evaluate_name = "evaluate"
-
-
-def make_index_(m):
-    def index_():
-        return jsonify(apply(m[request.get_json()["action"]],
-                             ((request.get_json()["data"]),) if
-                             contains_(request.get_json(), "data")
-                             else ()))
-    return index_
-
-
 append_extension = comp(partial(str_.join, "."),
                         vector)
 json_name = "json"
@@ -151,3 +140,10 @@ get_serializable = comp(filter_map_serializable,
                                                    convert_map)))
 root_path = "/"
 methods = ("POST",)
+
+
+def index_(m):
+    return jsonify(apply(m[request.get_json()["action"]],
+                         ((request.get_json()["data"]),) if
+                         contains_(request.get_json(), "data")
+                         else ()))
