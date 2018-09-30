@@ -1,3 +1,4 @@
+import threading
 from flask import Flask
 import pika
 import requests
@@ -49,17 +50,20 @@ def run_step(reduction, step):
     reduction["optimizer"].step()
     reduction["model"].eval()
     # TODO implement this function
-    return aid.if_then(comp(zero_,
-                            aid.build(mod,
-                                      partial(aid.flip(get), "global_step"),
-                                      partial(aid.flip(get),
-                                              "validation-interval"))),
-                       comp(assess_remotely,
-                            document_helpers.set_inference),
-                       merge(reduction, step, forwarded))
+    return aid.if_then(
+        comp(zero_,
+             aid.build(mod,
+                       partial(aid.flip(get), "global_step"),
+                       partial(aid.flip(get),
+                               "validation-interval"))),
+        document_helpers.convert_merge(comp(assess_remotely,
+                                            partial(aid.flip(dissoc), "states"),
+                                            document_helpers.set_inference)),
+        merge(reduction, step, forwarded))
 
 
 run_steps = partial(reduce,
                     run_step,
                     document_helpers.progress["training"],
                     steps)
+threading.Thread(target=run_steps).start()
