@@ -53,4 +53,5 @@
 (def spit-kubernetes
   #(->> resources*
         get-json-lines
-        (spit (str helpers/kubernetes-name ".txt"))))
+        (spit (helpers/append-extension helpers/kubernetes-name
+                                        helpers/txt-name))))
