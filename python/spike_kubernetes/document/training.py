@@ -48,7 +48,7 @@ def run_step(reduction, step):
     forwarded["loss"].backward()
     reduction["optimizer"].step()
     reduction["model"].eval()
-    # TODO: implement this function
+    # TODO implement this function
     return aid.if_then(comp(zero_,
                             aid.build(mod,
                                       partial(aid.flip(get), "global_step"),

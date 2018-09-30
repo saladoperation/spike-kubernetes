@@ -22,26 +22,30 @@ get_embedding = comp(partial(aid.flip(nn.Embedding.from_pretrained), False),
                      get_embedding_vectors)
 get_bidirectional_size = partial(multiply, 2)
 num_tags = multiply(3, 2)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+move = partial(aid.flip(aid.make_attribute_call("to")), device)
 
 
 def get_model():
     # TODO possibly use embedding dropout
-    return nn.ModuleDict(
-        {"embedding": get_embedding(
-            init.kaiming_normal_(torch.zeros(1,
-                                             pretrained.dim))),
-            # TODO possibly use variational dropout
-            # TODO possibly use layer normalization
-            "lstm": nn.LSTM(pretrained.dim,
-                            tuned["hidden_size"],
-                            tuned["num_layers"],
-                            batch_first=True,
-                            bidirectional=True,
-                            dropout=tuned["dropout"]),
-            "linear": nn.Linear(
-                get_bidirectional_size(tuned["hidden_size"]),
-                num_tags),
-            "crf": conditional_random_field.ConditionalRandomField(num_tags)})
+    return move(
+        nn.ModuleDict(
+            {"embedding": get_embedding(
+                init.kaiming_normal_(torch.zeros(1,
+                                                 pretrained.dim))),
+                # TODO possibly use variational dropout
+                # TODO possibly use layer normalization
+                "lstm": nn.LSTM(pretrained.dim,
+                                tuned["hidden_size"],
+                                tuned["num_layers"],
+                                batch_first=True,
+                                bidirectional=True,
+                                dropout=tuned["dropout"]),
+                "linear": nn.Linear(
+                    get_bidirectional_size(tuned["hidden_size"]),
+                    num_tags),
+                "crf": conditional_random_field.ConditionalRandomField(
+                    num_tags)}))
 
 
 def forward(m):
@@ -49,7 +53,12 @@ def forward(m):
         m["model"]["embedding"](m["source"]),
         m["states"])
     output = m["model"]["linear"](lstm_output)
-    return {"loss": -m["model"]["crf"](output, m["reference"]),
+    # TODO don't pass mask when ConditionalRandomField gets fixed
+    # If mask is not passed, crf gives an error on a GPU.
+    # RuntimeError: Expected object of type torch.cuda.FloatTensor but found type torch.FloatTensor for argument #2 'other'
+    return {"loss": -m["model"]["crf"](output,
+                                       m["reference"],
+                                       torch.ones_like(m["reference"])),
             "output": output,
             "states": states}
 
@@ -59,9 +68,9 @@ def get_states(batch_size):
     return tuple(
         map(init.kaiming_normal_,
             repeat(2,
-                   torch.zeros(get_bidirectional_size(tuned["num_layers"]),
-                               batch_size,
-                               tuned["hidden_size"]))))
+                   move(torch.zeros(get_bidirectional_size(tuned["num_layers"]),
+                                    batch_size,
+                                    tuned["hidden_size"])))))
 
 
 def deep_merge_with(f, *more):
@@ -82,7 +91,8 @@ progress = deep_merge(
 
 convert_list = partial(s.transform_,
                        s.multi_path("source", "reference"),
-                       torch.tensor)
+                       comp(move,
+                            torch.tensor))
 
 
 def decode(crf, logits):
