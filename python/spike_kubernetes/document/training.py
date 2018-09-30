@@ -84,7 +84,8 @@ def run_step(reduction, step):
                        partial(aid.flip(get),
                                "validation-interval"))),
         document_helpers.convert_merge(comp(assess_remotely,
-                                            partial(aid.flip(dissoc), "states"),
+                                            partial(aid.flip(dissoc),
+                                                    "states"),
                                             helpers.effect(log_pt),
                                             document_helpers.set_inference)),
         merge(reduction, step, forwarded))
