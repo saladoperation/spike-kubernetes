@@ -106,6 +106,7 @@
                                         #(->> (helpers/get-training-path)
                                               helpers/get-files
                                               partition-into-batches
+                                              (map cycle)
                                               (map drop
                                                    (:document-offset %))))))))
 
