@@ -8,6 +8,7 @@
             [spike-kubernetes.document.preparation :as document-preparation]
             [spike-kubernetes.document.tuning :as tuning]
             [spike-kubernetes.helpers :as helpers]
+            [spike-kubernetes.install :as install]
             [spike-kubernetes.kubernetes :as kubernetes]
             [spike-kubernetes.preparation :as preparation]))
 
@@ -15,6 +16,7 @@
   [command & more]
   (aid/case-eval
     command
+    "install" (install/install)
     helpers/preparation-name
     ((aid/case-eval
        (first more)
