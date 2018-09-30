@@ -895,7 +895,7 @@
                         [model-name*]
                         (-> (get-tuned-path model-name*
                                             (get-run model-name*)
-                                            "edn")
+                                            edn-name)
                             slurp
                             edn/read-string))
 

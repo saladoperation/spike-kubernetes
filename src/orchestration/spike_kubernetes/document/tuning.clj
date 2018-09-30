@@ -28,7 +28,7 @@
                  (map helpers/spit+
                       (map (helpers/get-tuned-path helpers/document-name
                                                    %)
-                           ["edn" "json"]))
+                           [helpers/edn-name "json"]))
                  dorun)
            (comp (partial spit
                           (helpers/get-selection-path helpers/document-name))
