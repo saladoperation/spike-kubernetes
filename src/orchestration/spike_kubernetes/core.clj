@@ -22,11 +22,11 @@
        preparation/prepare))
     "tuning" (tuning/tune)
     "learning" (learning/learn)
-    helpers/orchestration-name (do (require 'spike-kubernetes.orchestration)
-                                   (mount/start))
     helpers/kubernetes-name (do (kubernetes/spit-kubernetes)
                                 (shutdown-agents))
-    (System/exit (aid/casep (circleci/run-circleci)
-                            either/right? 0
-                            1)))
+    "circleci" (System/exit (aid/casep (circleci/run-circleci)
+                                       either/right? 0
+                                       1))
+    (do (require 'spike-kubernetes.orchestration)
+        (mount/start)))
   (shutdown-agents))

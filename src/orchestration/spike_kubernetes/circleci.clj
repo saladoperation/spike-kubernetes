@@ -67,10 +67,7 @@
                    :from-tos (get-from-tos #{jar-path
                                              (helpers/get-resources-path)})
                    :port     helpers/orchestration-port
-                   :cmd      [java-name
-                              "-jar"
-                              jar-path
-                              helpers/orchestration-name]}))
+                   :cmd      [java-name "-jar" jar-path]}))
 
 (def get-prod-path
   (partial get-target-path "prod"))
