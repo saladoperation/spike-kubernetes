@@ -1367,4 +1367,7 @@
 
      (def juxt->>
        (comp (partial comp (partial apply m/>>))
-             juxt))))
+             juxt))
+
+     (def txt-name
+       "txt")))

@@ -100,7 +100,7 @@
                (aid/build spit-edn-lines+
                           (comp helpers/get-training-path
                                 (partial (aid/flip helpers/append-extension)
-                                         "txt")
+                                         helpers/txt-name)
                                 first)
                           last))
              (comp (partial spit helpers/length-path)
