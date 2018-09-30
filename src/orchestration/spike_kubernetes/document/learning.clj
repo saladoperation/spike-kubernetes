@@ -181,12 +181,12 @@
                    get-validation-loss
                    get-minimum)
          %)
-     ;TODO implment this function
-     (map (fn [extension]
-            (map (comp get-checkpoints-path
-                       ((aid/flip helpers/append-extension) extension))
-                 [recent-name "minimum"]))
-          [helpers/edn-name "pt"])))
+     (->> [helpers/edn-name "pt"]
+          (map (fn [extension]
+                 (map (comp get-checkpoints-path
+                            ((aid/flip helpers/append-extension) extension))
+                      [recent-name "minimum"])))
+          (run! (partial apply fs/copy)))))
 
 (declare flatten-map)
 
