@@ -1,4 +1,3 @@
-import threading
 from flask import Flask
 import pika
 import requests
