@@ -1368,9 +1368,5 @@
        (comp (partial apply m/>>)
              map))
 
-     (def juxt->>
-       (comp (partial comp (partial apply m/>>))
-             juxt))
-
      (def txt-name
        "txt")))

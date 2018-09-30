@@ -48,9 +48,13 @@
         (map (partial concat [sudo-name "docker"]))
         run-commands))
 
+(def juxt->>
+  (comp (partial comp (partial apply m/>>))
+        juxt))
+
 (def install
-  (helpers/juxt->> install-apt
-                   helpers/install-word2vecf
-                   install-conda
-                   helpers/install-npm
-                   install-docker))
+  (juxt->> install-apt
+           helpers/install-word2vecf
+           install-conda
+           helpers/install-npm
+           install-docker))
