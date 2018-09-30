@@ -3,7 +3,6 @@
             [clojure.java.io :as io]
             [clojure.set :as set]
             [aid.core :as aid]
-            [cats.core :as m]
             [com.rpl.specter :as s]
             [me.raynes.fs :as fs]
             [spike-kubernetes.command :as command]
