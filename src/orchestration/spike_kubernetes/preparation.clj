@@ -90,6 +90,6 @@
 
 (def prepare
   #(spit (helpers/get-resources-path helpers/preparation-filename)
-         {:n-supremum (get-n-supremum)
-          :confusions   (get-confusions)
-          :alternative  (get-alternative)}))
+         {:n-supremum  (get-n-supremum)
+          :confusions  (get-confusions)
+          :alternative (get-alternative)}))
