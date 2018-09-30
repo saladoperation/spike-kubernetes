@@ -240,7 +240,7 @@
   #(juxt (comp (partial (aid/flip helpers/append-extension) helpers/txt-name)
                (partial helpers/get-run-path
                         helpers/document-name
-                        "generation"
+                        "generated"
                         (name %))
                str
                get-training-global-step)
