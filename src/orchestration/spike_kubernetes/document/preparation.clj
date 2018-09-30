@@ -94,19 +94,20 @@
       ((apply
          juxt
          (comp
-           (juxt (partial
-                   run!
-                   (aid/build spit-edn-lines+
-                              (comp helpers/get-training-path
-                                    (partial (aid/flip helpers/append-extension)
-                                             helpers/txt-name)
-                                    first)
-                              last))
-                 (comp (partial spit helpers/length-path)
-                       (partial apply hash-map)
-                       (partial mapcat (juxt first
-                                             (comp count
-                                                   last)))))
+           (juxt
+             (partial
+               run!
+               (aid/build spit-edn-lines+
+                          (comp helpers/get-training-path
+                                (partial (aid/flip helpers/append-extension)
+                                         helpers/txt-name)
+                                first)
+                          last))
+             (comp (partial spit helpers/length-path)
+                   (partial apply hash-map)
+                   (partial mapcat (juxt first
+                                         (comp count
+                                               last)))))
            (partial map-indexed vector)
            (partial map :text)
            (partial remove (comp evaluation-ids
