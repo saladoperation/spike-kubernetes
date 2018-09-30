@@ -290,7 +290,7 @@
       :training   (-> %
                       :body
                       slurp
-                      parse-string
+                      helpers/parse-keywordize
                       helpers/flatten-sequential
                       set-precision)}
      (helpers/transfer* [:training :minimum] get-minimum)
