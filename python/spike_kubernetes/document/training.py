@@ -1,7 +1,10 @@
+import os
+import os.path as path
 import threading
 from flask import Flask
 import pika
 import requests
+import torch
 from spike_kubernetes.clojure.core import *
 import spike_kubernetes.aid as aid
 from spike_kubernetes.cheshire import *
@@ -37,6 +40,31 @@ assess_remotely = comp(aid.make_attribute_call("json"),
                        helpers.get_serializable)
 
 
+def mkdirs(path_):
+    os.makedirs(path_, exist_ok=True)
+
+
+def make_plus(f):
+    return comp(juxt(comp(mkdirs,
+                          path.dirname,
+                          path.abspath,
+                          last),
+                     partial(apply, f)),
+                vector)
+
+
+save_plus = make_plus(torch.save)
+
+
+def log_pt(m):
+    save_plus(s.setval_("training",
+                        s.transform_(s.multi_path("model", "optimizer"),
+                                     aid.make_attribute_call("state_dict"),
+                                     m),
+                        document_helpers.progress),
+              helpers.get_pt_path(document_helpers.document_name))
+
+
 def run_step(reduction, step):
     reduction["model"].train()
     reduction["model"].zero_grad()
@@ -58,6 +86,7 @@ def run_step(reduction, step):
                                "validation-interval"))),
         document_helpers.convert_merge(comp(assess_remotely,
                                             partial(aid.flip(dissoc), "states"),
+                                            helpers.effect(log_pt),
                                             document_helpers.set_inference)),
         merge(reduction, step, forwarded))
 

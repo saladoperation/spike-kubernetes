@@ -38,8 +38,8 @@ get_selection = comp(parse_string,
 tuned_name = get_json_filename("tuned")
 
 
-def get_run_path(model_name, run, filename):
-    return get_resources_path(model_name, "runs", run, filename)
+def get_run_path(model_name, run, *more):
+    return get_resources_path(model_name, "runs", run, *more)
 
 
 def get_tuned_path(model_name, selection):
@@ -99,12 +99,13 @@ effect = aid.curry(2, comp(last,
 
 
 def get_pt_path(model_name):
-    return get_resources_path(model_name,
-                              get_selection(model_name)["run"],
-                              append_extension(
-                                  get_step_selection(
-                                      get_selection(model_name)),
-                                  "pt"))
+    return get_run_path(model_name,
+                        get_selection(model_name)["run"],
+                        "checkpoints",
+                        append_extension(
+                            get_step_selection(
+                                get_selection(model_name)),
+                            "pt"))
 
 
 def effects(*more):

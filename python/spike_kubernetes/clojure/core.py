@@ -166,3 +166,8 @@ def number_(x):
 
 string_ = comp(partial(equal, builtins.str),
                type)
+
+
+def juxt(*more):
+    return comp(tuple,
+                funcy.juxt(*more))
