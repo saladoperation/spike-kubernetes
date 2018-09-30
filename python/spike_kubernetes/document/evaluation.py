@@ -1,5 +1,6 @@
 import allennlp.modules.conditional_random_field as conditional_random_field
 from flask import Flask
+from tensorboardX import SummaryWriter
 import torch
 import torch.nn as nn
 import torch.nn.init as init
@@ -24,8 +25,7 @@ get_embedding = comp(partial(aid.flip(nn.Embedding.from_pretrained), False),
                      get_embedding_vectors)
 get_bidirectional_size = partial(multiply, 2)
 num_tags = multiply(3, 2)
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-move = partial(aid.flip(aid.make_attribute_call("to")), device)
+move = partial(aid.flip(aid.make_attribute_call("to")), helpers.device)
 
 
 def get_model():
@@ -133,8 +133,15 @@ evaluate = comp(helpers.get_serializable,
                 convert_list)
 
 
+def log_tensorboard(coll):
+    writer = SummaryWriter(helpers.get_run_path(document_name, "tensorboard"))
+    run_(partial(apply, writer.add_scalars), coll)
+    writer.close()
+
+
 @app.route(helpers.root_path, methods=helpers.methods)
 def index():
     return helpers.index_(
         {helpers.get_stoi_name: constantly(pretrained.stoi),
-         helpers.evaluate_name: evaluate})
+         helpers.evaluate_name: evaluate,
+         "log-tensorboard": log_tensorboard})

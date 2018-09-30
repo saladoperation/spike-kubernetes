@@ -171,3 +171,12 @@ string_ = comp(partial(equal, builtins.str),
 def juxt(*more):
     return comp(tuple,
                 funcy.juxt(*more))
+
+
+def dorun(coll):
+    for _ in coll:
+        pass
+
+
+run_ = comp(dorun,
+            map)

@@ -2,6 +2,7 @@
   (:require [clojure.string :as str]
             [clojure.tools.reader.edn :as edn]
             [aid.core :as aid]
+            [clj-http.client :as client]
             [cheshire.core :refer :all]
             [com.rpl.specter :as s]
             [compliment.utils :as utils]
@@ -236,13 +237,15 @@
         :training))
 
 (def log-tensorboard
-  ;TODO implement this function
-  (aid/build s/setval*
-             (constantly [s/ALL s/AFTER-ELEM])
-             get-training-global-step
-             (comp vec
-                   (partial (aid/flip select-keys) #{:loss :precision})
-                   (partial reorder-keys reverse))))
+  (comp (partial client/post (helpers/get-origin helpers/document-port))
+        helpers/get-json-request
+        (partial array-map :action :log-tensorboard :data)
+        (aid/build s/setval*
+                   (constantly [s/ALL s/AFTER-ELEM])
+                   get-training-global-step
+                   (comp vec
+                         (partial (aid/flip select-keys) #{:loss :precision})
+                         (partial reorder-keys reverse)))))
 
 (def make-get-file-to-generation
   #(juxt (comp (partial (aid/flip helpers/append-extension) helpers/txt-name)
