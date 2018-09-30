@@ -394,8 +394,11 @@
        (aid/curry 2 (comp (partial str/join ".")
                           vector)))
 
+     (def edn-name
+       "edn")
+
      (def preparation-filename
-       (append-extension preparation-name "edn"))
+       (append-extension preparation-name edn-name))
 
      (utils/defmemoized get-preparation
                         []
@@ -1288,7 +1291,7 @@
 
      (def get-evaluation-path
        (comp get-organized-path
-             (partial (aid/flip append-extension) "edn")
+             (partial (aid/flip append-extension) edn-name)
              name))
 
      (defn get-run-path

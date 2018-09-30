@@ -178,7 +178,7 @@
                                 "checkpoints")
                        ((aid/flip helpers/append-extension) extension))
                  ["recent" "minimum"]))
-          ["edn" "pt"])))
+          [helpers/edn-name "pt"])))
 
 (declare flatten-map)
 
