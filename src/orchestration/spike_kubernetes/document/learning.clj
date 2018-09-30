@@ -12,7 +12,7 @@
             [langohr.core :as rmq]
             [langohr.queue :as lq]
             [me.raynes.fs :as fs]
-            [mount.core :refer [defstate]]
+            [mount.core :as mount :refer [defstate]]
             [ring.util.response :refer [response]]
             [spike-kubernetes.command :as command]
             [spike-kubernetes.helpers :as helpers]))
@@ -171,11 +171,15 @@
 (def recent-name
   "recent")
 
-(def log-recent
+(def get-recent-edn-path
   #(-> recent-name
        (helpers/append-extension helpers/edn-name)
-       get-checkpoints-path
-       (spit (generate-string %))))
+       get-checkpoints-path))
+
+(def log-recent
+  #(->> %
+        generate-string
+        (spit (get-recent-edn-path))))
 
 (def log-minimum
   #(if ((aid/build =
@@ -300,3 +304,24 @@
 (defstate server
           :start (start)
           :stop (web/stop))
+
+(def get-initial-offset
+  #(repeat (:batch-size (helpers/get-tuned helpers/document-name)) 0))
+
+(def get-initial-step
+  #(aid/casep (get-recent-edn-path)
+              fs/exists? (->> (get-recent-edn-path)
+                              slurp
+                              helpers/parse-keywordize
+                              :training
+                              (s/transform :global_step inc))
+              {:token-offset    (get-initial-offset)
+               :document-offset (get-initial-offset)
+               :global_step     0}))
+
+(defn learn
+  []
+  (mount/start)
+  (->> (get-initial-step)
+       get-training-steps
+       (run! publish-if-zero!)))
