@@ -162,9 +162,19 @@
                                    get-validation-loss)
                         get-validation-loss))
 
+(def get-checkpoints-path
+  (partial helpers/get-run-path
+           helpers/document-name
+           "checkpoints"))
+
+(def recent-name
+  "recent")
+
 (def log-recent
-  ;TODO implement this function
-  generate-string)
+  #(-> recent-name
+       (helpers/append-extension helpers/edn-name)
+       get-checkpoints-path
+       (spit (generate-string %))))
 
 (def log-minimum
   #(if ((aid/build =
@@ -173,11 +183,9 @@
          %)
      ;TODO implment this function
      (map (fn [extension]
-            (map (comp (partial helpers/get-run-path
-                                helpers/document-name
-                                "checkpoints")
+            (map (comp get-checkpoints-path
                        ((aid/flip helpers/append-extension) extension))
-                 ["recent" "minimum"]))
+                 [recent-name "minimum"]))
           [helpers/edn-name "pt"])))
 
 (declare flatten-map)
