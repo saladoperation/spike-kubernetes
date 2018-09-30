@@ -22,8 +22,8 @@
        preparation/prepare))
     "tuning" (tuning/tune)
     "learning" (learning/learn)
-    helpers/kubernetes-name (do (kubernetes/spit-kubernetes)
-                                (shutdown-agents))
+    helpers/kubernetes-name ((juxt kubernetes/spit-kubernetes
+                                   shutdown-agents))
     "circleci" (System/exit (aid/casep (circleci/run-circleci)
                                        either/right? 0
                                        1))
