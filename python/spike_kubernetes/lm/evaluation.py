@@ -29,8 +29,7 @@ get_embedding = comp(partial(aid.flip(nn.Embedding.from_pretrained), False),
                      get_embedding_vectors)
 get_states = comp(nn.ParameterList,
                   partial(map, nn.Parameter))
-move = partial(aid.flip(aid.make_attribute_call("to")), helpers.device)
-get_character_vector = comp(move,
+get_character_vector = comp(helpers.move,
                             partial(get, vocab.CharNGram()))
 character_vector_size = count(first(get_character_vector("")))
 lm_name = "lm"
@@ -53,7 +52,7 @@ def get_direction_model():
 
 
 def get_model():
-    return move(
+    return helpers.move(
         helpers.effect(
             aid.make_attribute_call("eval"),
             nn.ModuleDict(
@@ -68,7 +67,7 @@ def get_model():
                         "parameter": nn.ParameterDict(
                             {"tail": nn.Parameter(
                                 init.kaiming_normal_(
-                                    move(
+                                    helpers.move(
                                         torch.zeros(
                                             count(tuned["cutoffs"]),
                                             pretrained.dim))))})}))))
@@ -101,10 +100,10 @@ def make_cat_tail(tail):
 
 def make_adaptive_cross_entropy(m):
     def adaptive_cross_entropy(cluster):
-        return move(
+        return helpers.move(
             torch.zeros(
                 m["product"])) if empty_(
-            cluster["reference"]) else move(
+            cluster["reference"]) else helpers.move(
             torch.zeros(
                 m["product"])).index_copy_(
             0,
@@ -177,7 +176,7 @@ convert_list = partial(
                                s.multi_path("index",
                                             "mask",
                                             "reference"))),
-                 comp(move,
+                 comp(helpers.move,
                       torch.tensor))))
 progress = helpers.get_training_progress(lm_name, get_model())
 evaluate = comp(tuple,

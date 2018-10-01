@@ -42,6 +42,7 @@ get_tuned = comp(parse_string,
                  slurp,
                  get_tuned_path)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+move = partial(aid.flip(aid.make_attribute_call("to")), device)
 recent_name = "recent"
 
 

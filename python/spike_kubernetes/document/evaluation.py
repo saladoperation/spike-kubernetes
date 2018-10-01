@@ -25,12 +25,11 @@ get_embedding = comp(partial(aid.flip(nn.Embedding.from_pretrained), False),
                      get_embedding_vectors)
 get_bidirectional_size = partial(multiply, 2)
 num_tags = multiply(3, 2)
-move = partial(aid.flip(aid.make_attribute_call("to")), helpers.device)
 
 
 def get_model():
     # TODO possibly use embedding dropout
-    return move(
+    return helpers.move(
         nn.ModuleDict(
             {"embedding": get_embedding(
                 init.kaiming_normal_(torch.zeros(1,
@@ -69,10 +68,12 @@ def get_states(batch_size):
     # TODO possibly don't use kaiming_normal_
     return tuple(
         map(init.kaiming_normal_,
-            repeat(2,
-                   move(torch.zeros(get_bidirectional_size(tuned["num_layers"]),
-                                    batch_size,
-                                    tuned["hidden_size"])))))
+            repeat(
+                2,
+                helpers.move(
+                    torch.zeros(get_bidirectional_size(tuned["num_layers"]),
+                                batch_size,
+                                tuned["hidden_size"])))))
 
 
 def deep_merge_with(f, *more):
@@ -93,7 +94,7 @@ progress = deep_merge(
 
 convert_list = partial(s.transform_,
                        s.multi_path("source", "reference"),
-                       comp(move,
+                       comp(helpers.move,
                             torch.tensor))
 
 
