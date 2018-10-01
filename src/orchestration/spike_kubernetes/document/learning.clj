@@ -306,7 +306,10 @@
           :stop (web/stop))
 
 (def get-initial-offset
-  #(repeat (:batch-size (helpers/get-tuned helpers/document-name)) 0))
+  #(-> helpers/document-name
+       helpers/get-tuned
+       :batch-size
+       (repeat 0)))
 
 (def get-initial-step
   #(aid/casep (get-recent-edn-path)
