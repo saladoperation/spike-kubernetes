@@ -39,8 +39,7 @@
   #(->> %
         :file
         (map (comp (get-length)
-                   edn/read-string
-                   (partial (aid/flip fs/base-name) true)))
+                   fs/base-name))
         (reductions +)
         (cons 0)
         (map (partial -

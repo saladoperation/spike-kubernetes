@@ -80,6 +80,12 @@
 (def spit-edn-lines+
   (helpers/make-+ spit-edn-lines))
 
+(def count-lines
+  #(with-open [x (io/reader %)]
+     (-> x
+         line-seq
+         count)))
+
 (defn organize
   []
   (fs/delete-dir (helpers/get-organized-path))
@@ -94,26 +100,28 @@
       ((apply
          juxt
          (comp
-           (juxt
-             (partial
-               run!
-               (aid/build spit-edn-lines+
-                          (comp helpers/get-training-path
-                                (partial (aid/flip helpers/append-extension)
-                                         helpers/txt-name)
-                                first)
-                          last))
-             (comp (partial spit helpers/length-path)
-                   (partial apply hash-map)
-                   (partial mapcat (juxt first
-                                         (comp count
-                                               last)))))
+           (partial
+             run!
+             (aid/build spit-edn-lines+
+                        (comp helpers/get-training-path
+                              (partial (aid/flip helpers/append-extension)
+                                       helpers/txt-name)
+                              first)
+                        last))
            (partial map-indexed vector)
            (partial map :text)
            (partial remove (comp evaluation-ids
                                  edn/read-string
                                  :id)))
-         (map make-spit-evaluation [:test :validation]))))))
+         (map make-spit-evaluation [:test :validation])))))
+  ;Spitting a length file at the same time as spitting edn lines seems to run out of memory.
+  ;java.lang.OutOfMemoryError: GC overhead limit exceeded
+  (->> (helpers/get-training-path)
+       helpers/get-files
+       (mapcat (juxt fs/base-name
+                     count-lines))
+       (apply hash-map)
+       (spit helpers/length-path)))
 
 (def prepare
   (juxt download
