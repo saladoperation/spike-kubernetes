@@ -62,7 +62,7 @@
   (set/union test-ids validation-ids))
 
 (def make-spit-evaluation
-  #(comp (partial spit (helpers/get-evaluation-path %))
+  #(comp (partial vector spit (helpers/get-evaluation-path %))
          vec
          (partial mapcat :text)
          (partial filter (comp ({:test       test-ids
@@ -97,25 +97,26 @@
                           :text
                           helpers/structure-document)
                  helpers/parse-keywordize))
-      ((apply
-         juxt
+      ((aid/build
+         concat
          (comp
            (partial
-             run!
-             (aid/build spit-edn-lines+
-                        (comp helpers/get-training-path
-                              (partial (aid/flip helpers/append-extension)
-                                       helpers/txt-name)
-                              first)
-                        last))
+             map
+             (juxt (constantly spit-edn-lines+)
+                   (comp helpers/get-training-path
+                         (partial (aid/flip helpers/append-extension)
+                                  helpers/txt-name)
+                         first)
+                   last))
            (partial map-indexed vector)
            (partial map :text)
            (partial remove (comp evaluation-ids
                                  edn/read-string
                                  :id)))
-         (map make-spit-evaluation [:test :validation])))))
-  ;Spitting a length file at the same time as spitting edn lines seems to run out of memory.
-  ;java.lang.OutOfMemoryError: GC overhead limit exceeded
+         (apply juxt (map make-spit-evaluation [:test :validation]))))
+      ;Retaining the head seems to give the following error.
+      ;java.lang.OutOfMemoryError: GC overhead limit exceeded
+      (run! (partial apply aid/funcall))))
   (->> (helpers/get-training-path)
        helpers/get-files
        (mapcat (juxt fs/base-name
