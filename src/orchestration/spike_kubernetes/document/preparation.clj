@@ -61,10 +61,14 @@
 (def evaluation-ids
   (set/union test-ids validation-ids))
 
+(def structure-document-text
+  (comp helpers/structure-document
+        :text))
+
 (def make-spit-evaluation
-  #(comp (partial vector spit (helpers/get-evaluation-path %))
+  #(comp (partial spit (helpers/get-evaluation-path %))
          vec
-         (partial mapcat :text)
+         (partial mapcat structure-document-text)
          (partial filter (comp ({:test       test-ids
                                  :validation validation-ids} %)
                                edn/read-string
@@ -86,35 +90,33 @@
          line-seq
          count)))
 
+(def organize*
+  #(with-open [x (io/reader random-path)]
+     (->> x
+          line-seq
+          (map helpers/parse-keywordize)
+          %)))
+
 (defn organize
   []
   (fs/delete-dir (helpers/get-organized-path))
-  (with-open [x (io/reader random-path)]
-    (->>
-      x
-      line-seq
-      (map (comp (partial s/transform*
-                          :text
-                          helpers/structure-document)
-                 helpers/parse-keywordize))
-      ((aid/build
-         concat
-         (apply juxt (map make-spit-evaluation [:test :validation]))
-         (comp (partial map
-                        (juxt (constantly spit-edn-lines+)
-                              (comp helpers/get-training-path
-                                    (partial (aid/flip helpers/append-extension)
-                                             helpers/txt-name)
-                                    first)
-                              last))
-               (partial map-indexed vector)
-               (partial map :text)
-               (partial remove (comp evaluation-ids
-                                     edn/read-string
-                                     :id)))))
-      ;Retaining the head seems to give the following error.
-      ;java.lang.OutOfMemoryError: GC overhead limit exceeded
-      (run! (partial apply aid/funcall))))
+  (->>
+    (map make-spit-evaluation [:test :validation])
+    (cons
+      (comp
+        (partial run!
+                 (aid/build spit-edn-lines+
+                            (comp helpers/get-training-path
+                                  (partial (aid/flip helpers/append-extension)
+                                           helpers/txt-name)
+                                  first)
+                            last))
+        (partial map-indexed vector)
+        (partial map structure-document-text)
+        (partial remove (comp evaluation-ids
+                              edn/read-string
+                              :id))))
+    (run! organize*))
   (->> (helpers/get-training-path)
        helpers/get-files
        (mapcat (juxt fs/base-name
