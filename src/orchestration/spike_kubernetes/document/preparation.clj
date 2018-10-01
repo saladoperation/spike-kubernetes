@@ -99,6 +99,7 @@
                  helpers/parse-keywordize))
       ((aid/build
          concat
+         (apply juxt (map make-spit-evaluation [:test :validation]))
          (comp (partial map
                         (juxt (constantly spit-edn-lines+)
                               (comp helpers/get-training-path
@@ -110,8 +111,7 @@
                (partial map :text)
                (partial remove (comp evaluation-ids
                                      edn/read-string
-                                     :id)))
-         (apply juxt (map make-spit-evaluation [:test :validation]))))
+                                     :id)))))
       ;Retaining the head seems to give the following error.
       ;java.lang.OutOfMemoryError: GC overhead limit exceeded
       (run! (partial apply aid/funcall))))
