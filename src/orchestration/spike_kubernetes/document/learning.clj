@@ -138,11 +138,12 @@
 (def get-precision
   (comp (partial apply /)
         (partial map count)
-        (juxt (partial filter (aid/build =
-                                         :inference
-                                         :reference))
+        (juxt (partial filter (aid/build or
+                                         :mask
+                                         (aid/build =
+                                                    :inference
+                                                    :reference)))
               identity)
-        (partial remove :mask)
         helpers/separate))
 
 (def set-precision
