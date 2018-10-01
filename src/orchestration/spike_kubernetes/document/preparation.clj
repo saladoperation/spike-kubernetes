@@ -99,20 +99,18 @@
                  helpers/parse-keywordize))
       ((aid/build
          concat
-         (comp
-           (partial
-             map
-             (juxt (constantly spit-edn-lines+)
-                   (comp helpers/get-training-path
-                         (partial (aid/flip helpers/append-extension)
-                                  helpers/txt-name)
-                         first)
-                   last))
-           (partial map-indexed vector)
-           (partial map :text)
-           (partial remove (comp evaluation-ids
-                                 edn/read-string
-                                 :id)))
+         (comp (partial map
+                        (juxt (constantly spit-edn-lines+)
+                              (comp helpers/get-training-path
+                                    (partial (aid/flip helpers/append-extension)
+                                             helpers/txt-name)
+                                    first)
+                              last))
+               (partial map-indexed vector)
+               (partial map :text)
+               (partial remove (comp evaluation-ids
+                                     edn/read-string
+                                     :id)))
          (apply juxt (map make-spit-evaluation [:test :validation]))))
       ;Retaining the head seems to give the following error.
       ;java.lang.OutOfMemoryError: GC overhead limit exceeded
