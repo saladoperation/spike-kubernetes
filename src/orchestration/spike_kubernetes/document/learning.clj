@@ -1,6 +1,7 @@
 (ns spike-kubernetes.document.learning
   (:require [clojure.string :as str]
             [clojure.tools.reader.edn :as edn]
+            [clojure.core.memoize :as memoize]
             [aid.core :as aid]
             [clj-http.client :as client]
             [cheshire.core :refer :all]
@@ -14,6 +15,7 @@
             [me.raynes.fs :as fs]
             [mount.core :as mount :refer [defstate]]
             [ring.util.response :refer [response]]
+            [taoensso.nippy :as nippy]
             [spike-kubernetes.command :as command]
             [spike-kubernetes.helpers :as helpers]))
 
@@ -68,22 +70,23 @@
              get-document-offset*
              :document-offset))
 
+(def hour
+  (* 60 60 1000))
+
+(def thaw-from-file-memoize
+  (memoize/ttl nippy/thaw-from-file :ttl/threshold hour))
+
 (def get-step
-  #(->> (str "[" (->> %
-                      :file
-                      (take (-> %
-                                get-document-offset*
-                                inc))
-                      (map slurp)
-                      command/join-newline
-                      str/split-lines
-                      (drop (:token-offset %))
-                      (take (-> helpers/document-name
-                                helpers/get-tuned
-                                :step-size))
-                      str/join)
-             "]")
-        edn/read-string
+  #(->> %
+        :file
+        (take (-> %
+                  get-document-offset*
+                  inc))
+        (mapcat thaw-from-file-memoize)
+        (drop (:token-offset %))
+        (take (-> helpers/document-name
+                  helpers/get-tuned
+                  :step-size))
         (s/transform [s/ALL :source] helpers/get-document-index)
         helpers/merge-into-vector
         (merge {:file            (get-file %)

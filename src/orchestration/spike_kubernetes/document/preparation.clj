@@ -4,6 +4,7 @@
             [clojure.set :as set]
             [aid.core :as aid]
             [me.raynes.fs :as fs]
+            [taoensso.nippy :as nippy]
             [spike-kubernetes.command :as command]
             [spike-kubernetes.helpers :as helpers]))
 
@@ -73,15 +74,8 @@
                                edn/read-string
                                :id))))
 
-(defn spit-edn-lines
-  [f coll]
-  (->> coll
-       (map str)
-       command/join-newline
-       (spit f)))
-
-(def spit-edn-lines+
-  (helpers/make-+ spit-edn-lines))
+(def freeze-to-file+
+  (helpers/make-+ nippy/freeze-to-file))
 
 (def count-lines
   #(with-open [x (io/reader %)]
@@ -104,7 +98,25 @@
     (cons
       (comp
         (partial run!
-                 (aid/build spit-edn-lines+
+                 ;Clojure seems to be the bottleneck in learning/learn.
+                 ;Nippy and memoization seems to be faster than JSON Lines.
+                 ;Nippy and memoization
+                 ;(-> (get-initial-step)
+                 ;    get-training-steps
+                 ;    first
+                 ;    count
+                 ;    time)
+                 ;"Elapsed time: 815.124125 msecs"
+                 ;=> 2021813
+                 ;JSON Lines
+                 ;(-> (get-initial-step)
+                 ;    get-training-steps
+                 ;    first
+                 ;    count
+                 ;    time)
+                 ;"Elapsed time: 5525.949577 msecs"
+                 ;=> 2026656
+                 (aid/build freeze-to-file+
                             (comp helpers/get-training-path
                                   (partial (aid/flip helpers/append-extension)
                                            helpers/txt-name)
