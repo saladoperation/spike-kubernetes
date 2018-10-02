@@ -1385,5 +1385,5 @@
        (comp (partial apply >>)
              map))
 
-     (def txt-name
-       "txt")))
+     (def nippy-name
+       "npy")))

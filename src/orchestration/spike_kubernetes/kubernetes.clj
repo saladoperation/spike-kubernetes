@@ -54,4 +54,4 @@
   #(->> resources*
         get-json-lines
         (spit (helpers/append-extension helpers/kubernetes-name
-                                        helpers/txt-name))))
+                                        "txt"))))

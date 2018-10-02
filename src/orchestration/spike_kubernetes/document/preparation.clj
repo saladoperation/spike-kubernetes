@@ -119,7 +119,7 @@
                  (aid/build freeze-to-file+
                             (comp helpers/get-training-path
                                   (partial (aid/flip helpers/append-extension)
-                                           helpers/txt-name)
+                                           helpers/nippy-name)
                                   first)
                             last))
         (partial map-indexed vector)

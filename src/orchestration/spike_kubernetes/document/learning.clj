@@ -256,7 +256,7 @@
                          (partial reorder-keys reverse)))))
 
 (def make-get-file-to-generation
-  #(juxt (comp (partial (aid/flip helpers/append-extension) helpers/txt-name)
+  #(juxt (comp (partial (aid/flip helpers/append-extension) helpers/nippy-name)
                (partial helpers/get-run-path
                         helpers/document-name
                         "generated"
