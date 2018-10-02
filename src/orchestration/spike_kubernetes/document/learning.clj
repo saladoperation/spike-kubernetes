@@ -70,11 +70,11 @@
              get-document-offset*
              :document-offset))
 
-(def hour
-  (* 60 60 1000))
+(def minute
+  (* 60 1000))
 
 (def thaw-from-file-memoize
-  (memoize/ttl nippy/thaw-from-file :ttl/threshold hour))
+  (memoize/ttl nippy/thaw-from-file :ttl/threshold minute))
 
 (def get-step
   #(->> %
