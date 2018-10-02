@@ -98,7 +98,7 @@
     (cons
       (comp
         (partial run!
-                 ;Clojure seems to be the bottleneck in learning/learn.
+                 ;Clojure seems to be the bottleneck in learning/learn with JSON Lines.
                  ;Nippy and memoization seems to be faster than JSON Lines.
                  ;Nippy and memoization
                  ;(-> (get-initial-step)
