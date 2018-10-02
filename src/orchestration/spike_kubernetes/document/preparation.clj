@@ -123,7 +123,8 @@
                                   first)
                             last))
         (partial map-indexed vector)
-        (partial map structure-document-text)
+        ;organize with pmap seems to be about twice as fast as map.
+        (partial pmap structure-document-text)
         (partial remove (comp evaluation-ids
                               edn/read-string
                               :id))))
