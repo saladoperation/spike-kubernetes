@@ -256,7 +256,7 @@
                          (partial reorder-keys reverse)))))
 
 (def make-get-file-to-generation
-  #(juxt (comp (partial (aid/flip helpers/append-extension) helpers/nippy-name)
+  #(juxt (comp (partial (aid/flip helpers/append-extension) "txt")
                (partial helpers/get-run-path
                         helpers/document-name
                         "generated"
@@ -271,15 +271,15 @@
        (map make-get-file-to-generation)
        (apply juxt)))
 
-(def log-generation
-  ;TODO implement this function
-  get-file-to-generations)
+(def log-generations
+  (comp (partial run! (partial apply helpers/spit+))
+        get-file-to-generations))
 
 (def log
   (juxt log-recent
         log-minimum
         log-tensorboard
-        log-generation))
+        log-generations))
 
 (def handler
   #(->>
