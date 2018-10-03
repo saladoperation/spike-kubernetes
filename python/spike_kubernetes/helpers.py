@@ -93,8 +93,7 @@ def get_pt_path(model_name):
     return get_run_path(model_name,
                         "checkpoints",
                         append_extension(
-                            get_step_selection(
-                                get_selection(model_name)),
+                            get_step_selection(get_selection(model_name)),
                             "pt"))
 
 
