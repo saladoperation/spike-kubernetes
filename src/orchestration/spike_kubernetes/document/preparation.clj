@@ -77,12 +77,6 @@
 (def freeze-to-file+
   (helpers/make-+ nippy/freeze-to-file))
 
-(def count-lines
-  #(with-open [x (io/reader %)]
-     (-> x
-         line-seq
-         count)))
-
 (def organize*
   #(with-open [x (io/reader random-path)]
      (->> x
@@ -132,7 +126,8 @@
   (->> (helpers/get-training-path)
        helpers/get-files
        (mapcat (juxt fs/base-name
-                     count-lines))
+                     (comp count
+                           nippy/thaw-from-file)))
        (apply hash-map)
        (spit helpers/length-path)))
 
