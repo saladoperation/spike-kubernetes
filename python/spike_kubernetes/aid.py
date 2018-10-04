@@ -41,24 +41,21 @@ def if_then_else_(if_function, then_funciton, else_function, x):
     return then_funciton(x) if if_function(x) else else_function(x)
 
 
-# TODO don't specify the arity
-if_then_else = curry(4, if_then_else_)
+if_then_else = curry(if_then_else_)
 
 
 def if_then_(if_function, then_function, else_):
     return if_then_else(if_function, then_function, identity, else_)
 
 
-# TODO don't specify the arity
-if_then = curry(3, if_then_)
+if_then = curry(if_then_)
 
 
 def if_else_(if_function, else_function, then):
     return if_then_else(if_function, identity, else_function, then)
 
 
-# TODO don't specify the arity
-if_else = curry(3, if_else_)
+if_else = curry(if_else_)
 
 
 def make_attribute_call(s_):
