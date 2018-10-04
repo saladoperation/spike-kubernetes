@@ -83,7 +83,6 @@ def deep_merge_with(f, *more):
 
 deep_merge = partial(deep_merge_with, comp(last,
                                            vector))
-
 validation_batch_size = 1
 progress = deep_merge(
     {"training": {"states": get_states(tuned["batch-size"])},
@@ -91,7 +90,6 @@ progress = deep_merge(
                     "states": get_states(validation_batch_size)}},
     {"training": helpers.get_training_progress(
         document_name, get_model())})
-
 convert_list = partial(s.transform_,
                        s.multi_path("source", "reference"),
                        comp(helpers.move,
