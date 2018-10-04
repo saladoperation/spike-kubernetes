@@ -147,7 +147,8 @@
                                                     :inference
                                                     :reference)))
               identity)
-        helpers/separate))
+        helpers/separate
+        (partial (aid/flip select-keys) #{:mask :inference :reference})))
 
 (def set-precision
   (helpers/transfer* :precision get-precision))
