@@ -59,8 +59,7 @@ get_optimizer = comp(optim.Adam,
 
 def make_set_lr_(lr):
     def set_lr__(param_group):
-        # TODO use setattr
-        param_group["lr"] = lr
+        setattr(param_group, "lr", lr)
     return set_lr__
 
 
