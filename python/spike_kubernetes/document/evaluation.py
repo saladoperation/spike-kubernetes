@@ -124,7 +124,7 @@ def convert_merge_(f, m):
 convert_merge = aid.curry(convert_merge_)
 evaluate = comp(helpers.get_serializable,
                 partial(aid.flip(select_keys), {"loss", "inference"}),
-                convert_merge(set_inference),
+                set_inference,
                 convert_merge(forward),
                 partial(merge,
                         progress["training"],
