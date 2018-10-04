@@ -286,7 +286,7 @@
      {:validation (->> :validation
                        get-evaluation-tokens
                        helpers/grade-document
-                       (helpers/transfer* :precision get-precision)
+                       set-precision
                        (helpers/transfer* :inference
                                           helpers/generate-document-inference)
                        (helpers/transfer* :reference generate-reference))
