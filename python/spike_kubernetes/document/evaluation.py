@@ -21,7 +21,7 @@ def get_embedding_vectors(unk_vector):
     return torch.cat((pretrained.vectors, unk_vector))
 
 
-get_embedding = comp(partial(aid.flip(nn.Embedding.from_pretrained), False),
+get_embedding = comp(nn.Embedding.from_pretrained,
                      get_embedding_vectors)
 get_bidirectional_size = partial(multiply, 2)
 num_tags = multiply(3, 2)
