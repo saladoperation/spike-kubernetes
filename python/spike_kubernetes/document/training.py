@@ -76,7 +76,7 @@ def run_step(reduction, step):
                                "validation-interval"))),
         evaluation.convert_merge(comp(assess_remotely,
                                       partial(aid.flip(dissoc),
-                                                    "states"),
+                                              "states"),
                                       helpers.effect(log_pt),
                                       evaluation.set_inference)),
         merge(reduction, step, forwarded))
