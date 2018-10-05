@@ -56,30 +56,36 @@ def log_pt(m):
               helpers.get_pt_path(evaluation.document_name))
 
 
+validation_ = comp(zero_,
+                   aid.build(mod,
+                             partial(aid.flip(get), "global_step"),
+                             partial(aid.flip(get),
+                                     "validation-interval")))
+
+
 def run_step(reduction, step):
     reduction["model"].train()
     reduction["model"].zero_grad()
-    forwarded = evaluation.forward(
-        merge(s.transform_(("states",
-                            s.ALL),
-                           aid.make_attribute_call("detach"),
-                           reduction),
-              step))
+    forwarded = aid.if_then(
+        validation_,
+        evaluation.set_inference,
+        evaluation.forward(
+            merge(s.transform_(("states",
+                                s.ALL),
+                               aid.make_attribute_call("detach"),
+                               reduction),
+                  step)))
     forwarded["loss"].backward()
     reduction["optimizer"].step()
     reduction["model"].eval()
     return aid.if_then(
-        comp(zero_,
-             aid.build(mod,
-                       partial(aid.flip(get), "global_step"),
-                       partial(aid.flip(get),
-                               "validation-interval"))),
+        validation_,
         evaluation.convert_merge(comp(assess_remotely,
                                       partial(aid.flip(dissoc),
                                               "states"),
                                       helpers.effect(log_pt),
                                       evaluation.set_inference)),
-        merge(reduction, step, forwarded))
+        forwarded)
 
 
 run_steps = partial(reduce,

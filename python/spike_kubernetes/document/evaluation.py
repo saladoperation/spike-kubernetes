@@ -49,7 +49,7 @@ def get_model():
                     num_tags)}))
 
 
-def forward(m):
+def forward_(m):
     lstm_output, states = m["model"]["lstm"](
         m["model"]["embedding"](m["source"]),
         m["states"])
@@ -62,6 +62,16 @@ def forward(m):
                                        torch.ones_like(m["reference"])),
             "output": output,
             "states": states}
+
+
+def convert_merge_(f, m):
+    return aid.build(merge,
+                     identity,
+                     f)(m)
+
+
+convert_merge = aid.curry(convert_merge_)
+forward = convert_merge(forward_)
 
 
 def get_states(batch_size):
@@ -113,19 +123,10 @@ def transfer_(apath, f, m):
 
 
 set_inference = partial(transfer_, "inference", get_inference)
-
-
-def convert_merge_(f, m):
-    return aid.build(merge,
-                     identity,
-                     f)(m)
-
-
-convert_merge = aid.curry(convert_merge_)
 evaluate = comp(helpers.get_serializable,
                 partial(aid.flip(select_keys), {"loss", "inference"}),
                 set_inference,
-                convert_merge(forward),
+                forward,
                 partial(merge,
                         progress["training"],
                         progress["validation"]),
