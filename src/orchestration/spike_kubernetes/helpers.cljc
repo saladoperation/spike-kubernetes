@@ -1362,8 +1362,9 @@
        "apt-get")
 
      (def apt-commands
-       (map (partial cons apt-name) [["update"]
-                                     (concat ["install" "-y"] apt-packages)]))
+       (map (partial s/setval* s/BEFORE-ELEM apt-name)
+            [["update"]
+             (concat ["install" "-y"] apt-packages)]))
 
      (def get-forwarding
        (comp (partial str/join ":")
