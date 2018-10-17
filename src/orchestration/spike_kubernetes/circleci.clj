@@ -96,7 +96,7 @@
   "script")
 
 (def conda-image
-  "continuumio/miniconda:4.5.4@sha256:19d3eedab8b6301a0e1819476cfc50d53399881612183cf65208d7d43db99cd9")
+  "continuumio/miniconda3:4.5.11@sha256:d7ab0b98c5adad49ed5dabf11a93d53361f08445b998945d80d351b417d4e0ba")
 
 (def get-python-dockerfile
   #(get-dockerfile
