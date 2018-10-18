@@ -57,6 +57,7 @@ overrides==1.9
 packaging==18.0
 parsimonious==0.8.0
 pbr==5.0.0
+pika==0.12.0
 plac==0.9.6
 pluggy==0.8.0
 preshed==2.0.1
