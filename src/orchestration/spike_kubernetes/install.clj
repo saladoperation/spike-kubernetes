@@ -1,15 +1,29 @@
 (ns spike-kubernetes.install
   (:require [cats.core :as m]
+            [clojure.set :as set]
             [spike-kubernetes.command :as command]
             [spike-kubernetes.helpers :as helpers]))
 
-(def run-commands
-  (comp (partial command/bash "-c")
-        #(str "\"" % "\"")
-        helpers/get-shell-command))
-
 (def sudo-name
   "sudo")
+
+(def required-packages
+  #{"nodejs"})
+
+(def optional-packages
+  #{"glances"
+    "inotify-tools"
+    "silversearcher-ag"
+    "tmux"
+    "vim"})
+
+(def apt-packages
+  (set/union required-packages optional-packages))
+
+(def apt-commands
+  (map (partial concat [sudo-name "apt-get"])
+       [["update"]
+        (concat ["install" "-y"] apt-packages)]))
 
 (def install-apt
   #(helpers/>> (command/curl "-sL"
@@ -19,13 +33,7 @@
                              "-E"
                              "bash"
                              "-")
-               (->> helpers/apt-commands
-                    (map (partial cons sudo-name))
-                    run-commands)))
-
-(def install-conda
-  #(-> [helpers/conda-command helpers/source-command helpers/spacy-command]
-       run-commands))
+               (helpers/run-commands apt-commands)))
 
 (def container-name
   "rabbitmq")
@@ -46,7 +54,7 @@
           (helpers/get-forwarding 15672)
           "rabbitmq:3-management"]]
         (map (partial concat [sudo-name "docker"]))
-        run-commands))
+        helpers/run-commands))
 
 (def juxt->>
   (comp (partial comp (partial apply m/>>))
@@ -55,6 +63,6 @@
 (def install
   (juxt->> install-apt
            helpers/install-word2vecf
-           install-conda
+           helpers/install-venv
            helpers/install-npm
            install-docker))

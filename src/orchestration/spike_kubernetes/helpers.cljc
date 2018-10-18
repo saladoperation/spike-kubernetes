@@ -1321,50 +1321,36 @@
      (def python-name
        "python")
 
-     (def conda-command
-       ["conda"
-        "env"
-        "create"
-        "--force"
-        "-f"
-        (->> "pu.yml"
-             (str (aid/casep (command/hash "nvidia-smi")
-                             either/right? "g"
-                             "c"))
-             (get-path python-name "environments"))])
-
      (def get-shell-command
        (comp (partial str/join " && ")
              (partial map command/join-whitespace)))
 
-     (def source-command
-       ["source" "activate" "spike-kubernetes"])
+     (def run-commands
+       (comp (partial command/bash "-c")
+             #(str "\"" % "\"")
+             get-shell-command))
 
-     (def spacy-command
-       [python-name "-m" "spacy" "download" "en"])
+     (def environment-name
+       "environment")
 
-     (def required-packages
-       #{"build-essential"
-         "libffi-dev"
-         "nodejs"})
+     (def venv-commands
+       [["cd" python-name]
+        [python-name "-m" "venv" environment-name]
+        ["." (get-path environment-name
+                       "bin"
+                       "activate")]
+        ["pip"
+         "install"
+         "-r"
+         (->> "pu.txt"
+              (str (aid/casep (command/hash "nvidia-smi")
+                              either/right? "g"
+                              "c"))
+              (get-path "requirements"))]
+        [python-name "-m" "spacy" "download" "en"]])
 
-     (def optional-packages
-       #{"glances"
-         "inotify-tools"
-         "silversearcher-ag"
-         "tmux"
-         "vim"})
-
-     (def apt-packages
-       (set/union required-packages optional-packages))
-
-     (def apt-name
-       "apt-get")
-
-     (def apt-commands
-       (map (partial s/setval* s/BEFORE-ELEM apt-name)
-            [["update"]
-             (vec (concat ["install" "-y"] apt-packages))]))
+     (def install-venv
+       #(run-commands venv-commands))
 
      (def get-forwarding
        (comp (partial str/join ":")

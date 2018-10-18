@@ -20,26 +20,14 @@
   (partial helpers/get-path "code"))
 
 (defn get-dockerfile
-  [{:keys [image from-tos runs port cmd] :or {runs [":"]}}]
+  [{:keys [image from-tos run port cmd] :or {run ":"}}]
   (generate-dockerfile (concat [["FROM" image]]
                                (map (partial s/setval* s/BEFORE-ELEM "COPY")
                                     from-tos)
                                [["WORKDIR" (get-code-path)]]
-                               (map (partial vector "RUN") runs)
+                               [["RUN" run]]
                                [["EXPOSE" port]
                                 ["CMD" cmd]])))
-;A single RUN seems to cause the following error.
-;The command '/bin/bash -c apt update && apt install -y build-essential libffi-dev && conda env create -f python/environments/cpu.yml && source activate spike-kubernetes && python -m spacy download en' returned a non-zero code: 126
-;/bin/bash: /opt/conda/envs/spike-kubernetes/bin/python: Invalid argument
-;(defn get-dockerfile
-;  [{:keys [image from-tos run port cmd] :or {run ":"}}]
-;  (generate-dockerfile (concat [["FROM" image]]
-;                               (map (partial s/setval* s/BEFORE-ELEM "COPY")
-;                                    from-tos)
-;                               [["WORKDIR" (get-code-path)]
-;                                ["RUN" ["/bin/bash" "-c" run]]
-;                                ["EXPOSE" port]
-;                                ["CMD" cmd]])))
 
 (def get-target-path
   (partial helpers/get-path "target"))
@@ -95,21 +83,18 @@
 (def script-name
   "script")
 
-(def conda-image
-  "continuumio/miniconda3:4.5.11@sha256:d7ab0b98c5adad49ed5dabf11a93d53361f08445b998945d80d351b417d4e0ba")
+(def python-image
+  (str
+    helpers/python-name
+    ":3.7.0-stretch@sha256:f992a6c05c53365ff4c55ad38717dd571247c450cfacf6291e81b4a70a7c8592"))
 
 (def get-python-dockerfile
   #(get-dockerfile
-     {:image    conda-image
+     {:image    python-image
       :from-tos (get-from-tos #{(helpers/get-resources-path)
                                 helpers/python-name
                                 script-name})
-      :runs     (concat helpers/apt-commands
-                        [helpers/conda-command
-                         ["/bin/bash"
-                          "-c"
-                          (helpers/get-shell-command [helpers/source-command
-                                                      helpers/spacy-command])]])
+      :run      (helpers/get-shell-command helpers/venv-commands)
       :port     %
       :cmd      [(helpers/get-path script-name
                                    helpers/python-name
