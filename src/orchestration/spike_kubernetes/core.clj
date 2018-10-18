@@ -13,13 +13,13 @@
             [spike-kubernetes.preparation :as preparation]))
 
 (defn -main
-  [command & more]
+  [& more]
   (aid/case-eval
-    command
+    (first more)
     "install" (install/install)
     helpers/preparation-name
     ((aid/case-eval
-       (first more)
+       (second more)
        helpers/document-name document-preparation/prepare
        preparation/prepare))
     "tuning" (tuning/tune)
