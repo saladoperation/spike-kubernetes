@@ -126,9 +126,7 @@ evaluate = comp(helpers.get_serializable,
                 partial(aid.flip(select_keys), {"loss", "inference"}),
                 set_inference,
                 convert_merge(forward),
-                partial(merge,
-                        progress["training"],
-                        progress["validation"]),
+                partial(merge, progress["training"], progress["validation"]),
                 convert_list)
 
 
