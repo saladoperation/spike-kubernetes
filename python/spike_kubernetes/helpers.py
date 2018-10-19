@@ -102,6 +102,11 @@ def effects(*more):
     return last(more)
 
 
+def get_checkpoint(model_name):
+    return torch.load(get_pt_path(model_name),
+                      device) if path.exists(get_pt_path(model_name)) else {}
+
+
 def get_training_progress(model_name, model):
     return merge(get_tuned(model_name),
                  effects(partial(s.transform_,
@@ -109,9 +114,7 @@ def get_training_progress(model_name, model):
                                  aid.flip(set_lr)(get_tuned(model_name)["lr"])),
                          partial(merge_with,
                                  load_state,
-                                 torch.load(get_pt_path(model_name), device) if
-                                 path.exists(get_pt_path(model_name)) else
-                                 {}),
+                                 get_checkpoint(model_name)),
                          zipmap(("model",
                                  "optimizer"),
                                 juxt(identity,
