@@ -30,23 +30,25 @@ num_tags = multiply(3, 2)
 def get_model():
     # TODO possibly use embedding dropout
     return helpers.move(
-        nn.ModuleDict(
-            {"embedding": get_embedding(
-                init.kaiming_normal_(torch.zeros(1,
-                                                 pretrained.dim))),
-                # TODO possibly use variational dropout
-                # TODO possibly use layer normalization
-                "lstm": nn.LSTM(pretrained.dim,
-                                tuned["hidden_size"],
-                                tuned["num_layers"],
-                                batch_first=True,
-                                bidirectional=True,
-                                dropout=tuned["dropout"]),
-                "linear": nn.Linear(
-                    get_bidirectional_size(tuned["hidden_size"]),
-                    num_tags),
-                "crf": conditional_random_field.ConditionalRandomField(
-                    num_tags)}))
+        helpers.effect(
+            aid.make_attribute_call("eval"),
+            nn.ModuleDict(
+                {"embedding": get_embedding(
+                    init.kaiming_normal_(torch.zeros(1,
+                                                     pretrained.dim))),
+                    # TODO possibly use variational dropout
+                    # TODO possibly use layer normalization
+                    "lstm": nn.LSTM(pretrained.dim,
+                                    tuned["hidden_size"],
+                                    tuned["num_layers"],
+                                    batch_first=True,
+                                    bidirectional=True,
+                                    dropout=tuned["dropout"]),
+                    "linear": nn.Linear(
+                        get_bidirectional_size(tuned["hidden_size"]),
+                        num_tags),
+                    "crf": conditional_random_field.ConditionalRandomField(
+                        num_tags)})))
 
 
 def forward(m):
