@@ -178,7 +178,7 @@ convert_list = partial(
                                             "reference"))),
                  comp(helpers.move,
                       torch.tensor))))
-progress = helpers.get_training_progress(lm_name, get_model())
+progress = helpers.get_progress_(lm_name, get_model())["training"]
 evaluate = comp(tuple,
                 partial(map,
                         comp(helpers.get_serializable,

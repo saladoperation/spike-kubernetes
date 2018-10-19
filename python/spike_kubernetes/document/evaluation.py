@@ -78,20 +78,12 @@ def get_states(batch_size):
                                 tuned["hidden_size"])))))
 
 
-def deep_merge_with(f, *more):
-    return merge_with(partial(deep_merge_with, f),
-                      *more) if every_(map_, more) else f(*more)
-
-
-deep_merge = partial(deep_merge_with, comp(last,
-                                           vector))
 validation_batch_size = 1
-progress = deep_merge(
+progress = helpers.deep_merge(
     {"training": {"states": get_states(tuned["batch-size"])},
      "validation": {"batch-size": validation_batch_size,
                     "states": get_states(validation_batch_size)}},
-    {"training": helpers.get_training_progress(
-        document_name, get_model())})
+    helpers.get_progress_(document_name, get_model()))
 convert_list = partial(s.transform_,
                        s.multi_path("source", "reference"),
                        comp(helpers.move,

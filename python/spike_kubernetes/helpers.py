@@ -103,22 +103,35 @@ def effects(*more):
 
 
 def get_checkpoint(model_name):
-    return torch.load(get_pt_path(model_name),
-                      device) if path.exists(get_pt_path(model_name)) else {}
+    return torch.load(
+        get_pt_path(model_name),
+        device) if path.exists(get_pt_path(model_name)) else {"training": {}}
 
 
-def get_training_progress(model_name, model):
-    return merge(get_tuned(model_name),
-                 effects(partial(s.transform_,
-                                 "optimizer",
-                                 aid.flip(set_lr)(get_tuned(model_name)["lr"])),
-                         partial(merge_with,
-                                 load_state,
-                                 get_checkpoint(model_name)),
-                         zipmap(("model",
-                                 "optimizer"),
-                                juxt(identity,
-                                     get_optimizer)(model))))
+def deep_merge_with(f, *more):
+    return merge_with(partial(deep_merge_with, f),
+                      *more) if every_(map_, more) else f(*more)
+
+
+deep_merge = partial(deep_merge_with, comp(last,
+                                           vector))
+
+
+def get_progress_(model_name, model):
+    return deep_merge(
+        get_checkpoint(model_name),
+        {"training": merge(
+            get_tuned(model_name),
+            effects(partial(s.transform_,
+                            "optimizer",
+                            aid.flip(set_lr)(get_tuned(model_name)["lr"])),
+                    partial(merge_with,
+                            load_state,
+                            get_checkpoint(model_name)["training"]),
+                    zipmap(("model",
+                            "optimizer"),
+                           juxt(identity,
+                                get_optimizer)(model))))})
 
 
 convert_map = aid.if_then(comp(partial(equal, builtins.map),
