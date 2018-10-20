@@ -7,7 +7,6 @@ import spike_kubernetes.clojure.string as str_
 import spike_kubernetes.clojure.walk as walk
 import spike_kubernetes.aid as aid
 from spike_kubernetes.cheshire import *
-import spike_kubernetes.specter as s
 
 torch.manual_seed(0)
 get_stoi_name = "get-stoi"
@@ -79,8 +78,9 @@ def set_lr_(optimizer, lr):
 set_lr = aid.curry(2, set_lr_)
 
 
-def load_state(state, entity):
+def load_state(entity, state):
     entity.load_state_dict(state)
+    return entity
 
 
 effect = aid.curry(2, comp(last,
@@ -105,7 +105,7 @@ def effects(*more):
 def get_checkpoint(model_name):
     return torch.load(
         get_pt_path(model_name),
-        device) if path.exists(get_pt_path(model_name)) else {"training": {}}
+        device) if path.exists(get_pt_path(model_name)) else {}
 
 
 def deep_merge_with(f, *more):
@@ -113,25 +113,16 @@ def deep_merge_with(f, *more):
                       *more) if every_(map_, more) else f(*more)
 
 
-deep_merge = partial(deep_merge_with, comp(last,
-                                           vector))
-
-
 def get_progress_(model_name, model):
-    return deep_merge(
-        get_checkpoint(model_name),
-        {"training": merge(
-            get_tuned(model_name),
-            effects(partial(s.transform_,
-                            "optimizer",
-                            aid.flip(set_lr)(get_tuned(model_name)["lr"])),
-                    partial(merge_with,
-                            load_state,
-                            get_checkpoint(model_name)["training"]),
-                    zipmap(("model",
-                            "optimizer"),
-                           juxt(identity,
-                                get_optimizer)(model))))})
+    return deep_merge_with(
+        load_state,
+        {"training": zipmap(
+            ("model",
+             "optimizer"),
+            juxt(identity,
+                 comp(effect(aid.flip(set_lr)(get_tuned(model_name)["lr"])),
+                      get_optimizer))(model))},
+        get_checkpoint(model_name))
 
 
 convert_map = aid.if_then(comp(partial(equal, builtins.map),

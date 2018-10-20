@@ -76,8 +76,10 @@ def get_states(batch_size):
                                 tuned["hidden_size"])))))
 
 
+deep_merge = partial(helpers.deep_merge_with, comp(last,
+                                                   vector))
 validation_batch_size = 1
-progress = helpers.deep_merge(
+progress = deep_merge(
     {"training": {"states": get_states(tuned["batch-size"])},
      "validation": {"batch-size": validation_batch_size,
                     "states": get_states(validation_batch_size)}},
