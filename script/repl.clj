@@ -1,8 +1,5 @@
 (ns repl
-  (:require [clojure.java.io :as io]
-            [clojure.string :as str]
-            [aid.core :as aid]
-            [com.rpl.specter :as s]
+  (:require [aid.core :as aid]
             [figwheel-sidecar.repl-api :as repl-api]
             [spike-kubernetes.helpers :as helpers]))
 
