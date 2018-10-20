@@ -52,25 +52,22 @@ def get_direction_model():
 
 
 def get_model():
-    return helpers.move(
-        helpers.effect(
-            aid.make_attribute_call("eval"),
-            nn.ModuleDict(
-                merge(
-                    zipmap(("forth", "back"),
-                           repeatedly(2, get_direction_model)),
-                    {"embedding": get_embedding(
-                        init.kaiming_normal_(torch.zeros(count(special_tokens),
-                                                         pretrained.dim))),
-                        # TODO delete nn.ParameterDict when indexing nn.Parameter gets supported
-                        # nn.ParameterDict works around TypeError: torch.FloatTensor is not a Module subclass
-                        "parameter": nn.ParameterDict(
-                            {"tail": nn.Parameter(
-                                init.kaiming_normal_(
-                                    helpers.move(
-                                        torch.zeros(
-                                            count(tuned["cutoffs"]),
-                                            pretrained.dim))))})}))))
+    return helpers.get_model_(
+        merge(
+            zipmap(("forth", "back"),
+                   repeatedly(2, get_direction_model)),
+            {"embedding": get_embedding(
+                init.kaiming_normal_(torch.zeros(count(special_tokens),
+                                                 pretrained.dim))),
+                # TODO delete nn.ParameterDict when indexing nn.Parameter gets supported
+                # nn.ParameterDict works around TypeError: torch.FloatTensor is not a Module subclass
+                "parameter": nn.ParameterDict(
+                    {"tail": nn.Parameter(
+                        init.kaiming_normal_(
+                            helpers.move(
+                                torch.zeros(
+                                    count(tuned["cutoffs"]),
+                                    pretrained.dim))))})}))
 
 
 def transpose_batch(x):

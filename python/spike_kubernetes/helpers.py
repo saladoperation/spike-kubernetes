@@ -1,6 +1,7 @@
 import os.path as path
 from flask import jsonify, request
 import torch
+import torch.nn as nn
 import torch.optim as optim
 from spike_kubernetes.clojure.core import *
 import spike_kubernetes.clojure.string as str_
@@ -154,3 +155,8 @@ def index_(m):
                          ((request.get_json()["data"]),) if
                          contains_(request.get_json(), "data")
                          else ()))
+
+
+get_model_ = comp(move,
+                  effect(aid.make_attribute_call("eval")),
+                  nn.ModuleDict)
