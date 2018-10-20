@@ -1288,7 +1288,11 @@
                             :hyphen "-"
                             " "))
                (aid/casep %
-                          :proper (:text_with_ws %)
+                          (aid/build or
+                                     :proper
+                                     (comp (partial = "i")
+                                           :lower_))
+                          (:text_with_ws %)
                           ((aid/casep %
                                       title? str/capitalize
                                       identity)
