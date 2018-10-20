@@ -1,1 +1,176 @@
+about	on
+above	over
+across	over
+across	through
+ago	before
+allow	permit	let
+almost	nearly
+alone	lonely	lonesome	all alone	lone	solitary
+also	, too,
+alternate	alternative
+alternately	alternatively
+appear	seem
+arise	rise
+around	about
+round	about
+ask	["ask" "" "for"]
+at	on	in
+at	to
+in	to
+at	on	in
+at first	first
+awake	wake	awaken	waken
+back	again
+bath	bathe
+beat	win
+because	because of
+become	get	go	grow
+go	turn
+stay	remain
+keep	remain
+before	ago
+before	before that	first
+begin	start
+below	under	underneath	beneath
+beside	besides
+between	among
+big	large	great
+birthday	date of birth
+borrow	lend
+bring	take
+["bring" "" "up"]	educate
+broad	wide
+near	by
+by	with
+take care	care	["care" "for"]
+take care	["care" "about"]	["care" "for"]
+["take care" "of"]	care	["care" "for"]
+["take care" "of"]	["care" "about"]	["care" "for"]
+city	town
+classic	classical
+close	shut
+clothe	clothes
+come	go
+comic	comical
+on the contrary	on the other hand
+dead	died	death
+do	make
+during	for
+north	northern
+east	eastern
+south	southern
+west	western
+economic	economical
+efficient	effective
+electric	electrical
+end	finish
+especially	specially
+except	["except" "for"]
+expect	hope	wait	look forward
+expect	["hope" "for"]	["wait" "for"]	["look forward" "to"]
+experiment	experience
+fairly	quite	rather	pretty
+far	a long way
+farther	further
+female	feminine
+male	masculine
+finally	at last	in the end	at the end
+fit	suit
+for	since	in	from
+fun	funny
+get	go
+hear	["listen" "to"]
+listen 	["listen" "to"]
+here	there
+high	tall
+hire	lent	let
+historic	historical
+house	home
+how's	["what's" "like"]
+how is	["what is" "like"]
+how are	["what are" "like"]
+how does	["what does" "like"]
+how do	["what do" "like"]
+ill	sick
+in	into
+on	onto
+instead	instead of
+instead of	without
+know	["know" "about"]
+know	["know" "of"]
 know	["find" "" "out"]
+know	get to know
+know	learn
+know	hear
+know	can tell
+latest	last
+lay	lie
+like	as
+long	for a long time
+long	a long time
+["look" "after"]	["look" "for"]
+lose	loose
+loudly	aloud
+magic	magical
+marry	get married
+divorce	get divorced
+need not	must not
+next	nearest
+no doubt	doubtless
+not	no
+open	opened
+opportunity	possibility
+opposite	in front of
+facing	in front of
+in front of	in the front of
+play	game
+politic	political
+politics	policy
+price	prize
+principal	principle
+remember	remind
+road	street
+say	tell
+see	look	["look" "at"]	watch
+seem to be	seem
+sensible	sensitive
+shade	shadow
+small	little
+so	very
+["so that" "can"]	["so that" "may"]
+["so that" "will"]	["so that" "may"]
+["in order that" "can"]	["in order that" "may"]
+["in order that" "will"]	["in order that" "may"]
+some time	sometimes
+sometime	sometimes
+soon	early	quickly
+speak	talk
+yet	already
+still	already
+such	very
+such	great
+such	so
+surely	certainly
+thankful	grateful
+on time	in time
+too	very
+too	too much
+travel	journey	trip	voyage
+until	till	to
+until	by
+very	very much
+in the way	on the way
+in my way	on my way
+in our way	on our way
+in your way	on your way
+in its way	on its way
+in her way	on her way
+in his way	on his way
+in their way	on their way
+well	good
+which	what	who
+why	why not
+will you	do you want to
+won't	don't want to
+will not	do not want to
+yes	no

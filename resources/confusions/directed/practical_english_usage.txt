@@ -1,8 +1,203 @@
 accept	agree
+according to me	in my opinion
+actual	present	current	up to date
+actually	at this moment	now	at present
+fear	be afraid
 ["do" "fear"]	["be" "afraid"]
+afraid	frightened
+after	afterwards	afterward	then	after that
+after all	finally	at last	in the end
 for	["" "" "ago"]
+["for" "ago"]	["" "ago"]
+before	["" "" "ago"]
+alike	like	similar-looking
+all	it all	all of it
+all	them all	all of them
 ["allow" "" "to"]	let
+["permit" "" "to"]	let
+nearly	hardly
+along	through
+rise	get up
+round	around
+as usually	as usual
+with	on
+["arrive" "to"]	["arrive" "at"]
+wake	wake up
+waking	awake
+sleeping	asleep
+bathe	have a swim	go for a swim	go swimming	swim
+been	come	gone
+before	["" "" "before"]	before that	first	in front of
+better	rather
+wide	large
+bear	have
+but me	but I
+but us	but we
+but her	but she
+but him	but he
+but them	but they
+continuously	continually
+on the contrary	in contrast
+contrary	opposite
+control	check	have a look at
+dressed with	dressed in
+dressing in	dressed in
+in	during
+owing to	due to
+older	elder
+oldest	eldest
+any else	any other
+enough of	enough
+especial	special
+also	even
+eventual	possible
+not ever	never
+["haven't" "ever"]	["have" "never"]
+don't ever	never
+["won't" "ever"]	["will" "never"]
+ever	always
+["except" "for"]	without	["but" "for"]
+["make" "experience"]	["have" "experience"]
+explain	explain to
+at last	lastly
+forget	leave
+get	get to be
+["go" "to"]	["go" "in"]	["go" "at"]
+tall	long
+in holidays	on holiday
+to home	home
+how much	how
+why	how
+how	what
+how is	what's
+the way how	the way	how
+["sit down" "into"]	["sit down" "on"]
+["extremely" "indeed"]	["very" "indeed"]
+["quite" "indeed"]	["very" "indeed"]
+instead	on the other hand
+["know" "to"]	["know" "how to"]
+know	tell
+the last days	the last few days
+the last weeks	the last few weeks
+["" "later"]	in
+["learn" "how to"]	["learn" "to"]
+["let" "" "to"]	let
+very like	very much like
+do you like	would you like
+["if you" "like to"]	["if you" "like"]
+as it is	as is
+as it was	as was
+for a longer time	longer
+["look" "at"]	look
+["look" "if"]	["see" "if"]
+["look" "whether"]	["see" "whether"]
+["look" "for"]	fetch
+["made" "of"]	["made" "from"]
 ["marry" "with"]	marry
-["nice" "with"]	["nice" "to"]
+maybe	perhaps
+mean	think
+meaning	opinion
+I mean that	I mean,
+mean	means
+by all means	by all possible means
+lose	miss
+miss	haven't got	lack
+near to	near
+needn't	don't need to
+the next days	the next few days
+no doubt	there is no doubt that	without any doubt	certainly	definitely	undoutedly
+no more	no longer
+nowadays	modern
+of course	certainly
+once	sometime	one day
 open	untie	undo	["turn" "" "on"]	["switch" "" "on"]	turned on
+opposite	["" "" "opposite"]
+in front of	across from
+another	the others
+other	different	more
+out	out of
+mine own	my own
+ours own	our own
+yours own	your own
+hers own	her own
+theirs own	their own
+a place where to	a place to
+thanks you	thank you
+thank you a lot	thanks a lot
+thanks god	thank god
+thank you indeed	thank you very much indeed
+thank you for your	thank you for
+from my point of view	in my opinion
+quite	rather	much	a bit
+wouldn't rather	would rather not
+or better	or rather
+reason of	reason for
+remind	["remind" "" "of"]
+rests	remains	leftovers
+["the same" "like"]	["the same" "as"]
+say	["say" "to"]	ask
+tell	ask
+["be" "seeing"]	["can" "see"]
 see	["see" "about"]
+seem as	seem	seem like
+so	like this	like that	in this way	in that way
+["very" "that"]	["so" "that"]
+so	such
+["so" "and"]	["so" "as to"]
+["so" "to"]	["so" "as to"]
+hope	hope so
+so, that	that
+know so	know	know that
+don't hope so	hope not
+think not	don't think so
+so much	so
+in order that	so that
+["so that" "might"]	["so that" "would"]	["so that" "could"]	["so that" "should"]
+["in order that" "might"]	["in order that" "would"]	["in order that" "could"]	["in order that" "should"]
+so-and-so	so-so
+type of	sort of	kind of
+such a	["" "" "of this kind"]	["" "" "of that kind"]	["" "" "like this"]	["" "" "like that"]
+["very" "that"]	["such" "that"]
+so	so much
+["suggest" "should"]	suggest
+sympathetic	nice	pleasant	easy to get along with
+be thinking if	be wondering if
+tonight	last night
+very	much
+much too many	far too many
+make a trip	travel
+until	as far as	up to
+till	as far as	up to
+very	much
+little	not very
+very much	a lot of
+wait	["wait" "for"]
+["wait that" "be"]	["wait for" "to be"]
+want	["want" "to"]
+["want that" "I"]	["want" "me to"]
+["want" "I"]	["want" "me to"]
+["want that" "we"]	["want" "us to"]
+["want" "we"]	["want" "us to"]
+["want that" "you"]	["want" "you to"]
+["want" "you"]	["want" "you to"]
+["want that" "they"]	["want" "them to"]
+["want" "they"]	["want" "them to"]
+want	["want" "" "to be"]	["want" "" "as"]
+["in" "way"]	["" "way"]
+["by" "way"]	["" "way"]
+the way in which	the way	the way that
+the way by which	the way	the way that
+ways of	means of	methods of
+well	happy
+whom	who
+why to	why
+will you	do you want	would you like
+wish	want	would like	hope
+["kind" "with"]	["kind" "to"]
+["nice" "with"]	["nice" "to"]
+["polite" "with"]	["polite" "to"]
+["rude" "with"]	["rude" "to"]
+["good" "with"]	["good" "to"]
+["with" "voice"]	["in" "voice"]
+with	by
+very worth	well worth
