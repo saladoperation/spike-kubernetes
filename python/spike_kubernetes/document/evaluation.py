@@ -98,7 +98,7 @@ def decode(crf, logits):
 
 get_inference = aid.build(decode,
                           partial(s.select_, ("model", "crf")),
-                          partial(aid.flip(get), "output"))
+                          partial(s.select_, "output"))
 
 
 def transfer_(apath, f, m):

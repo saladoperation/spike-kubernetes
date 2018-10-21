@@ -71,9 +71,8 @@ def run_step(reduction, step):
     return aid.if_then(
         comp(zero_,
              aid.build(mod,
-                       partial(aid.flip(get), "global_step"),
-                       partial(aid.flip(get),
-                               "validation-interval"))),
+                       partial(s.select_, "global_step"),
+                       partial(s.select_, "validation-interval"))),
         evaluation.convert_merge(comp(assess_remotely,
                                       partial(aid.flip(dissoc),
                                               "states"),
