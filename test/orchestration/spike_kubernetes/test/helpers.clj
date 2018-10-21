@@ -216,6 +216,36 @@
 (test/deftest quote-source
   (test-quote-sentence :source (partial map :lower_)))
 
+(def start-sentence
+  [{:dep_          "advmod"
+    :is_sent_start nil
+    :lemma_        "the"
+    :lower_        "the"
+    :tag_          "DT"}
+   {:dep_          "amod"
+    :is_sent_start nil
+    :lemma_        "more"
+    :lower_        "more"
+    :tag_          "JJR"}
+   {:dep_          "det"
+    :is_sent_start nil
+    :lemma_        "the"
+    :lower_        "the"
+    :tag_          "DT"}
+   {:dep_          "ROOT"
+    :is_sent_start nil
+    :lemma_        "merrier"
+    :lower_        "merrier"
+    :tag_          "NN"}
+   {:dep_          "punct"
+    :is_sent_start nil
+    :lemma_        "."
+    :lower_        "."
+    :tag_          "."}])
+
+(test/deftest start
+  (test-arrangement start-sentence :start [true nil nil]))
+
 (defn test-structure
   [original candidate]
   (-> candidate

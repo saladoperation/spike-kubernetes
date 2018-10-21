@@ -246,10 +246,11 @@
      (def get-diff
        (command/if-then-else article-removal?
                              (comp (partial zipmap
-                                            [:article :article-title])
+                                            [:article :article-title :start])
                                    (juxt (comp article-code
                                                :lower_)
-                                         :is_title))
+                                         :is_title
+                                         :start))
                              (comp (partial s/setval* :hyphen true)
                                    (partial (aid/flip select-keys)
                                             #{:article :article-title}))))
