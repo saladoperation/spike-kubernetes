@@ -1258,13 +1258,14 @@
              :inference))
 
      (def title?
-       (aid/build and
-                  (comp (partial = "")
-                        get-article)
-                  :start
-                  (aid/build or
-                             (complement :proper)
-                             :is_title)))
+       (command/if-then-else :start
+                             (aid/build and
+                                        (comp (partial = "")
+                                              get-article)
+                                        (aid/build or
+                                                   (complement :proper)
+                                                   :is_title))
+                             :is_title))
 
      (def consolidate
        #(aid/casep
@@ -1280,10 +1281,7 @@
                             :hyphen "-"
                             " "))
                (aid/casep %
-                          (aid/build or
-                                     :proper
-                                     (comp (partial = "i")
-                                           :lower_))
+                          :proper
                           (:text_with_ws %)
                           ((aid/casep %
                                       title? str/capitalize
