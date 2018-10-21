@@ -1261,16 +1261,15 @@
              :inference))
 
      (def title?
-       (command/if-then-else (aid/build and
-                                        (comp (partial = "")
-                                              get-article)
-                                        (aid/build or
-                                                   :article-title
-                                                   :start))
-                             (aid/build or
-                                        (complement :proper)
-                                        :is_title)
-                             (constantly false)))
+       (aid/build and
+                  (comp (partial = "")
+                        get-article)
+                  (aid/build or
+                             :article-title
+                             :start)
+                  (aid/build or
+                             (complement :proper)
+                             :is_title)))
 
      (def consolidate
        #(aid/casep
