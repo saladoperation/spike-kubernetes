@@ -99,10 +99,6 @@ instead of	without
 know	["know" "about"]
 know	["know" "of"]
 know	["find" "" "out"]
-know	get to know
-know	learn
-know	hear
-know	can tell
 latest	last
 lay	lie
 like	as
