@@ -5,66 +5,66 @@
             [spike-kubernetes.helpers :as helpers]))
 
 (def article-sentence
-  [{:dep_   "nsubj"
+  [{:dep_          "nsubj"
     :is_sent_start nil
-    :lemma_ "-PRON-"
-    :lower_ "it"
-    :tag_   "PRP"}
-   {:dep_   "ROOT"
+    :lemma_        "-PRON-"
+    :lower_        "it"
+    :tag_          "PRP"}
+   {:dep_          "ROOT"
     :is_sent_start nil
-    :lemma_ "be"
-    :lower_ "'s"
-    :tag_   "VBZ"}
-   {:dep_   "det"
+    :lemma_        "be"
+    :lower_        "'s"
+    :tag_          "VBZ"}
+   {:dep_          "det"
     :is_sent_start nil
-    :lemma_ "a"
-    :lower_ "a"
-    :tag_   "DT"}
-   {:dep_   "nmod"
+    :lemma_        "a"
+    :lower_        "a"
+    :tag_          "DT"}
+   {:dep_          "nmod"
     :is_sent_start nil
-    :lemma_ "state"
-    :lower_ "state"
-    :tag_   "NN"}
-   {:dep_   "punct"
+    :lemma_        "state"
+    :lower_        "state"
+    :tag_          "NN"}
+   {:dep_          "punct"
     :is_sent_start nil
-    :lemma_ "-"
-    :lower_ "-"
-    :tag_   "HYPH"}
-   {:dep_   "prep"
+    :lemma_        "-"
+    :lower_        "-"
+    :tag_          "HYPH"}
+   {:dep_          "prep"
     :is_sent_start nil
-    :lemma_ "of"
-    :lower_ "of"
-    :tag_   "IN"}
-   {:dep_   "punct"
+    :lemma_        "of"
+    :lower_        "of"
+    :tag_          "IN"}
+   {:dep_          "punct"
     :is_sent_start nil
-    :lemma_ "-"
-    :lower_ "-"
-    :tag_   "HYPH"}
-   {:dep_   "det"
+    :lemma_        "-"
+    :lower_        "-"
+    :tag_          "HYPH"}
+   {:dep_          "det"
     :is_sent_start nil
-    :lemma_ "the"
-    :lower_ "the"
-    :tag_   "DT"}
-   {:dep_   "punct"
+    :lemma_        "the"
+    :lower_        "the"
+    :tag_          "DT"}
+   {:dep_          "punct"
     :is_sent_start nil
-    :lemma_ "-"
-    :lower_ "-"
-    :tag_   "HYPH"}
-   {:dep_   "pobj"
+    :lemma_        "-"
+    :lower_        "-"
+    :tag_          "HYPH"}
+   {:dep_          "pobj"
     :is_sent_start nil
-    :lemma_ "art"
-    :lower_ "art"
-    :tag_   "NN"}
-   {:dep_   "attr"
+    :lemma_        "art"
+    :lower_        "art"
+    :tag_          "NN"}
+   {:dep_          "attr"
     :is_sent_start nil
-    :lemma_ "model"
-    :lower_ "model"
-    :tag_   "NN"}
-   {:dep_   "punct"
+    :lemma_        "model"
+    :lower_        "model"
+    :tag_          "NN"}
+   {:dep_          "punct"
     :is_sent_start nil
-    :lemma_ "."
-    :lower_ "."
-    :tag_   "."}])
+    :lemma_        "."
+    :lower_        "."
+    :tag_          "."}])
 
 (aid/defcurried test-arrangement
                 [sentence k vs]
@@ -89,31 +89,31 @@
                          [false false false false true false true false false]))
 
 (def alternative-sentence
-  [{:dep_   "ROOT"
+  [{:dep_          "ROOT"
     :is_sent_start nil
-    :lemma_ "be"
-    :lower_ "are"
-    :tag_   "VBP"}
-   {:dep_   "expl"
+    :lemma_        "be"
+    :lower_        "are"
+    :tag_          "VBP"}
+   {:dep_          "expl"
     :is_sent_start nil
-    :lemma_ "there"
-    :lower_ "there"
-    :tag_   "EX"}
-   {:dep_   "amod"
+    :lemma_        "there"
+    :lower_        "there"
+    :tag_          "EX"}
+   {:dep_          "amod"
     :is_sent_start nil
-    :lemma_ "many"
-    :lower_ "many"
-    :tag_   "JJ"}
-   {:dep_   "attr"
+    :lemma_        "many"
+    :lower_        "many"
+    :tag_          "JJ"}
+   {:dep_          "attr"
     :is_sent_start nil
-    :lemma_ "coder"
-    :lower_ "coders"
-    :tag_   "NNS"}
-   {:dep_   "punct"
+    :lemma_        "coder"
+    :lower_        "coders"
+    :tag_          "NNS"}
+   {:dep_          "punct"
     :is_sent_start nil
-    :lemma_ "?"
-    :lower_ "?"
-    :tag_   "."}])
+    :lemma_        "?"
+    :lower_        "?"
+    :tag_          "."}])
 
 (def test-alternative-sentence
   (test-arrangement alternative-sentence))
@@ -125,31 +125,31 @@
   (test-alternative-sentence :reference [0 0 1 1 0]))
 
 (def proper-sentence
-  [{:dep_   "nsubj"
+  [{:dep_          "nsubj"
     :is_sent_start nil
-    :lemma_ "-PRON-"
-    :lower_ "it"
-    :tag_   "PRP"}
-   {:dep_   "ROOT"
+    :lemma_        "-PRON-"
+    :lower_        "it"
+    :tag_          "PRP"}
+   {:dep_          "ROOT"
     :is_sent_start nil
-    :lemma_ "be"
-    :lower_ "'s"
-    :tag_   "VBZ"}
-   {:dep_   "det"
+    :lemma_        "be"
+    :lower_        "'s"
+    :tag_          "VBZ"}
+   {:dep_          "det"
     :is_sent_start nil
-    :lemma_ "a"
-    :lower_ "a"
-    :tag_   "DT"}
-   {:dep_   "attr"
+    :lemma_        "a"
+    :lower_        "a"
+    :tag_          "DT"}
+   {:dep_          "attr"
     :is_sent_start nil
-    :lemma_ "lisp"
-    :lower_ "lisp"
-    :tag_   "NNP"}
-   {:dep_   "punct"
+    :lemma_        "lisp"
+    :lower_        "lisp"
+    :tag_          "NNP"}
+   {:dep_          "punct"
     :is_sent_start nil
-    :lemma_ "."
-    :lower_ "."
-    :tag_   "."}])
+    :lemma_        "."
+    :lower_        "."
+    :tag_          "."}])
 
 (def test-proper-sentence
   (test-arrangement proper-sentence))
@@ -161,36 +161,36 @@
   (test-proper-sentence :source ["it" "'re" "a" "lisp" "."]))
 
 (def compound-proper-sentence
-  [{:dep_   "nsubj"
+  [{:dep_          "nsubj"
     :is_sent_start nil
-    :lemma_ "-PRON-"
-    :lower_ "i"
-    :tag_   "PRP"}
-   {:dep_   "ROOT"
+    :lemma_        "-PRON-"
+    :lower_        "i"
+    :tag_          "PRP"}
+   {:dep_          "ROOT"
     :is_sent_start nil
-    :lemma_ "be"
-    :lower_ "'m"
-    :tag_   "VBP"}
-   {:dep_   "det"
+    :lemma_        "be"
+    :lower_        "'m"
+    :tag_          "VBP"}
+   {:dep_          "det"
     :is_sent_start nil
-    :lemma_ "a"
-    :lower_ "a"
-    :tag_   "DT"}
-   {:dep_   "compound"
+    :lemma_        "a"
+    :lower_        "a"
+    :tag_          "DT"}
+   {:dep_          "compound"
     :is_sent_start nil
-    :lemma_ "lisp"
-    :lower_ "lisp"
-    :tag_   "NNP"}
-   {:dep_   "attr"
+    :lemma_        "lisp"
+    :lower_        "lisp"
+    :tag_          "NNP"}
+   {:dep_          "attr"
     :is_sent_start nil
-    :lemma_ "programmer"
-    :lower_ "programmer"
-    :tag_   "NN"}
-   {:dep_   "punct"
+    :lemma_        "programmer"
+    :lower_        "programmer"
+    :tag_          "NN"}
+   {:dep_          "punct"
     :is_sent_start nil
-    :lemma_ "."
-    :lower_ "."
-    :tag_   "."}])
+    :lemma_        "."
+    :lower_        "."
+    :tag_          "."}])
 
 (def test-compound-proper-sentence
   (test-arrangement compound-proper-sentence))
@@ -202,41 +202,41 @@
   (test-compound-proper-sentence :source ["i" "'m" "lisp" "programmer" "."]))
 
 (def quote-sentence
-  [{:dep_   "punct"
+  [{:dep_          "punct"
     :is_sent_start nil
-    :lemma_ "\""
-    :lower_ "\""
-    :tag_   "``"}
-   {:dep_   "ROOT"
+    :lemma_        "\""
+    :lower_        "\""
+    :tag_          "``"}
+   {:dep_          "ROOT"
     :is_sent_start nil
-    :lemma_ "bring"
-    :lower_ "bring"
-    :tag_   "VB"}
-   {:dep_   "det"
+    :lemma_        "bring"
+    :lower_        "bring"
+    :tag_          "VB"}
+   {:dep_          "det"
     :is_sent_start nil
-    :lemma_ "the"
-    :lower_ "the"
-    :tag_   "DT"}
-   {:dep_   "dobj"
+    :lemma_        "the"
+    :lower_        "the"
+    :tag_          "DT"}
+   {:dep_          "dobj"
     :is_sent_start nil
-    :lemma_ "pain"
-    :lower_ "pain"
-    :tag_   "NN"}
-   {:dep_   "advmod"
+    :lemma_        "pain"
+    :lower_        "pain"
+    :tag_          "NN"}
+   {:dep_          "advmod"
     :is_sent_start nil
-    :lemma_ "forward"
-    :lower_ "forward"
-    :tag_   "RB"}
-   {:dep_   "punct"
+    :lemma_        "forward"
+    :lower_        "forward"
+    :tag_          "RB"}
+   {:dep_          "punct"
     :is_sent_start nil
-    :lemma_ "."
-    :lower_ "."
-    :tag_   "."}
-   {:dep_   "punct"
+    :lemma_        "."
+    :lower_        "."
+    :tag_          "."}
+   {:dep_          "punct"
     :is_sent_start nil
-    :lemma_ "\""
-    :lower_ "\""
-    :tag_   "''"}])
+    :lemma_        "\""
+    :lower_        "\""
+    :tag_          "''"}])
 
 (defn test-quote-sentence
   [k f]
@@ -363,7 +363,7 @@
                   :is_title                  [false false false false]
                   :mask                      [false false false false]
                   :proper                    [false false false false]
-                  :start                     [nil nil nil nil]
+                  :start                     [true nil nil nil]
                   :text_with_ws              ["coding " "is " "art" "."]}
                  "Coding is a art."))
 
@@ -376,6 +376,6 @@
                   :is_title                  [false false false false]
                   :mask                      [false false false false]
                   :proper                    [true false false false]
-                  :start                     [nil nil nil nil]
+                  :start                     [true nil nil nil]
                   :text_with_ws              ["iPhone " "user " "rocks" "."]}
                  "iPhone users rock."))
