@@ -245,13 +245,13 @@
 
      (def get-diff
        (command/if-then-else article-removal?
-                             (comp (partial zipmap
-                                            [:article :start])
+                             (comp (partial zipmap [:article :start])
                                    (juxt (comp article-code
                                                :lower_)
                                          :start))
                              (comp (partial s/setval* :hyphen true)
-                                   (partial (aid/flip select-keys) #{:article}))))
+                                   (partial (aid/flip select-keys)
+                                            #{:article}))))
 
      (def mask?
        (aid/build or
