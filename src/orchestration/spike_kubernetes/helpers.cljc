@@ -246,14 +246,12 @@
      (def get-diff
        (command/if-then-else article-removal?
                              (comp (partial zipmap
-                                            [:article :article-title :start])
+                                            [:article :start])
                                    (juxt (comp article-code
                                                :lower_)
-                                         :is_title
                                          :start))
                              (comp (partial s/setval* :hyphen true)
-                                   (partial (aid/flip select-keys)
-                                            #{:article :article-title}))))
+                                   (partial (aid/flip select-keys) #{:article}))))
 
      (def mask?
        (aid/build or
@@ -284,9 +282,8 @@
 
      (def set-remove-tokens
        (comp (partial reduce set-remove-token [])
-             (partial map (partial merge {:article       0
-                                          :article-title false
-                                          :hyphen        false}))))
+             (partial map (partial merge {:article 0
+                                          :hyphen  false}))))
 
      (def arrange-tokens
        (comp set-remove-tokens
@@ -1264,9 +1261,7 @@
        (aid/build and
                   (comp (partial = "")
                         get-article)
-                  (aid/build or
-                             :article-title
-                             :start)
+                  :start
                   (aid/build or
                              (complement :proper)
                              :is_title)))
@@ -1276,10 +1271,7 @@
           %
           :mask (:text_with_ws %)
           (str ((aid/casep %
-                           (aid/build or
-                                      :article-title
-                                      :start)
-                           str/capitalize
+                           :start str/capitalize
                            identity)
                  (get-article %))
                (case (get-article %)

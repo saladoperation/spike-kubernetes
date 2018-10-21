@@ -330,7 +330,6 @@
 
 (test/deftest insertion-lower-hyphen
   (test-generate {:alternative               ["they" "'s " "states" "-" "of" "-" "arts " "models" "."]
-                  :article-title             [false false false false false false false false false]
                   :character-with-whitespace ["it" "'re " "state" "-" "of" "-" "art " "model" "."]
                   :hyphen                    [false false false false true false true false false]
                   :inference                 [0 1 4 0 0 0 2 0 0]
@@ -343,7 +342,6 @@
 
 (test/deftest insertion-title
   (test-generate {:alternative               ["answers " "is " "no" "."]
-                  :article-title             [false false false false]
                   :character-with-whitespace ["answer " "are " "no" "."]
                   :hyphen                    [false false false false]
                   :inference                 [2 1 0 0]
@@ -356,7 +354,6 @@
 
 (test/deftest deletion-title
   (test-generate {:alternative               ["codings " "is " "arts" "."]
-                  :article-title             [true false false false]
                   :character-with-whitespace ["coding " "are " "art" "."]
                   :hyphen                    [false false false false]
                   :inference                 [0 1 4 0]
@@ -369,7 +366,6 @@
 
 (test/deftest deletion-camel
   (test-generate {:alternative               ["iphones " "users " "rocks" "."]
-                  :article-title             [true false false false]
                   :character-with-whitespace ["iphone " "user " "rock" "."]
                   :hyphen                    [false false false false]
                   :inference                 [0 1 0 0]
