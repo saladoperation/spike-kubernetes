@@ -1114,7 +1114,9 @@
                                      :output)))
 
      (def grade-lm
-       (comp (group-by-vals :index)
+       (comp (partial sort-by (comp :index
+                                    first))
+             (group-by-vals :index)
              (partial mapcat (comp separate
                                    set-negative-log-probability))
              (aid/build (partial map (comp partition-output
