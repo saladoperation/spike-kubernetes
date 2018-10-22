@@ -30,7 +30,7 @@
                  (partial map
                           (comp (partial s/setval*
                                          (s/multi-path :original
-                                                       :proper
+                                                       :proper-noun
                                                        :quote)
                                          false)
                                 helpers/set-forth-source)))))

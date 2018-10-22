@@ -195,10 +195,26 @@
      (def set-quotes
        (partial reduce set-quote []))
 
+     (def set-proper-noun
+       (transfer* :proper-noun (comp (partial (aid/flip str/starts-with?)
+                                              (str noun-prefix "P"))
+                                     :tag_)))
+
      (def set-proper
-       (transfer* :proper (comp (partial (aid/flip str/starts-with?)
-                                         (str noun-prefix "P"))
-                                :tag_)))
+       (transfer* :proper (aid/build or
+                                     :proper-noun
+                                     (comp (partial contains? #{"PERSON"
+                                                                "NORP"
+                                                                "FAC"
+                                                                "ORG"
+                                                                "GPE"
+                                                                "LOC"
+                                                                "PRODUCT"
+                                                                "EVENT"
+                                                                "WORK_OF_ART"
+                                                                "LAW"
+                                                                "LANGUAGE"})
+                                           :ent_type_))))
 
      (def reverse-reduce
        (comp reverse
@@ -206,18 +222,19 @@
              (partial s/transform* s/LAST reverse)
              vector))
 
-     (defn set-masked-proper
+     (defn set-masked-proper-noun
        [tokens token]
        (->> token
-            (s/setval :masked-proper (and (:proper token)
-                                          (or (-> token
-                                                  :dep_
-                                                  (not= "compound"))
-                                              (last? :masked-proper tokens))))
+            (s/setval :masked-proper-noun
+                      (and (:proper-noun token)
+                           (or (-> token
+                                   :dep_
+                                   (not= "compound"))
+                               (last? :masked-proper-noun tokens))))
             (conj tokens)))
 
-     (def set-masked-propers
-       (partial reverse-reduce set-masked-proper []))
+     (def set-masked-proper-nouns
+       (partial reverse-reduce set-masked-proper-noun []))
 
      (def hyphen?
        (comp (partial = "-")
@@ -255,7 +272,7 @@
 
      (def mask?
        (aid/build or
-                  :masked-proper
+                  :masked-proper-noun
                   :quote))
 
      (def removable?
@@ -287,8 +304,9 @@
 
      (def arrange-tokens
        (comp set-remove-tokens
-             set-masked-propers
-             (partial map set-proper)
+             set-masked-proper-nouns
+             (partial map (comp set-proper
+                                set-proper-noun))
              set-quotes
              set-starts))
 
@@ -359,11 +377,11 @@
        "<sos>")
 
      (def set-sos
-       (partial s/setval* s/BEFORE-ELEM {:forth         {:source sos}
-                                         :lemma_        sos
-                                         :masked-proper false
-                                         :quote         false
-                                         :text_with_ws  ""}))
+       (partial s/setval* s/BEFORE-ELEM {:forth              {:source sos}
+                                         :lemma_             sos
+                                         :masked-proper-noun false
+                                         :quote              false
+                                         :text_with_ws       ""}))
 
      (def set-forth-source
        (transfer* [:forth :source] get-source))

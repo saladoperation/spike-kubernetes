@@ -23,6 +23,7 @@ def get_token(token):
                                                   partial(getattr,
                                                           token)),
                                         {"dep_",
+                                         "ent_type_",
                                          "head",
                                          "i",
                                          "is_sent_start",
