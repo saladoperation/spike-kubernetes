@@ -73,8 +73,11 @@
         (str (get (merge bijection surjection)
                   (:source %)
                   (case (:source %)
-                    "it" (case (:dep_ %)
-                           "nsubj" "they"
+                    "it" (if (and (= (:dep_ %)
+                                     "nsubj")
+                                  (not= (:head_tag_ %)
+                                        "VBG"))
+                           "they"
                            "them")
                     "its" (case (:tag_ %)
                             "PRP" "theirs"
