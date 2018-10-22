@@ -101,7 +101,6 @@
 
 (def handle
   (aid/build aid/funcall
-             ;TODO implement this function
              (comp {:get-alternative  (comp (partial apply merge)
                                             (partial map get-lm-alternative))
                     :set-alternatives set-alternatives}
