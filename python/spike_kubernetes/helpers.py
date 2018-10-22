@@ -8,6 +8,7 @@ import spike_kubernetes.clojure.string as str_
 import spike_kubernetes.clojure.walk as walk
 import spike_kubernetes.aid as aid
 from spike_kubernetes.cheshire import *
+import spike_kubernetes.specter as s
 
 torch.manual_seed(0)
 get_stoi_name = "get-stoi"
@@ -160,3 +161,7 @@ def index_(m):
 get_model_ = comp(move,
                   effect(aid.make_attribute_call("eval")),
                   nn.ModuleDict)
+
+
+def transfer_(apath, f, m):
+    return s.setval_(apath, f(m), m)
