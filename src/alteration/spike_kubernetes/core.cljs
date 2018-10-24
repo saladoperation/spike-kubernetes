@@ -95,9 +95,7 @@
                         (:source %))))))))
 
 (def set-alternatives
-  (partial map
-           (helpers/transfer* :alternative
-                              get-document-alternative)))
+  (partial map (helpers/transfer* :alternative get-document-alternative)))
 
 (def handle
   (aid/build aid/funcall
