@@ -600,7 +600,8 @@
        (if-else empty?
                 (partial s/transform*
                          [s/LAST :text_with_ws]
-                         (if-else (partial (aid/flip str/ends-with?) " ")
+                         (if-else (comp #{\  \(}
+                                        last)
                                   (partial (aid/flip str) " ")))))
 
      (defn make-parse-singleton-c
