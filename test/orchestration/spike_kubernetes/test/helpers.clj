@@ -333,6 +333,7 @@
                   :character-with-whitespace ["it" "'re " "state" "-" "of" "-" "art " "model" "."]
                   :hyphen                    [false false false false true false true false false]
                   :inference                 [0 1 4 0 0 0 2 0 0]
+                  :is_lower                  [false true true false true false true true false]
                   :is_title                  [true false false false false false false false false]
                   :mask                      [false false false false false false false false false]
                   :proper                    [false false false false false false false false false]
@@ -345,6 +346,7 @@
                   :character-with-whitespace ["answer " "are " "no" "."]
                   :hyphen                    [false false false false]
                   :inference                 [2 1 0 0]
+                  :is_lower                  [false true true false]
                   :is_title                  [true false false false]
                   :mask                      [false false false false]
                   :proper                    [false false false false]
@@ -352,11 +354,12 @@
                   :text_with_ws              ["Answer " "is " "no" "."]}
                  "The answer is no."))
 
-(test/deftest deletion-title
+(test/deftest deletion-common-title
   (test-generate {:alternative               ["codings " "is " "arts" "."]
                   :character-with-whitespace ["coding " "are " "art" "."]
                   :hyphen                    [false false false false]
                   :inference                 [0 1 4 0]
+                  :is_lower                  [true true true false]
                   :is_title                  [false false false false]
                   :mask                      [false false false false]
                   :proper                    [false false false false]
@@ -364,14 +367,28 @@
                   :text_with_ws              ["coding " "is " "art" "."]}
                  "Coding is a art."))
 
-(test/deftest deletion-camel
-  (test-generate {:alternative               ["iphones " "users " "rocks" "."]
-                  :character-with-whitespace ["iphone " "user " "rock" "."]
-                  :hyphen                    [false false false false]
-                  :inference                 [0 1 0 0]
-                  :is_title                  [false false false false]
-                  :mask                      [false false false false]
-                  :proper                    [true false false false]
-                  :start                     [true nil nil nil]
-                  :text_with_ws              ["iPhone " "user " "rocks" "."]}
-                 "iPhone users rock."))
+(test/deftest deletion-common-upper
+  (test-generate {:alternative               ["dnas " "sucks" "."]
+                  :character-with-whitespace ["dna " "suck" "."]
+                  :hyphen                    [false false false]
+                  :inference                 [0 1 0]
+                  :is_lower                  [false true false]
+                  :is_title                  [false false false]
+                  :mask                      [false false false]
+                  :proper                    [false false false]
+                  :start                     [true nil nil]
+                  :text_with_ws              ["DNA " "sucks" "."]}
+                 "DNA sucks."))
+
+(test/deftest deletion-proper
+  (test-generate {:alternative               ["iphones " "sucks" "."]
+                  :character-with-whitespace ["iphone " "suck" "."]
+                  :hyphen                    [false false false]
+                  :inference                 [1 0 0]
+                  :is_lower                  [false true false]
+                  :is_title                  [false false false]
+                  :mask                      [false false false]
+                  :proper                    [true false false]
+                  :start                     [true nil nil]
+                  :text_with_ws              ["iPhones " "suck" "."]}
+                 "iPhones suck."))

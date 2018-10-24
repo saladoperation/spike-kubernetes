@@ -18,6 +18,7 @@
             [environ.core :refer [env]]
             [incanter.core :as incanter]
             [me.raynes.fs :as fs]
+            [superstring.core :as superstring]
             [spike-kubernetes.command :as command]
             [spike-kubernetes.parse.core :as parse]])))
 
@@ -1284,30 +1285,54 @@
                                    get-article)
                              :is_title))
 
+     (def count-common-prefix
+       (comp count
+             superstring/common-prefix))
+
+     (defn case-inference
+       [token s]
+       (aid/casep
+         token
+         (aid/build or
+                    :is_lower
+                    :is_title)
+         ((aid/casep token
+                     title? str/capitalize
+                     identity)
+           s)
+         (str (subs (:text_with_ws token)
+                    0
+                    (count-common-prefix (:character-with-whitespace token)
+                                         s))
+              (subs s
+                    (count-common-prefix (:character-with-whitespace token)
+                                         s)
+                    (count s)))))
+
      (def consolidate
        #(aid/casep
           %
           :mask (:text_with_ws %)
-          (str ((aid/casep %
-                           :start str/capitalize
-                           identity)
-                 (get-article %))
-               (case (get-article %)
-                 "" ""
-                 (aid/casep %
-                            :hyphen "-"
-                            " "))
-               (aid/casep %
-                          :proper
-                          (:text_with_ws %)
-                          ((aid/casep %
-                                      title? str/capitalize
-                                      identity)
-                            (command/if-then-else (comp even?
-                                                        :inference)
-                                                  :character-with-whitespace
-                                                  :alternative
-                                                  %))))))
+          (str
+            ((aid/casep %
+                        :start str/capitalize
+                        identity)
+              (get-article %))
+            (case (get-article %)
+              "" ""
+              (aid/casep %
+                         :hyphen "-"
+                         " "))
+            (aid/casep
+              %
+              :proper
+              (:text_with_ws %)
+              (case-inference %
+                              (command/if-then-else (comp even?
+                                                          :inference)
+                                                    :character-with-whitespace
+                                                    :alternative
+                                                    %))))))
 
      (def generate-document-inference
        (comp str/join

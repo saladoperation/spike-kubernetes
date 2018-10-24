@@ -26,6 +26,7 @@ def get_token(token):
                                          "ent_type_",
                                          "head",
                                          "i",
+                                         "is_lower",
                                          "is_sent_start",
                                          "is_title",
                                          "lemma_",

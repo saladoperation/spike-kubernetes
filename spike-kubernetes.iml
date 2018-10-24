@@ -233,6 +233,7 @@
     <orderEntry type="library" name="Leiningen: simple-lein-profile-merge:0.1.4" level="project" />
     <orderEntry type="library" name="Leiningen: slingshot:0.12.2" level="project" />
     <orderEntry type="library" name="Leiningen: strictly-specking-standalone:0.1.1" level="project" />
+    <orderEntry type="library" name="Leiningen: superstring:3.0.0" level="project" />
     <orderEntry type="library" name="Leiningen: suspendable:0.1.1" level="project" />
     <orderEntry type="library" name="Leiningen: tailrecursion/cljs-priority-map:1.2.1" level="project" />
     <orderEntry type="library" name="Leiningen: tigris:0.1.1" level="project" />
