@@ -1280,12 +1280,8 @@
 
      (def title?
        (command/if-then-else :start
-                             (aid/build and
-                                        (comp (partial = "")
-                                              get-article)
-                                        (aid/build or
-                                                   (complement :proper)
-                                                   :is_title))
+                             (comp (partial = "")
+                                   get-article)
                              :is_title))
 
      (def consolidate
