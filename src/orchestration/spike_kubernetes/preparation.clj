@@ -3,7 +3,6 @@
             [clojure.string :as str]
             [clojure.tools.reader.edn :as edn]
             [aid.core :as aid]
-            [clj-http.client :as client]
             [com.rpl.specter :as s]
             [loom.graph :as graph]
             [me.raynes.fs :as fs]
