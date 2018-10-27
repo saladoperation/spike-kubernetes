@@ -653,7 +653,14 @@
                                                   [z]))))
                    (m/pure (concat xs
                                    ys
-                                   (ensure-whitespace [z])
+                                   ((if (-> replacements
+                                            last
+                                            first
+                                            :text_with_ws
+                                            (str/starts-with? "'"))
+                                      identity
+                                      ensure-whitespace)
+                                     [z])
                                    (->> replacements
                                         last
                                         (s/setval* [s/LAST
