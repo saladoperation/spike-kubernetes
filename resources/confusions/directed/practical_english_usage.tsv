@@ -31,19 +31,21 @@ before	["" "" "before"]	before that	first	in front of
 better	rather
 wide	large
 bear	have
-but me	but I
-but us	but we
-but her	but she
-but him	but he
-but them	but they
+but I	but me
+but we	but us
+but she	but her
+but he	but him
+but they	but them
 continuously	continually
 on the contrary	in contrast
 contrary	opposite
 control	check	have a look at
-dressed with	dressed in
-dressing in	dressed in
+["make" "photo"]	["take" "photo"]
+["make" "experience"]	["have" "experience"]
+["dressed" "with"]	["dressed" "in"]
+["dressing" "in"]	["dressed" "in"]
 in	during
-owing to	due to
+["owing" "to"]	["due" "to"]
 older	elder
 oldest	eldest
 any else	any other
@@ -119,11 +121,11 @@ in front of	across from
 another	the others
 other	different	more
 out	out of
-mine own	my own
-ours own	our own
-yours own	your own
-hers own	her own
-theirs own	their own
+["mine" "own"]	["my" "own"]
+["ours" "own"]	["our" "own"]
+["yours" "own"]	["your" "own"]
+["hers" "own"]	["her" "own"]
+["theirs" "own"]	["their" "own"]
 a place where to	a place to
 thanks you	thank you
 thank you a lot	thanks a lot
@@ -192,7 +194,6 @@ the way in which	the way	the way that
 the way by which	the way	the way that
 ways of	means of	methods of
 well	happy
-whom	who
 why to	why
 will you	do you want	would you like
 wish	want	would like	hope
