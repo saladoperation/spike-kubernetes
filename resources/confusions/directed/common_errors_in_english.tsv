@@ -126,7 +126,7 @@ schedule	itinerary
 occupied	busy
 forget	during	in
 since	foreign
-["before" ""]	["" "" "ago"]
+before	["" "" "ago"]
 in the night	in the evening
 in the evening	at night
 yesterday night	yesterday evening	last night
