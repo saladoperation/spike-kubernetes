@@ -65,7 +65,7 @@ desert	dessert
 ["good" "in"]	["good" "at"]
 ["look" "for"]	["look" "after"]
 relations	relationship
-["how is" ""]	["what's" "" "like"]
+how is	["what's" "" "like"]
 sympathetic	nice
 know	get to know
 high	tall
@@ -139,9 +139,9 @@ at first	first
 at the end	in the end
 at last	finally
 after	afterwards
-["after" ""]	["in" "" "'s time"]
+after	["in" "" "'s time"]
 after all	in the end
 furthermore	what's more
 on the other side	on the other hand
 despite of	despite	in spite of
-so that	,so
+o that	,so

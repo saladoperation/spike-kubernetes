@@ -184,12 +184,12 @@ ask	ask for
 dispose	dispose of
 get rid	get rid of
 dream	dream of
-["explain" ""]	["explain" "to"]
+explain	["explain" "to"]
 knock	knock at
 listen	listen to
 pay	pay for
 point	point to	point at
-["remind" ""]	["remind" "" "of"]
+remind	["remind" "" "of"]
 reply	reply to
 say	say to
 search	search for
