@@ -218,11 +218,9 @@ behind of	behind
 inside of	inside
 outside of	outside
 round of	round
-except	besides
-except	as well as
+except	besides	as well as
 by	with
-from	by
-from	of	in
+from	by	of	in
 for	about
 since	for
 from	since
@@ -231,6 +229,7 @@ in	within
 avenge myself	take revenge
 avenge ourselves	take revenge
 avenge yourself	take revenge
+avenge yourselves	take revenge
 avenge itself	take revenge
 avenge herself	take revenge
 avenge himself	take revenge
@@ -238,6 +237,7 @@ avenge themselves	take revenge
 revenge myself	take revenge
 revenge ourselves	take revenge
 revenge yourself	take revenge
+revenge yourselves	take revenge
 revenge itself	take revenge
 revenge herself	take revenge
 revenge himself	take revenge
@@ -292,8 +292,7 @@ some	any
 less	fewer
 this	that
 latter	later
-last	latter
-last	latest
+last	latter	latest
 small	young
 big	old
 high	tall
