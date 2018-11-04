@@ -6,7 +6,7 @@ journey	tour
 street	road
 voyage	journey	flight
 nature	the country
-landscape	scenary
+landscape	scenery
 camping	campsite
 shadow	shade
 with my car	by car
@@ -34,7 +34,8 @@ his work	work
 their work	work
 occupation	job
 chief	manager
-abourer	worker
+labourer	worker
+laboroer	worker
 manager	management
 ["work" "in"]	["work" "for"]
 personal	personnel
@@ -138,8 +139,7 @@ actually	at the moment
 at first	first
 at the end	in the end
 at last	finally
-after	afterwards
-after	["in" "" "'s time"]
+after	afterwards	afterward	["in" "" "' time"]	["in" "" "'s time"]
 after all	in the end
 furthermore	what's more
 on the other side	on the other hand
