@@ -11,8 +11,7 @@ for	["" "" "ago"]
 ["for" "ago"]	["" "ago"]
 before	["" "" "ago"]
 alike	like	similar-looking
-all	it all	all of it
-all	them all	all of them
+all	it all	all of it	them all	all of them
 ["allow" "" "to"]	let
 ["permit" "" "to"]	let
 nearly	hardly
@@ -78,10 +77,7 @@ the way how	the way	how
 ["quite" "indeed"]	["very" "indeed"]
 instead	on the other hand
 ["know" "to"]	["know" "how to"]
-know	get to know
-know	learn
-know	hear
-know	can tell
+know	get to know	learn	hear	can tell
 the last days	the last few days
 the last weeks	the last few weeks
 ["" "later"]	in
