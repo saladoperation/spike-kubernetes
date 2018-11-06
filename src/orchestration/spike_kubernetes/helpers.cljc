@@ -553,29 +553,33 @@
                                           replaceable-lemma
                                           replaceable-lower)))
 
-     (defn make-parse-b
-       [originals replacements]
-       (let [starts-with-verb (-> originals
-                                  first
-                                  starts-with-verb?)]
-         (->> originals
-              first
-              ((aid/build (partial s/setval* (if starts-with-verb
-                                               s/BEFORE-ELEM
-                                               s/AFTER-ELEM))
-                          (comp (if (->> [originals replacements]
-                                         (map first)
-                                         (apply unalterable-tags?))
-                                  replaceable-lower
-                                  replaceable-lemma)
-                                (if starts-with-verb
-                                  first
-                                  last))
-                          (comp replaceable-tokens
-                                (if starts-with-verb
-                                  rest
-                                  drop-last))))
-              (apply (aid/lift-a vector)))))
+     (aid/defcurried make-parse-original
+                     [f originals replacements]
+                     (let [starts-with-verb (-> originals
+                                                f
+                                                starts-with-verb?)]
+                       (->>
+                         originals
+                         f
+                         ((aid/build (partial s/setval* (if starts-with-verb
+                                                          s/BEFORE-ELEM
+                                                          s/AFTER-ELEM))
+                                     (comp (if (->> [originals replacements]
+                                                    (map first)
+                                                    (apply unalterable-tags?))
+                                             replaceable-lower
+                                             replaceable-lemma)
+                                           (if starts-with-verb
+                                             first
+                                             last))
+                                     (comp replaceable-tokens
+                                           (if starts-with-verb
+                                             rest
+                                             drop-last))))
+                         (apply (aid/lift-a vector)))))
+
+     (def make-parse-b
+       (make-parse-original first))
 
      (def non-particle-adverb-tag?
        (comp (partial (aid/flip str/starts-with?)
@@ -668,21 +672,49 @@
                      :whitespace_)
                  replacement))
 
+     (aid/defcurried get-variant-source
+                     [original replacement-source]
+                     (get ((:alternative (get-preparation)) replacement-source)
+                          (-> original
+                              :tag_
+                              condense-tag)
+                          replacement-source))
+
+     (def make-set-variant-source
+       #(partial s/transform*
+                 [(aid/casep %
+                             starts-with-verb? s/FIRST
+                             s/LAST)
+                  :forth
+                  :source]
+                 (-> %
+                     get-discriminative-token
+                     get-variant-source)))
+
+     (defn set-lower-text-with-wss
+       [original replacement]
+       (->> replacement
+            (map (transfer* :text_with_ws
+                            (aid/build str
+                                       (comp :source
+                                             :forth)
+                                       :whitespace_)))
+            (append-whitespace original)))
+
      (defn make-parse-multiton-c
        [originals replacements]
        ((aid/lift-a concat)
          many-any
          (->>
-           originals
-           last
-           replaceable-tokens
-           (apply
-             (aid/lift-a (fn [& original]
-                           (aid/casep replacements
-                                      singleton? []
-                                      (->> replacements
-                                           last
-                                           (append-whitespace original)))))))))
+           (make-parse-original last originals replacements)
+           ((aid/lift-a #(aid/casep replacements
+                                    singleton? []
+                                    (->> replacements
+                                         last
+                                         ((if-else (partial unalterable-tags?
+                                                            (last originals))
+                                                   (make-set-variant-source %)))
+                                         (set-lower-text-with-wss %))))))))
 
      (defn make-parse-c
        [child? originals replacements]
@@ -720,39 +752,14 @@
      (aid/defcurried set-b-text-with-wss
                      [original replacement]
                      (->> replacement
-                          (map (transfer* :text_with_ws
-                                          (aid/build str
-                                                     (comp :source
-                                                           :forth)
-                                                     :whitespace_)))
-                          (append-whitespace original)
+                          (set-lower-text-with-wss original)
                           ((if (-> original
                                    first
                                    :start)
                              (partial s/transform*
-                                      [s/FIRST
-                                       :text_with_ws]
+                                      [s/FIRST :text_with_ws]
                                       str/capitalize)
                              identity))))
-
-     (aid/defcurried get-variant-source
-                     [original replacement-source]
-                     (get ((:alternative (get-preparation)) replacement-source)
-                          (-> original
-                              :tag_
-                              condense-tag)
-                          replacement-source))
-
-     (def make-set-variant-source
-       #(partial s/transform*
-                 [(aid/casep %
-                             starts-with-verb? s/FIRST
-                             s/LAST)
-                  :forth
-                  :source]
-                 (-> %
-                     get-discriminative-token
-                     get-variant-source)))
 
      (defn get-variant-parser
        [originals replacements]
