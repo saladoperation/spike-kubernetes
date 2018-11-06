@@ -668,10 +668,6 @@
                                                     s/END]
                                                    (:whitespace_ z)))))))))
 
-     (def non-empty-last
-       (comp last
-             (partial remove empty?)))
-
      (defn append-whitespace
        [original replacement]
        (s/setval [s/LAST :text_with_ws s/END]
@@ -686,14 +682,14 @@
          many-any
          (->>
            originals
-           non-empty-last
+           last
            replaceable-tokens
            (apply
              (aid/lift-a (fn [& original]
                            (aid/casep replacements
                                       singleton? []
                                       (->> replacements
-                                           non-empty-last
+                                           last
                                            (append-whitespace original)))))))))
 
      (defn make-parse-c
