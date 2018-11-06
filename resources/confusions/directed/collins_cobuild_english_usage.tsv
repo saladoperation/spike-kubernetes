@@ -165,7 +165,7 @@ eventually	possibly	perhaps
 ever	yet	always	still
 examination	exam
 ["say" "example"]	["give" "example"]
-["example" "said"]	["example" "given"]
+["example" "say"]	["example" "give"]
 expect it	expect so
 ["say" "excuse"]	["make" "excuse"]
 ["excuse" "say"]	["excuse" "make"]
