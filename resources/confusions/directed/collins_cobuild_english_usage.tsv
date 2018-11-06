@@ -366,7 +366,7 @@ a large part of	many of
 ["pass" "test"]	["take" "test"]
 ["test" "pass"]	["test" "take"]
 ["pass" "exam"]	["take" "exam"]
-["exam" "pass"]	["exam" "tak"]
+["exam" "pass"]	["exam" "take"]
 pay	pay for	buy
 ["get" "permission"]	["obtain" "permission"]
 ["permission" "get"]	["permission" "obtain"]
