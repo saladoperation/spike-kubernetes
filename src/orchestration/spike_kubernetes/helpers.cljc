@@ -553,14 +553,6 @@
                                           replaceable-lemma
                                           replaceable-lower)))
 
-     (aid/defcurried get-variant-source
-                     [original replacement-source]
-                     (get ((:alternative (get-preparation)) replacement-source)
-                          (-> original
-                              :tag_
-                              condense-tag)
-                          replacement-source))
-
      (defn make-parse-b
        [originals replacements]
        (let [starts-with-verb (-> originals
@@ -742,6 +734,14 @@
                                        :text_with_ws]
                                       str/capitalize)
                              identity))))
+
+     (aid/defcurried get-variant-source
+                     [original replacement-source]
+                     (get ((:alternative (get-preparation)) replacement-source)
+                          (-> original
+                              :tag_
+                              condense-tag)
+                          replacement-source))
 
      (def make-set-variant-source
        #(partial s/transform*
