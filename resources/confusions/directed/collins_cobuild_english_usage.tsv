@@ -60,11 +60,12 @@ as	than
 ["say" "question"]	["ask" "question"]
 as long as	as far as
 ["pay" "attention at"]	["pay" "attention to"]
-["attention" "paid at"]	["attention" "paid to"]
+["attention" "pay at"]	["attention" "pay to"]
 await	wait for
 very awake	wide awake	fully awake
 far	away
 return back	return
+bad	badly
 not barely	barely
 be	make
 put up with	tolerate
@@ -116,13 +117,13 @@ comprehension	understanding
 on the contrary	on the other hand
 control	check	inspect
 ["take" "course of"]	["take" "course in"]
-["course of" "taken"]	["course in" "taken"]
+["course of" "take"]	["course in" "take"]
 ["do" "course of"]	["do" "course in"]
-["course of" "done"]	["course in" "done"]
+["course of" "do"]	["course in" "do"]
 ["do" "crime"]	["commit" "crime"]
-["crime" "done"]	["crime" "committed"]
+["crime" "do"]	["crime" "commit"]
 ["make" "crime"]	["commit" "crime"]
-["crime" "made"]	["crime" "committed"]
+["crime" "make"]	["crime" "commit"]
 weep	cry
 daren't to	daren't
 dare not to	dare not
@@ -167,11 +168,11 @@ examination	exam
 ["example" "said"]	["example" "given"]
 expect it	expect so
 ["say" "excuse"]	["make" "excuse"]
-["excuse" "said"]	["excuse" "made"]
+["excuse" "say"]	["excuse" "make"]
 ["make" "experience"]	["have" "experience"]
-["experience" "made"]	["experience" "had"]
+["experience" "make"]	["experience" "have"]
 ["make" "experiment"]	["do" "experiment"]	["conduct" "experiment"]	["carry out" "experiment"]
-["experiment" "made"]	["experiment" "done"]	["experiment" "conducted"]	["experiment" "carried out"]
+["experiment" "make"]	["experiment" "do"]	["experiment" "conduct"]	["experiment" "carry out"]
 explain	explain to
 explode	["blow" "" "up"]
 fall	drop	["knock" "" "down"]	["knock" "" "over"]
@@ -200,6 +201,7 @@ generally	mainly
 gently	politely
 glasses	pair of glasses
 enter	get on	board
+good	well
 grow up	["bring" "" "up"]
 bring up	grow up
 I guess it	I guess so
@@ -250,11 +252,11 @@ interesting	well-paid
 invite	["invite" "" "to"]
 journal	newspaper
 ["do" "journey"]	["make" "journey"]	["go on" "journey"]
-["journey" "done"]	["journey" "made"]
+["journey" "do"]	["journey" "make"]	["journey" "go on"]
 ["do" "trip"]	["take" "trip"]	["go on" "trip"]
-["trip" "done"]	["trip" "taken"]
+["trip" "do"]	["trip" "take"]
 ["do" "voyage"]	["make" "voyage"]
-["voyage" "done"]	["voyage" "made"]
+["voyage" "do"]	["voyage" "make"]
 ["do" "excursion"]	["go on" "excursion"]
 just partly	only partly
 know	get to know
@@ -300,9 +302,9 @@ may not	cannot	can't
 ["don't" "mind it"]	["don't" "mind"]
 error	mistake
 ["do" "mistake"]	["make" "mistake"]
-["mistake" "done"]	["mistake" "made"]
+["mistake" "do"]	["mistake" "make"]
 ["do" "error"]	["make" "error"]
-["error" "done"]	["error" "made"]
+["error" "do"]	["error" "make"]
 in mistake	by mistake
 by error	in error
 mistake	fault
@@ -360,16 +362,16 @@ parking	car park	parking lot
 part of	some of
 a large part of	many of
 ["make" "party"]	["have" "party"]	["give" "party"]	["throw" "party"]
-["party" "made"]	["party" "had"]	["party" "given"]	["party" "thrown"]
+["party" "make"]	["party" "have"]	["party" "give"]	["party" "throw"]
 ["pass" "test"]	["take" "test"]
-["test" "passed"]	["test" "taken"]
+["test" "pass"]	["test" "take"]
 ["pass" "exam"]	["take" "exam"]
-["exam" "passed"]	["exam" "taken"]
+["exam" "pass"]	["exam" "tak"]
 pay	pay for	buy
 ["get" "permission"]	["obtain" "permission"]
-["permission" "got"]	["permission" "obtained"]
+["permission" "get"]	["permission" "obtain"]
 ["take" "permission"]	["get" "permission"]	["obtain" "permission"]
-["permission" "taken"]	["permission" "got"]	["permission" "obtained"]
+["permission" "take"]	["permission" "get"]	["permission" "obtain"]
 that place	there
 place	room	space
 ["it" "is no point in"]	["there" "is no point in"]
@@ -387,7 +389,7 @@ problem why	reason why
 professor	teacher
 programme	program
 ["do" "progress"]	["make" "progress"]
-["progress" "done"]	["progress" "made"]
+["progress" "do"]	["progress" "make"]
 proper	own
 prove	test
 provide	["provide" "" "with"]
@@ -419,11 +421,11 @@ salute	greet
 ["same" "like"]	["same" "as"]
 say	tell
 ["say" "question"]	["ask" "question"]
-["question" "said"]	["question" "asked"]
+["question" "sa"]	["question" "ask"]
 ["say" "order"]	["give" "order"]
-["order" "said"]	["order" "given"]
+["order" "say"]	["order" "give"]
 ["say" "instruction"]	["give" "instruction"]
-["instruction" "said"]	["instruction" "given"]
+["instruction" "say"]	["instruction" "give"]
 ["say" "about"]	["talk" "about"]
 scarce	rare
 don't scarcely	scarcely
@@ -481,7 +483,7 @@ surely	definitely	certainly	naturally
 ["for" "surprise"]	["to" "surprise"]
 ["tell" "it"]	["tell" "so"]
 ["make" "test"]	["take" "test"]
-["test" "made"]	["test" "taken"]
+["test" "make"]	["test" "take"]
 ["not as" "than"]	["not as" "as"]
 thanks you	thank you	thanks a lot
 thanks you a lot	thanks a lot
@@ -518,6 +520,7 @@ very above	well above
 very behind	far behind
 very	very much	greatly
 ["do" "visit"]	["make" "visit"]	["pay" "visit"]
+["visit" "do"]	["visit" "make"]	["visit" "pay"]
 wait	wait for
 want to not	don't want to
 want not to	don't want to
