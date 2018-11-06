@@ -35,7 +35,7 @@ their work	work
 occupation	job
 chief	manager
 labourer	worker
-laboroer	worker
+laborer	worker
 manager	management
 ["work" "in"]	["work" "for"]
 personal	personnel
@@ -44,9 +44,13 @@ wage	salary
 rise	raise
 price of living	cost of living
 ["do" "mistake"]	["make" "mistake"]
+["mistake" "do"]	["mistake" "make"]
 ["make" "exercise"]	["do" "exercise"]
+["exercise" "make"]	["exercise" "do"]
 ["make" "exam"]	["take" "exam"]
+["exam" "make"]	["exam" "take"]
 ["make" "interview"]	["have" "interview"]
+["interview" "make"]	["interview" "have"]
 grow up	grow
 parent	relative
 strong	strict
@@ -61,6 +65,7 @@ plate	dish
 food	meal
 desert	dessert
 ["eat" "breakfast"]	["have" "breakfast"]
+["breakfast" "eat"]	["breakfast" "have"]
 ["care" "about"]	["take care" "of"]
 ["married" "with"]	["married" "to"]
 ["good" "in"]	["good" "at"]
@@ -144,4 +149,4 @@ after all	in the end
 furthermore	what's more
 on the other side	on the other hand
 despite of	despite	in spite of
-so that	,so
+so that	, so
