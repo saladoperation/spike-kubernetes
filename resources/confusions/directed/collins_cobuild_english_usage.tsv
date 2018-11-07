@@ -25,7 +25,7 @@ agree to	accept
 alight	burning
 alike	similar
 alive	living	live
-alone	["" "" "on its own"]	["" "" "on her own"]	["" "" "on his own"]
+alone	["" "on its own"]	["" "on her own"]	["" "on his own"]
 along	through	across
 too	either
 among	between
@@ -89,7 +89,7 @@ bum	bottom
 butt	behind
 mark	brand	make
 ["bring" "up"]	educate
-educate	["bring" "" "up"]
+educate	["bring" "up"]
 burst in tears	burst into tears
 by	near
 named	called
@@ -128,9 +128,9 @@ weep	cry
 daren't to	daren't
 dare not to	dare not
 this day	today
-delay	["put" "" "off"]
-cancel	["put" "" "off"]
-postpone	["put" "" "off"]
+delay	["put" "off"]
+cancel	["put" "off"]
+postpone	["put" "off"]
 ["put" "off"]	delay	cancel
 demand for	demand
 deny	deny it
@@ -175,8 +175,8 @@ expect it	expect so
 ["make" "experiment"]	["do" "experiment"]	["conduct" "experiment"]	["carry out" "experiment"]
 ["experiment" "make"]	["experiment" "do"]	["experiment" "conduct"]	["experiment" "carry out"]
 explain	explain to
-explode	["blow" "" "up"]
-fall	drop	["knock" "" "down"]	["knock" "" "over"]
+explode	["blow" "up"]
+fall	drop	["knock" "down"]	["knock" "over"]
 far	far away	a long way away	distant	faraway	far-off
 most favourite	favourite
 most favorite	favorite
@@ -203,7 +203,7 @@ gently	politely
 glasses	pair of glasses
 enter	get on	board
 good	well
-grow up	["bring" "" "up"]
+grow up	["bring" "up"]
 bring up	grow up
 I guess it	I guess so
 gymnasium	gym	secondary school	high school
@@ -212,7 +212,7 @@ happen to be	there happens to be
 hear	can hear
 to home	home
 ["make" "homework"]	["do" "homework"]
-["homework" "made"]	["homework" "done"]
+["homework" "make"]	["homework" "do"]
 I hope it	I hope so
 I don't hope so	I hope not
 to my house	home
@@ -229,7 +229,7 @@ in its house	at home
 in her house	at home
 in his house	at home
 in their house	at home
-how	the way	["what is" "" "like"]
+how	the way	["what is" "like"]
 how do I think of	what do I think of
 how do we think of	what do we think of
 how do you think of	what do you think of
@@ -250,7 +250,7 @@ inside of	inside
 in spite of	regardless of
 despite of	despite
 interesting	well-paid
-invite	["invite" "" "to"]
+invite	["invite" "to"]
 journal	newspaper
 ["do" "journey"]	["make" "journey"]	["go on" "journey"]
 ["journey" "do"]	["journey" "make"]	["journey" "go on"]
@@ -351,11 +351,11 @@ of	in
 years old	[""]
 old	elderly
 once	one day	sometime
-the one of	["" "" "'s"]
-open	open it	["put" "" "on"]	["switch" "" "on"]	["turn" "" "on"]
+the one of	["" "'s"]
+open	open it	["put" "on"]	["switch" "on"]	["turn" "on"]
 out	out of
 outside of	outside
-own	my own	our own	your own	its own	her own	his own	their own	["" "" "of my own"]	["" "" "of our own"]	["" "" "of your own"]	["" "" "of its own"]	["" "" "of her own"]	["" "" "of his own"]	["" "" "of their own"]
+own	my own	our own	your own	its own	her own	his own	their own	["" "of my own"]	["" "of our own"]	["" "of your own"]	["" "of its own"]	["" "of her own"]	["" "of his own"]	["" "of their own"]
 pants	pair of pants
 shorts	pair of shorts
 paper	sheet of paper	piece of paper
@@ -393,7 +393,7 @@ programme	program
 ["progress" "do"]	["progress" "make"]
 proper	own
 prove	test
-provide	["provide" "" "with"]
+provide	["provide" "with"]
 ["provide" "to"]	["provide" "for"]
 provide	provide for
 quite	a bit	a little	slightly
@@ -415,7 +415,7 @@ request for	request
 require	need	want
 return	go back	come back	get back
 ["return" "back"]	return
-return	["bring" "" "back"]	reintroduce
+return	["bring" "back"]	reintroduce
 ring	ring up
 ["be" "'s"]	belong to
 salute	greet
@@ -475,7 +475,7 @@ storey	story
 strange	unusual
 stranger	someone from abroad	person from overseas
 strongly	tightly	firmly	hard
-such	["" "" "like that"]	["" "" "like this"]
+such	["" "like that"]	["" "like this"]
 ever such	such
 support	bear	put up with	tolerate
 can't support	can't stand
@@ -531,14 +531,15 @@ don't want	don't want to
 west	western
 win	defeat	beat
 woman	lady
-old woman	old lady	elderly lady
+["old" "woman"]	["old" "lady"]	["elderly" "lady"]
+["woman" "old"]	["lady" "old"]	["lady" "elderly"]
 worth	value
 would	used to
 no	yes
 yesterday night	last night
 ["have" "years"]	be	["be" "years old"]
 about	of
-be	["be" "" "years old"]
+be	["be" "years old"]
 in the night	at night
 by	in
 thank you a lot	thanks a lot
