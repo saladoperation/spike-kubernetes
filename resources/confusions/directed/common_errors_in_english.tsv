@@ -71,7 +71,7 @@ desert	dessert
 ["good" "in"]	["good" "at"]
 ["look" "for"]	["look" "after"]
 relations	relationship
-how is	["what's" "" "like"]
+how is	["what's" "like"]
 sympathetic	nice
 know	get to know
 high	tall
@@ -88,9 +88,9 @@ say it	say	tell it
 say her	say	tell her
 say him	say	tell him
 say them	say	tell them
-["explain me" ""]	["explain" "" "to me"]
-["explain us" ""]	["explain" "" "to us"]
-["explain you" ""]	["explain" "" "to you"]
+["explain me" ""]	["explain" "to me"]
+["explain us" ""]	["explain" "to us"]
+["explain you" ""]	["explain" "to you"]
 hear	listen to
 ["remind" "of"]	["remind" "about"]
 ["by my" "own"]	["on my" "own"]
@@ -132,7 +132,7 @@ schedule	itinerary
 occupied	busy
 forget	during	in
 since	foreign
-before	["" "" "ago"]
+before	["" "ago"]
 in the night	in the evening
 in the evening	at night
 yesterday night	yesterday evening	last night
@@ -144,7 +144,7 @@ actually	at the moment
 at first	first
 at the end	in the end
 at last	finally
-after	afterwards	afterward	["in" "" "' time"]	["in" "" "'s time"]
+after	afterwards	afterward	["in" "' time"]	["in" "'s time"]
 after all	in the end
 furthermore	what's more
 on the other side	on the other hand

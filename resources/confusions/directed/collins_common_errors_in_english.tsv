@@ -108,15 +108,16 @@ know	get to know
 ["quantity" "low"]	["quantity" "small"]
 ["big" "choice"]	["large" "choice"]	["wide" "choice"]
 ["choice" "big"]	["choice" "large"]	["choice" "wide"]
-small choice	narrow choice
+["small" "choice"]	["narrow" "choice"]
 ["choice" "small"]	["choice" "narrow"]
-little choice	narrow choice
+["little" "choice"]	["narrow" "choice"]
 ["choice" "little"]	["choice" "narrow"]
 ["big" "importance"]	["great" "importance"]
 ["importance" "big"]	["importance" "great"]
 big progress	great progress	a lot of progress
+["big" "progress"]	["great" "progress"]
 ["progress" "big"]	["progress" "great"]
-high man	tall man
+["high" "man"]	["tall" "man"]
 ["man" "high"]	["man" "tall"]
 bad pain	great pain
 ["pain" "bad"]	["pain" "great"]
