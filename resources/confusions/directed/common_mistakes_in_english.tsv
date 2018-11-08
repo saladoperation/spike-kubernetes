@@ -88,14 +88,14 @@ a night	one night
 a morning	one morning
 an afternoon	one afternoon
 an evening	one evening
-the other day	the next day
-the other day	the following day
+other day	next day
+other day	following day
 as usually	as usual
 according to my opinion	in my opinion
 as I think	I think
-at the end	in the end
-under the rain	in the rain
-["the reason is" "because"]	["the reason is" "that"]
+["at" "end"]	["in" "end"]
+["under" "rain"]	["in" "rain"]
+["reason is" "because"]	["reason is" "that"]
 also	either
 too	either
 ["give" "exam"]	["take" "exam"]
