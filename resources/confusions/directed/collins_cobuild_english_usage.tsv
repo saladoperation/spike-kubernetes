@@ -47,13 +47,13 @@ I apologize	I'm sorry	sorry
 approach to	approach
 ["approve" "to"]	["approve" "of"]
 round	around	about	round about
-at my arrival	on my arrival
-at our arrival	on our arrival
-at your arrival	on your arrival
-at its arrival	on its arrival
-at her arrival	on her arrival
+["at my" "arrival"]	["on my" "arrival"]
+["at our" "arrival"]	["on our" "arrival"]
+["at your" "arrival"]	["on your" "arrival"]
+["at its" "arrival"]	["on its" "arrival"]
+["at her" "arrival"]	["on her" "arrival"]
 ["at his" "arrival"]	["on his" "arrival"]
-at their arrival	on their arrival
+["at their" "arrival"]	["on their" "arrival"]
 ["arrive" "to"]	["arrive" "at"]	["arrive" "in"]
 as	than
 ["embarrassed" "of"]	["embarrassed" "by"]	["embarrassed" "about"]
