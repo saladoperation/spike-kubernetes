@@ -7,13 +7,13 @@ fear	be afraid
 afraid	frightened
 after	afterwards	afterward	then	after that
 after all	finally	at last	in the end
-for	["" "" "ago"]
+for	["" "ago"]
 ["for" "ago"]	["" "ago"]
-before	["" "" "ago"]
+before	["" "ago"]
 alike	like	similar-looking
 all	it all	all of it	them all	all of them
-["allow" "" "to"]	let
-["permit" "" "to"]	let
+["allow" "to"]	let
+["permit" "to"]	let
 nearly	hardly
 along	through
 rise	get up
@@ -26,7 +26,7 @@ waking	awake
 sleeping	asleep
 bathe	have a swim	go for a swim	go swimming	swim
 been	come	gone
-before	["" "" "before"]	before that	first	in front of
+before	["" "before"]	before that	first	in front of
 better	rather
 wide	large
 bear	have
@@ -42,7 +42,6 @@ control	check	have a look at
 ["make" "photo"]	["take" "photo"]
 ["make" "experience"]	["have" "experience"]
 ["dressed" "with"]	["dressed" "in"]
-["dressing" "in"]	["dressed" "in"]
 in	during
 ["owing" "to"]	["due" "to"]
 older	elder
@@ -59,13 +58,14 @@ don't ever	never
 ever	always
 ["except" "for"]	without	["but" "for"]
 ["make" "experience"]	["have" "experience"]
+["experience" ""]	["experience" "have"]
 explain	explain to
 at last	lastly
 forget	leave
 get	get to be
 ["go" "to"]	["go" "in"]	["go" "at"]
 tall	long
-in holidays	on holiday
+["in" "holidays"]	["on" "holiday"]
 to home	home
 how much	how
 why	how
@@ -82,12 +82,11 @@ the last days	the last few days
 the last weeks	the last few weeks
 ["" "later"]	in
 ["learn" "how to"]	["learn" "to"]
-["let" "" "to"]	let
+["let" "to"]	let
 very like	very much like
 do you like	would you like
 ["if you" "like to"]	["if you" "like"]
-as it is	as is
-as it was	as was
+["as it" "is"]	["as" "is"]
 for a longer time	longer
 ["look" "at"]	look
 ["look" "if"]	["see" "if"]
@@ -111,8 +110,8 @@ no more	no longer
 nowadays	modern
 of course	certainly
 once	sometime	one day
-open	untie	undo	["turn" "" "on"]	["switch" "" "on"]	turned on
-opposite	["" "" "opposite"]
+open	untie	undo	["turn" "on"]	["switch" "on"]	turned on
+opposite	["" "opposite"]
 in front of	across from
 another	the others
 other	different	more
@@ -133,7 +132,7 @@ quite	rather	much	a bit
 wouldn't rather	would rather not
 or better	or rather
 reason of	reason for
-remind	["remind" "" "of"]
+remind	["remind" "of"]
 rests	remains	leftovers
 ["the same" "like"]	["the same" "as"]
 say	["say" "to"]	ask
@@ -157,7 +156,7 @@ in order that	so that
 ["in order that" "might"]	["in order that" "would"]	["in order that" "could"]	["in order that" "should"]
 so-and-so	so-so
 type of	sort of	kind of
-such a	["" "" "of this kind"]	["" "" "of that kind"]	["" "" "like this"]	["" "" "like that"]
+such a	["" "of this kind"]	["" "of that kind"]	["" "like this"]	["" "like that"]
 ["very" "that"]	["such" "that"]
 so	so much
 ["suggest" "should"]	suggest
@@ -183,11 +182,11 @@ want	["want" "to"]
 ["want" "you"]	["want" "you to"]
 ["want that" "they"]	["want" "them to"]
 ["want" "they"]	["want" "them to"]
-want	["want" "" "to be"]	["want" "" "as"]
+want	["want" "to be"]	["want" "as"]
 ["in" "way"]	["" "way"]
 ["by" "way"]	["" "way"]
-the way in which	the way	the way that
-the way by which	the way	the way that
+way in which	way	way that
+way by which	way	way that
 ways of	means of	methods of
 well	happy
 why to	why
