@@ -40,7 +40,9 @@ on the contrary	in contrast
 contrary	opposite
 control	check	have a look at
 ["make" "photo"]	["take" "photo"]
+["photo" "make"]	["photo" "take"]
 ["make" "experience"]	["have" "experience"]
+["experience" "make"]	["experience" "have"]
 ["dressed" "with"]	["dressed" "in"]
 in	during
 ["owing" "to"]	["due" "to"]
@@ -56,9 +58,10 @@ not ever	never
 don't ever	never
 ["won't" "ever"]	["will" "never"]
 ever	always
-["except" "for"]	without	["but" "for"]
+except for	without	but for
+expect for	expect
 ["make" "experience"]	["have" "experience"]
-["experience" ""]	["experience" "have"]
+["experience" "make"]	["experience" "have"]
 explain	explain to
 at last	lastly
 forget	leave
@@ -80,7 +83,6 @@ instead	on the other hand
 know	get to know	learn	hear	can tell
 the last days	the last few days
 the last weeks	the last few weeks
-["" "later"]	in
 ["learn" "how to"]	["learn" "to"]
 ["let" "to"]	let
 very like	very much like
@@ -88,12 +90,12 @@ do you like	would you like
 ["if you" "like to"]	["if you" "like"]
 ["as it" "is"]	["as" "is"]
 for a longer time	longer
-["look" "at"]	look
+look at	look
 ["look" "if"]	["see" "if"]
 ["look" "whether"]	["see" "whether"]
-["look" "for"]	fetch
+look for	fetch
 ["made" "of"]	["made" "from"]
-["marry" "with"]	marry
+marry with	marry
 maybe	perhaps
 mean	think
 meaning	opinion
@@ -134,11 +136,11 @@ or better	or rather
 reason of	reason for
 remind	["remind" "of"]
 rests	remains	leftovers
-["the same" "like"]	["the same" "as"]
-say	["say" "to"]	ask
+["same" "like"]	["same" "as"]
+say	say to	ask
 tell	ask
 ["be" "seeing"]	["can" "see"]
-see	["see" "about"]
+see	see about
 seem as	seem	seem like
 so	like this	like that	in this way	in that way
 ["very" "that"]	["so" "that"]
@@ -171,7 +173,7 @@ till	as far as	up to
 very	much
 little	not very
 very much	a lot of
-wait	["wait" "for"]
+wait	wait for
 ["wait that" "be"]	["wait for" "to be"]
 want	["want" "to"]
 ["want that" "I"]	["want" "me to"]

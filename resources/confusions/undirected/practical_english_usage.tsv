@@ -13,7 +13,7 @@ appear	seem
 arise	rise
 around	about
 round	about
-ask	["ask" "" "for"]
+ask	["ask" "for"]
 at	on	in
 at	to
 in	to
@@ -38,13 +38,14 @@ big	large	great
 birthday	date of birth
 borrow	lend
 bring	take
-["bring" "" "up"]	educate
+["bring" "up"]	educate
 broad	wide
 near	by
 by	with
-take care	care	["care" "for"]
-take care	["care" "about"]	["care" "for"]
-["take care" "of"]	care	["care" "for"]
+take care	care	care for
+take care	care about	care for
+["care" "about"]	["care" "for"]
+take care of	care
 ["take care" "of"]	["care" "about"]	["care" "for"]
 city	town
 classic	classical
@@ -65,9 +66,8 @@ efficient	effective
 electric	electrical
 end	finish
 especially	specially
-except	["except" "for"]
+except	except for
 expect	hope	wait	look forward
-expect	["hope" "for"]	["wait" "for"]	["look forward" "to"]
 experiment	experience
 fairly	quite	rather	pretty
 far	a long way
@@ -79,8 +79,7 @@ fit	suit
 for	since	in	from
 fun	funny
 get	go
-hear	["listen" "to"]
-listen 	["listen" "to"]
+hear	listen	listen to
 here	there
 high	tall
 hire	lent	let
@@ -96,9 +95,9 @@ in	into
 on	onto
 instead	instead of
 instead of	without
-know	["know" "about"]
-know	["know" "of"]
-know	["find" "" "out"]
+know	know about
+know	know of
+know	["find" "out"]
 latest	last
 lay	lie
 like	as
@@ -127,7 +126,7 @@ principal	principle
 remember	remind
 road	street
 say	tell
-see	look	["look" "at"]	watch
+see	look	look at	watch
 seem to be	seem
 sensible	sensitive
 shade	shadow
