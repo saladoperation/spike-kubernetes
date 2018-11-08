@@ -88,9 +88,13 @@ say it	say	tell it
 say her	say	tell her
 say him	say	tell him
 say them	say	tell them
-["explain me" ""]	["explain" "to me"]
-["explain us" ""]	["explain" "to us"]
-["explain you" ""]	["explain" "to you"]
+explain me	["explain" "to me"]
+explain us	["explain" "to us"]
+explain you	["explain" "to you"]
+explain it	["explain" "to it"]
+explain her	["explain" "to her"]
+explain him	["explain" "to him"]
+explain them	["explain" "to them"]
 hear	listen to
 ["remind" "of"]	["remind" "about"]
 ["by my" "own"]	["on my" "own"]
