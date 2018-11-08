@@ -199,13 +199,13 @@ knock	knock at
 listen	listen to
 pay	pay for
 point	point to	point at
-remind	["remind" "" "of"]
+remind	["remind" "of"]
 reply	reply to
 say	say to
 search	search for
-["share" ""]	["share" "" "with"]
+["share" ""]	["share" "with"]
 speak	speak to
-["supply" ""]	["supply" "" "with"]
+["supply" ""]	["supply" "with"]
 think	think of
 wait	wait for
 wish	wish for
@@ -259,7 +259,7 @@ hire out	hire
 win	earn
 ["substitute" "with"]	["replace" "with"]
 correct	repair	mend
-["dust" ""]	["cover" "" "with dust"]
+["dust" ""]	["cover" "with dust"]
 dusted	covered with dust
 please	ask for	thank
 could	was able to
@@ -290,7 +290,7 @@ put	keep
 ["care" "for"]	["take care" "of"]
 let	make
 too much	very much
-["before" ""]	["" "" "ago"]
+["before" ""]	["" "ago"]
 hardly	hard
 not so	not very
 just now	presently
