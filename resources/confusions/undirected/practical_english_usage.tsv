@@ -154,14 +154,7 @@ travel	journey	trip	voyage
 until	till	to
 until	by
 very	very much
-in the way	on the way
-in my way	on my way
-in our way	on our way
-in your way	on your way
-in its way	on its way
-in her way	on her way
-in his way	on his way
-in their way	on their way
+["in" "way"]	["on" "way"]
 well	good
 why	why not
 will you	do you want to
