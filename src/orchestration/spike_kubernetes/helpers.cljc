@@ -720,7 +720,7 @@
                                         last)
                                   (partial (aid/flip str) " ")))))
 
-     (defn concat-blocks*
+     (defn concatenate-blocks*
        [reduction element]
        (concat ((aid/casep reduction
                            trim? trim-last
@@ -728,9 +728,9 @@
                  element)
                reduction))
 
-     (defn concat-blocks
+     (defn concatenate-blocks
        [& more]
-       (reduce concat-blocks* (reverse more)))
+       (reduce concatenate-blocks* (reverse more)))
 
      (defn get-variant-parser
        [originals replacements]
@@ -745,15 +745,16 @@
                           originals
                           replacements)
           d many-any]
-         (m/pure (concat-blocks a
-                                (->> replacements
-                                     first
-                                     ((if-else (partial unalterable-tags?
-                                                        (first originals))
-                                               (make-set-variant-source b)))
-                                     (set-b-text-with-wss b))
-                                c
-                                d))))
+         (m/pure
+           (concatenate-blocks a
+                               (->> replacements
+                                    first
+                                    ((if-else (partial unalterable-tags?
+                                                       (first originals))
+                                              (make-set-variant-source b)))
+                                    (set-b-text-with-wss b))
+                               c
+                               d))))
 
      (defn get-variants*
        [originals replacements sentence]
