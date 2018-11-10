@@ -702,7 +702,7 @@
                   (make-parse-multiton-c originals replacements)))
 
      (def trim-tags
-       #{"," "." "-"})
+       #{"," "." "-" "-RRB-"})
 
      (def trim?
        (comp trim-tags
