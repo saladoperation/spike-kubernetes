@@ -312,9 +312,6 @@
 (test/deftest two-two
   (test-structure "Do you fear?" "Are you afraid?"))
 
-(test/deftest three-one
-  (test-structure "I'll allow you to know." "I'll let you know."))
-
 (test/deftest comparative
   (test-structure "I'm nicer with you." "I'm nicer to you."))
 
