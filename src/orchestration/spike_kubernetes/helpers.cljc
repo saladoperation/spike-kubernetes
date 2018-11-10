@@ -593,6 +593,41 @@
                                            else-function
                                            then))
 
+     (def trim-tags
+       #{"," "." "-" "-RRB-"})
+
+     (def trim?
+       (comp trim-tags
+             :tag_
+             first))
+
+     (def trim-last
+       (partial s/transform* [s/LAST :text_with_ws] str/trimr))
+
+     (def ensure-whitespace
+       (if-else (aid/build or
+                           empty?
+                           (comp (partial = "")
+                                 :text_with_ws
+                                 last))
+                (partial s/transform*
+                         [s/LAST :text_with_ws]
+                         (if-else (comp #{\  \(}
+                                        last)
+                                  (partial (aid/flip str) " ")))))
+
+     (defn concatenate-blocks*
+       [reduction element]
+       (concat ((aid/casep reduction
+                           trim? trim-last
+                           ensure-whitespace)
+                 element)
+               reduction))
+
+     (defn concatenate-blocks
+       [& more]
+       (m/pure (reduce concatenate-blocks* (reverse more))))
+
      (defn make-parse-singleton-c
        [child? replacements]
        (m/mlet [xs (-> non-particle-adverb-tag?
@@ -623,22 +658,22 @@
                (if (-> replacements
                        last
                        empty?)
-                 (m/pure (concat xs
-                                 (second replacements)
-                                 ys
-                                 [z]))
+                 (concatenate-blocks xs
+                                     (second replacements)
+                                     ys
+                                     [z])
                  ((if (-> replacements
                           first
                           empty?)
                     identity
-                    (partial m/<> (m/pure (concat (last replacements)
-                                                  xs
-                                                  ys
-                                                  [z]))))
-                   (m/pure (concat xs
-                                   ys
-                                   [z]
-                                   (last replacements)))))))
+                    (partial m/<> (concatenate-blocks (last replacements)
+                                                      xs
+                                                      ys
+                                                      [z])))
+                   (concatenate-blocks xs
+                                       ys
+                                       [z]
+                                       (last replacements))))))
 
      (aid/defcurried get-variant-source
                      [original replacement-source]
@@ -701,41 +736,6 @@
                                                                 replacements))
                   (make-parse-multiton-c originals replacements)))
 
-     (def trim-tags
-       #{"," "." "-" "-RRB-"})
-
-     (def trim?
-       (comp trim-tags
-             :tag_
-             first))
-
-     (def trim-last
-       (partial s/transform* [s/LAST :text_with_ws] str/trimr))
-
-     (def ensure-whitespace
-       (if-else (aid/build or
-                           empty?
-                           (comp (partial = "")
-                                 :text_with_ws
-                                 last))
-                (partial s/transform*
-                         [s/LAST :text_with_ws]
-                         (if-else (comp #{\  \(}
-                                        last)
-                                  (partial (aid/flip str) " ")))))
-
-     (defn concatenate-blocks*
-       [reduction element]
-       (concat ((aid/casep reduction
-                           trim? trim-last
-                           ensure-whitespace)
-                 element)
-               reduction))
-
-     (defn concatenate-blocks
-       [& more]
-       (reduce concatenate-blocks* (reverse more)))
-
      (defn get-variant-parser
        [originals replacements]
        ;TODO optimize this function
@@ -749,16 +749,15 @@
                           originals
                           replacements)
           d many-any]
-         (m/pure
-           (concatenate-blocks a
-                               (->> replacements
-                                    first
-                                    ((if-else (partial unalterable-tags?
-                                                       (first originals))
-                                              (make-set-variant-source b)))
-                                    (set-b-text-with-wss b))
-                               c
-                               d))))
+         (concatenate-blocks a
+                             (->> replacements
+                                  first
+                                  ((if-else (partial unalterable-tags?
+                                                     (first originals))
+                                            (make-set-variant-source b)))
+                                  (set-b-text-with-wss b))
+                             c
+                             d)))
 
      (defn get-variants*
        [originals replacements sentence]
