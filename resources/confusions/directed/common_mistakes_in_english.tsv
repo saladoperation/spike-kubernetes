@@ -259,7 +259,7 @@ hire out	hire
 win	earn
 ["substitute" "with"]	["replace" "with"]
 correct	repair	mend
-["dust" ""]	["cover" "with dust"]
+dust	["cover" "with dust"]
 dusted	covered with dust
 please	ask for	thank
 could	was able to
