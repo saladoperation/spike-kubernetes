@@ -713,7 +713,11 @@
        (partial s/transform* [s/LAST :text_with_ws] str/trimr))
 
      (def ensure-whitespace
-       (if-else empty?
+       (if-else (aid/build or
+                           empty?
+                           (comp (partial = "")
+                                 :text_with_ws
+                                 last))
                 (partial s/transform*
                          [s/LAST :text_with_ws]
                          (if-else (comp #{\  \(}
