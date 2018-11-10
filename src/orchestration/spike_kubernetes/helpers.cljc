@@ -593,14 +593,6 @@
                                            else-function
                                            then))
 
-     (def ensure-whitespace
-       (if-else empty?
-                (partial s/transform*
-                         [s/LAST :text_with_ws]
-                         (if-else (comp #{\  \(}
-                                        last)
-                                  (partial (aid/flip str) " ")))))
-
      (defn make-parse-singleton-c
        [child? replacements]
        (m/mlet [xs (-> non-particle-adverb-tag?
@@ -632,45 +624,21 @@
                        last
                        empty?)
                  (m/pure (concat xs
-                                 (-> replacements
-                                     second
-                                     ensure-whitespace)
+                                 (second replacements)
                                  ys
                                  [z]))
                  ((if (-> replacements
                           first
                           empty?)
                     identity
-                    (partial m/<> (m/pure (concat (-> replacements
-                                                      last
-                                                      ensure-whitespace)
+                    (partial m/<> (m/pure (concat (last replacements)
                                                   xs
                                                   ys
                                                   [z]))))
                    (m/pure (concat xs
                                    ys
-                                   ((if (-> replacements
-                                            last
-                                            first
-                                            :text_with_ws
-                                            (str/starts-with? "'"))
-                                      identity
-                                      ensure-whitespace)
-                                     [z])
-                                   (->> replacements
-                                        last
-                                        (s/setval* [s/LAST
-                                                    :text_with_ws
-                                                    s/END]
-                                                   (:whitespace_ z)))))))))
-
-     (defn append-whitespace
-       [original replacement]
-       (s/setval [s/LAST :text_with_ws s/END]
-                 (-> original
-                     last
-                     :whitespace_)
-                 replacement))
+                                   [z]
+                                   (last replacements)))))))
 
      (aid/defcurried get-variant-source
                      [original replacement-source]
@@ -691,15 +659,23 @@
                      get-discriminative-token
                      get-variant-source)))
 
-     (defn set-lower-text-with-wss
-       [original replacement]
-       (->> replacement
-            (map (transfer* :text_with_ws
-                            (aid/build str
-                                       (comp :source
-                                             :forth)
-                                       :whitespace_)))
-            (append-whitespace original)))
+     (def set-lower-text-with-wss
+       (partial map (transfer* :text_with_ws (aid/build str
+                                                        (comp :source
+                                                              :forth)
+                                                        :whitespace_))))
+
+     (aid/defcurried set-b-text-with-wss
+                     [original replacement]
+                     (->> replacement
+                          set-lower-text-with-wss
+                          ((if (-> original
+                                   first
+                                   :start)
+                             (partial s/transform*
+                                      [s/FIRST :text_with_ws]
+                                      str/capitalize)
+                             identity))))
 
      (defn make-parse-multiton-c
        [originals replacements]
@@ -714,7 +690,7 @@
                                          ((if-else (partial unalterable-tags?
                                                             (last originals))
                                                    (make-set-variant-source %)))
-                                         (set-lower-text-with-wss %))))))))
+                                         set-lower-text-with-wss)))))))
 
      (defn make-parse-c
        [child? originals replacements]
@@ -736,57 +712,48 @@
      (def trim-last
        (partial s/transform* [s/LAST :text_with_ws] str/trimr))
 
-     (def multiton?
-       (comp (partial < 1)
-             count))
+     (def ensure-whitespace
+       (if-else empty?
+                (partial s/transform*
+                         [s/LAST :text_with_ws]
+                         (if-else (comp #{\  \(}
+                                        last)
+                                  (partial (aid/flip str) " ")))))
 
-     (aid/defcurried set-a-text-with-wss
-                     [original replacement]
-                     ((aid/casep replacement
-                                 trim? trim-last
-                                 identity)
-                       (command/if-then multiton?
-                                        ensure-whitespace
-                                        original)))
+     (defn concat-blocks*
+       [reduction element]
+       (concat ((aid/casep reduction
+                           trim? trim-last
+                           ensure-whitespace)
+                 element)
+               reduction))
 
-     (aid/defcurried set-b-text-with-wss
-                     [original replacement]
-                     (->> replacement
-                          (set-lower-text-with-wss original)
-                          ((if (-> original
-                                   first
-                                   :start)
-                             (partial s/transform*
-                                      [s/FIRST :text_with_ws]
-                                      str/capitalize)
-                             identity))))
+     (defn concat-blocks
+       [& more]
+       (reduce concat-blocks* (reverse more)))
 
      (defn get-variant-parser
        [originals replacements]
        ;TODO optimize this function
-       (m/mlet [a many-any
-                b (make-parse-b originals replacements)
-                c (make-parse-c (comp (partial = (-> b
-                                                     first
-                                                     :i))
-                                      :head_i)
-                                originals
-                                replacements)
-                d many-any]
-               (m/pure (concat (->> replacements
-                                    first
-                                    (set-a-text-with-wss a))
-                               (->> replacements
-                                    first
-                                    ((if-else (partial unalterable-tags?
-                                                       (first originals))
-                                              (make-set-variant-source b)))
-                                    (set-b-text-with-wss b))
-                               ((aid/casep d
-                                           trim? trim-last
-                                           identity)
-                                 c)
-                               d))))
+       (m/mlet
+         [a many-any
+          b (make-parse-b originals replacements)
+          c (make-parse-c (comp (partial = (-> b
+                                               first
+                                               :i))
+                                :head_i)
+                          originals
+                          replacements)
+          d many-any]
+         (m/pure (concat-blocks a
+                                (->> replacements
+                                     first
+                                     ((if-else (partial unalterable-tags?
+                                                        (first originals))
+                                               (make-set-variant-source b)))
+                                     (set-b-text-with-wss b))
+                                c
+                                d))))
 
      (defn get-variants*
        [originals replacements sentence]
