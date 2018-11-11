@@ -11,10 +11,11 @@ app = Flask(__name__)
 def get_token(token):
     return dissoc(
         helpers.transfer_(
-            "child_tags",
+            "head_child_deps",
             comp(tuple,
-                 partial(map, partial(aid.flip(getattr), "tag_")),
-                 partial(s.select_, "children")),
+                 partial(map, partial(aid.flip(getattr), "dep_")),
+                 partial(aid.flip(getattr), "children"),
+                 partial(s.select_, "head")),
             helpers.transfer_(
                 "head_tag_",
                 comp(partial(aid.flip(getattr), "tag_"),
@@ -27,8 +28,7 @@ def get_token(token):
                                                       identity,
                                                       partial(getattr,
                                                               token)),
-                                            {"children",
-                                             "dep_",
+                                            {"dep_",
                                              "ent_type_",
                                              "head",
                                              "i",
@@ -40,8 +40,7 @@ def get_token(token):
                                              "tag_",
                                              "text_with_ws",
                                              "whitespace_"}))))),
-        "head",
-        "children")
+        "head")
 
 
 nlp = spacy.load("en")
