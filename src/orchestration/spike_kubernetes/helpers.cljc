@@ -593,14 +593,14 @@
                                            else-function
                                            then))
 
-     (def trim-tags
-       #{"," "." "-" "-RRB-"})
+     (def trim-lowers
+       #{"!" "%" ")" "," "-" "." ":" ";" "?"})
 
      (def trim?
        (aid/build or
                   empty?
-                  (comp trim-tags
-                        :tag_
+                  (comp trim-lowers
+                        :lower_
                         first)))
 
      (def trim-last
