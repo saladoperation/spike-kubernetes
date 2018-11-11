@@ -619,6 +619,7 @@
      (defn concatenate-blocks*
        [reduction element]
        (concat ((aid/casep reduction
+                           empty? identity
                            trim? trim-last
                            ensure-whitespace)
                  element)
