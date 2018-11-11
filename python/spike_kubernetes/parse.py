@@ -29,25 +29,23 @@ def reduce_map(coll, m):
     return reduce(transform_map, m, coll)
 
 
-def get_token(token):
-    return walk.prewalk(helpers.convert_map,
-                        reduce_map((("head", {"i", "children", "tag_"}),
-                                    (("head", "children", s.ALL), {"dep_"})),
-                                   get_map({"dep_",
-                                            "ent_type_",
-                                            "head",
-                                            "i",
-                                            "is_lower",
-                                            "is_sent_start",
-                                            "is_title",
-                                            "lemma_",
-                                            "lower_",
-                                            "tag_",
-                                            "text_with_ws",
-                                            "whitespace_"},
-                                           token)))
-
-
+get_token = comp(partial(walk.prewalk, helpers.convert_map),
+                 partial(reduce_map, (("head",
+                                       {"i", "children", "tag_"}),
+                                      (("head", "children", s.ALL),
+                                       {"dep_"}))),
+                 partial(get_map, {"dep_",
+                                   "ent_type_",
+                                   "head",
+                                   "i",
+                                   "is_lower",
+                                   "is_sent_start",
+                                   "is_title",
+                                   "lemma_",
+                                   "lower_",
+                                   "tag_",
+                                   "text_with_ws",
+                                   "whitespace_"}))
 nlp = spacy.load("en")
 parse = comp(tuple,
              partial(map, get_token),
