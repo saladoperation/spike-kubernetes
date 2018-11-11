@@ -77,10 +77,13 @@
                                       :dep_
                                       (= "nsubj"))
                                   (or (-> %
-                                          :head_tag_
+                                          :head_
+                                          :tag_
                                           (not= "VBG"))
                                       ((-> %
-                                           :sibling_deps
+                                           :head
+                                           :children
+                                           :deps_
                                            set)
                                         "aux")))
                            "they"

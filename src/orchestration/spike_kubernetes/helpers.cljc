@@ -646,12 +646,14 @@
                                           (constantly (empty? xs))
                                           (comp (partial = (-> xs
                                                                last
-                                                               :head_i))
+                                                               :head_
+                                                               :i))
                                                 :i))
                                (comp not
                                      (->> ys
                                           (filter non-particle-adverb-tag?)
-                                          (map :head_i)
+                                          (map (comp :i
+                                                     :head_))
                                           set)
                                      :i)
                                (comp (partial not= "punct")
@@ -746,7 +748,8 @@
           c (make-parse-c (comp (partial = (-> b
                                                first
                                                :i))
-                                :head_i)
+                                :i
+                                :head)
                           originals
                           replacements)
           d many-any]
