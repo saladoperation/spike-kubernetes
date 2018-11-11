@@ -31,10 +31,8 @@ def reduce_map(coll, m):
 
 def get_token(token):
     return walk.prewalk(helpers.convert_map,
-                        reduce_map((("head",
-                                     {"i", "children", "tag_"}),
-                                    (("head", "children", s.ALL),
-                                     {"dep_"})),
+                        reduce_map((("head", {"i", "children", "tag_"}),
+                                    (("head", "children", s.ALL), {"dep_"})),
                                    get_map({"dep_",
                                             "ent_type_",
                                             "head",
