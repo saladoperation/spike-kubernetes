@@ -30,10 +30,8 @@ def reduce_map(coll, m):
 
 
 get_token = comp(partial(walk.prewalk, helpers.convert_map),
-                 partial(reduce_map, (("head",
-                                       {"i", "children", "tag_"}),
-                                      (("head", "children", s.ALL),
-                                       {"dep_"}))),
+                 partial(reduce_map, (("head", {"i", "children", "tag_"}),
+                                      (("head", "children", s.ALL), {"dep_"}))),
                  partial(get_map, {"dep_",
                                    "ent_type_",
                                    "head",
