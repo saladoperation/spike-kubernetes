@@ -597,9 +597,11 @@
        #{"," "." "-" "-RRB-"})
 
      (def trim?
-       (comp trim-tags
-             :tag_
-             first))
+       (aid/build or
+                  empty?
+                  (comp trim-tags
+                        :tag_
+                        first)))
 
      (def trim-last
        (partial s/transform* [s/LAST :text_with_ws] str/trimr))
@@ -619,7 +621,6 @@
      (defn concatenate-blocks*
        [reduction element]
        (concat ((aid/casep reduction
-                           empty? identity
                            trim? trim-last
                            ensure-whitespace)
                  element)
