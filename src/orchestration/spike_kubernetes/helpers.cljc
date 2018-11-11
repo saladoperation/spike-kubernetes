@@ -528,29 +528,28 @@
                   (comp (partial = "CC")
                         :tag_)))
 
-     (aid/defcurried make-replaceable?
-                     [k x]
-                     (aid/build and
-                                (comp (partial = x)
-                                      k)
-                                (complement conjunction?)
-                                removable?
-                                :original))
-
-     (def get-replaceable
-       #(comp parse/satisfy
-              (make-replaceable? %)
-              %))
+     (aid/defcurried get-replaceable
+                     [ks m]
+                     (parse/satisfy
+                       (aid/build and
+                                  (comp (partial some true?)
+                                        (apply juxt
+                                               (map #(comp (partial = (% m))
+                                                           %)
+                                                    ks)))
+                                  (complement conjunction?)
+                                  removable?
+                                  :original)))
 
      (def replaceable-lower
-       (get-replaceable :lower_))
+       (get-replaceable [:lower_]))
 
-     (def replaceable-lemma
-       (get-replaceable :lemma_))
+     (def replaceable-lower-lemma
+       (get-replaceable [:lower_ :lemma_]))
 
      (def replaceable-tokens
        (partial map (command/if-then-else noun?
-                                          replaceable-lemma
+                                          replaceable-lower-lemma
                                           replaceable-lower)))
 
      (aid/defcurried make-parse-original
@@ -568,7 +567,7 @@
                                                     (map first)
                                                     (apply unalterable-tags?))
                                              replaceable-lower
-                                             replaceable-lemma)
+                                             replaceable-lower-lemma)
                                            (if starts-with-verb
                                              first
                                              last))
