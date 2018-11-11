@@ -11,7 +11,7 @@ app = Flask(__name__)
 def get_token(token):
     return dissoc(
         helpers.transfer_(
-            "head_child_deps",
+            "sibling_deps",
             comp(tuple,
                  partial(map, partial(aid.flip(getattr), "dep_")),
                  partial(aid.flip(getattr), "children"),
