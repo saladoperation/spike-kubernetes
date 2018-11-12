@@ -518,16 +518,6 @@
                                            get-discriminative-token)))
              vector))
 
-     (def conjunction?
-       (aid/build or
-                  (aid/build and
-                             (comp (partial = "mark")
-                                   :dep_)
-                             (comp (partial = "IN")
-                                   :tag_))
-                  (comp (partial = "CC")
-                        :tag_)))
-
      (aid/defcurried get-replaceable
                      [ks m]
                      (parse/satisfy
@@ -537,7 +527,6 @@
                                                (map #(comp (partial = (% m))
                                                            %)
                                                     ks)))
-                                  (complement conjunction?)
                                   removable?
                                   :original)))
 
