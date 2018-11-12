@@ -73,9 +73,7 @@
         (str (get (merge bijection surjection)
                   (:source %)
                   (case (:source %)
-                    "it" (if (and (-> %
-                                      :dep_
-                                      (str/starts-with? "ns"))
+                    "it" (if (and (helpers/subject? %)
                                   (or (-> %
                                           :head_
                                           :tag_

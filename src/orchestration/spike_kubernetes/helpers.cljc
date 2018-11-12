@@ -55,6 +55,10 @@
                 [apath f m]
                 (s/setval apath (f m) m))
 
+(def subject?
+  (comp (partial (aid/flip str/starts-with?) "ns")
+        :dep_))
+
 #?(:clj
    (do
      (def orchestration-name
@@ -667,13 +671,27 @@
                                        [z]
                                        (last replacements))))))
 
+     (def first-person?
+       (aid/build and
+                  (comp (partial = "VBP")
+                        :tag_)
+                  (comp (partial some (aid/build and
+                                                 (comp (partial = "i")
+                                                       :lower_)
+                                                 subject?))
+                        :children)))
+
      (aid/defcurried get-variant-source
                      [original replacement-source]
-                     (get ((:alternative (get-preparation)) replacement-source)
-                          (-> original
-                              :tag_
-                              condense-tag)
-                          replacement-source))
+                     (if (and (first-person? original)
+                              (= "be" replacement-source))
+                       "am"
+                       (get
+                         ((:alternative (get-preparation)) replacement-source)
+                         (-> original
+                             :tag_
+                             condense-tag)
+                         replacement-source)))
 
      (def make-set-variant-source
        #(partial s/transform*
