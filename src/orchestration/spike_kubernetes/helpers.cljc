@@ -1277,11 +1277,13 @@
              merge-into-vector
              (partial s/transform* [s/ALL :source] get-document-index)))
 
-     (def flatten-sequential
-       (partial s/transform* [s/MAP-VALS sequential?] flatten))
+     (def flatten-nested
+       (partial s/transform*
+                (s/multi-path :source :reference :inference)
+                flatten))
 
      (def grade-document
-       (comp flatten-sequential
+       (comp flatten-nested
              (aid/build merge
                         identity
                         (comp :body
