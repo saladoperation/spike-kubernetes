@@ -671,15 +671,30 @@
                                        [z]
                                        (last replacements))))))
 
-     (def first-person?
+     (def child-first-person
+       (comp (partial some (aid/build and
+                                      (comp (partial = "i")
+                                            :lower_)
+                                      subject?))
+             :children))
+
+     (def affirmative-first-person?
        (aid/build and
                   (comp (partial = "VBP")
                         :tag_)
-                  (comp (partial some (aid/build and
-                                                 (comp (partial = "i")
-                                                       :lower_)
-                                                 subject?))
-                        :children)))
+                  child-first-person))
+
+     (def interrogative-first-person?
+       (aid/build and
+                  (comp (partial = "aux")
+                        :dep_)
+                  (comp child-first-person
+                        :head)))
+
+     (def first-person?
+       (aid/build or
+                  affirmative-first-person?
+                  interrogative-first-person?))
 
      (aid/defcurried get-variant-source
                      [original replacement-source]
