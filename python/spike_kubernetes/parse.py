@@ -50,7 +50,9 @@ get_token = comp(partial(walk.prewalk, helpers.convert_map),
                                    "text_with_ws",
                                    "whitespace_"}))
 nlp = spacy.load("en")
-nlp.tokenizer.add_special_case("'m", ({LEMMA: "be", ORTH: "'m"},))
+run_(partial(apply, nlp.tokenizer.add_special_case),
+     {"'m": ({LEMMA: "be", ORTH: "'m"},),
+      "n't": ({LEMMA: "not", ORTH: "n't"},)})
 parse = comp(tuple,
              partial(map, get_token),
              nlp)

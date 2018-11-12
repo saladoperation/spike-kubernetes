@@ -586,13 +586,18 @@
                                            then))
 
      (def trim-starts
-       #{\! \% \' \) \, \- \. \: \; \?})
+       #{"!" "%" "'" ")" "," "-" "." ":" ";" "?" "n't"})
+
+     (def starts-with-trim?
+       (comp (partial some true?)
+             (->> trim-starts
+                  (map (aid/flip (aid/curry str/starts-with?)))
+                  (apply juxt))))
 
      (def trim?
        (aid/build or
                   empty?
-                  (comp trim-starts
-                        first
+                  (comp starts-with-trim?
                         :lower_
                         first)))
 
