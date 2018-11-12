@@ -75,7 +75,7 @@
                   (case (:source %)
                     "it" (if (and (-> %
                                       :dep_
-                                      (= "nsubj"))
+                                      (str/starts-with? "ns"))
                                   (or (-> %
                                           :head_
                                           :tag_
