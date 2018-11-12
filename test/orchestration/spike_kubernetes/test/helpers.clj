@@ -309,6 +309,9 @@
 (test/deftest two-two
   (test-structure "Do you fear?" "Are you afraid?"))
 
+(test/deftest be
+  (test-structure "I fear." "I am afraid."))
+
 (test/deftest comparative
   (test-structure "I'm nicer with you." "I'm nicer to you."))
 
