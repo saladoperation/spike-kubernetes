@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
 import spacy
+from spacy.symbols import LEMMA, ORTH
 from spike_kubernetes.clojure.core import *
 import spike_kubernetes.clojure.walk as walk
 import spike_kubernetes.aid as aid
@@ -49,6 +50,7 @@ get_token = comp(partial(walk.prewalk, helpers.convert_map),
                                    "text_with_ws",
                                    "whitespace_"}))
 nlp = spacy.load("en")
+nlp.tokenizer.add_special_case("'m", ({LEMMA: "be", ORTH: "'m"},))
 parse = comp(tuple,
              partial(map, get_token),
              nlp)
