@@ -697,11 +697,15 @@
                   affirmative-first-person?
                   interrogative-first-person?))
 
+     (def be
+       {"be"  "am"
+        "'re" "'m"})
+
      (aid/defcurried get-variant-source
                      [original replacement-source]
                      (if (and (first-person? original)
-                              (= "be" replacement-source))
-                       "am"
+                              (be replacement-source))
+                       (be replacement-source)
                        (get
                          ((:alternative (get-preparation)) replacement-source)
                          (-> original
