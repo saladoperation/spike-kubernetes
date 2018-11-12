@@ -58,6 +58,7 @@ round	around	about	round about
 as	than
 ["embarrassed" "of"]	["embarrassed" "by"]	["embarrassed" "about"]
 ["say" "question"]	["ask" "question"]
+["question" "say"]	["question" "ask"]
 as long as	as far as
 ["pay" "attention at"]	["pay" "attention to"]
 ["attention" "pay at"]	["attention" "pay to"]
@@ -422,7 +423,7 @@ salute	greet
 ["same" "like"]	["same" "as"]
 say	tell
 ["say" "question"]	["ask" "question"]
-["question" "sa"]	["question" "ask"]
+["question" "say"]	["question" "ask"]
 ["say" "order"]	["give" "order"]
 ["order" "say"]	["order" "give"]
 ["say" "instruction"]	["give" "instruction"]
