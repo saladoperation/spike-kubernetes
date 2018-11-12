@@ -585,13 +585,14 @@
                                            else-function
                                            then))
 
-     (def trim-lowers
-       #{"!" "%" ")" "," "-" "." ":" ";" "?"})
+     (def trim-starts
+       #{\! \% \' \) \, \- \. \: \; \?})
 
      (def trim?
        (aid/build or
                   empty?
-                  (comp trim-lowers
+                  (comp trim-starts
+                        first
                         :lower_
                         first)))
 
