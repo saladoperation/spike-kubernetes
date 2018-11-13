@@ -295,7 +295,7 @@
                       :body
                       slurp
                       helpers/parse-keywordize
-                      helpers/flatten-sequential
+                      helpers/flatten-nested
                       set-precision)}
      (helpers/transfer* [:training :minimum] get-minimum)
      (command/effect log)
