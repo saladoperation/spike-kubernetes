@@ -170,8 +170,10 @@ air	tune
 melody	tune
 air	wind
 breeze	wind
-in the fresh	out	in the open	in the open air
-in the full air	out	in the open	in the open air
+in the fresh	out	in the open air
+["in" "fresh"]	["in" "open"]
+in the full air	out	in the open air
+["in" "full air"]	["in" "open"]
 with air	by air	via air	per air	by plane
 alarm	alert
 alight	burning
@@ -181,19 +183,12 @@ same	similar
 ["similar" "with"]	["similar" "to"]
 live	alive
 alive	live
-allow	everyone
 every people	everyone
 every person	everyone
 all people	everyone
 all you	all of you
 all us	all of us
 all them	all of them
-all what	what
-all which	what
-that which	which
-all what	all that
-which	all that
-that which	all	what	all that
 all these	all these things
 allowance	permission
 ["not" "almost"]	["not" "nearly"]
@@ -224,7 +219,6 @@ anniversary	birthday
 advertisement	announcement
 advertisement	commercial
 annoy	bother	disturb
-an other	another
 one more	another
 ["make" "answer"]	["give" "answer"]
 ["answer" "make"]	["answer" "give"]
@@ -327,8 +321,7 @@ have your back	have a backache	've got backache
 have her back	have a backache	've got backache
 have his back	have a backache	've got backache
 have their backs	have a backache	've got backache
-bad	bad person	bad thing	badly
-badly	bad
+bad	bad person	bad thing
 ["bad" "to"]	["bad" "at"]
 ["bad" "in"]	["bad" "at"]
 very	badly
@@ -452,8 +445,8 @@ best	beloved	dearest
 loved	beloved	dearest
 more good	better
 more well	better
-better	'd better
-would better	'd better
+better	'd better	had better
+would better	'd better	had better
 big	great
 large	great
 great	big	large
@@ -561,12 +554,10 @@ camera	room
 camping	camping site	campsite
 go for camping	go camping
 can to	can
-["do" "can"]	can
 will can	'll be able to
-["will" "can"]	["will" "be able to"]	can
+["will" "can"]	["will" "be able to"]
 canal	channel
 canopy	settee	sofa
-mustn't have	can't have
 canteen	restaurant
 car	cart	lorry	coach	bus
 by car	with the car
@@ -1017,9 +1008,6 @@ documentation	literature
 dome	cathedral
 domicile	address	residence
 dominate	control
-to don't	not to
-no	don't
-not	don't
 no	don't
 door	doorway
 port	doorway
@@ -1178,11 +1166,11 @@ mechanic	engineer
 engineer	technician	mechanic
 make	learn	do
 enjoy with	enjoy
-enjoy	enjoy myself	enjoy ourselves	enjoy yourself	enjoy yourselves	enjoy itself	enjoy herself	enjoy himself	enjoy themselves	amuse	entertain
+enjoy	amuse	entertain
 amuse	entertain
 enjoy	entertain
 enjoy with	enjoy
-enjoy	enjoy myself	enjoy ourselves	enjoy yourself	enjoy yourselves	enjoy itself	enjoy herself	enjoy himself	enjoy themselves	amuse	entertain
+enjoy	amuse	entertain
 please myself	enjoy myself
 please ourselves	enjoy ourselves
 please yourself	enjoy yourself
@@ -1191,7 +1179,7 @@ please itself	enjoy itself
 please herself	enjoy herself
 please himself	enjoy himself
 please themselves	enjoy themselves
-enjoy	please	have a good time	enjoy yourself	enjoy yourselves
+enjoy	please	have a good time
 enlarge	stretch
 enough of	enough	fairly
 ["to" "it"]	to
@@ -1400,6 +1388,12 @@ favor	sake
 what grace	how charming
 afraid	afraid of
 ["afraid" "from"]	["afraid" "of"]
+have fear of	be afraid of
+["do" "have fear of"]	["be" "afraid of"]
+["I not" "afraid"]	["I'm not" "afraid"]
+["I do not" "afraid"]	["I'm not" "afraid"]
+it is afraid	it is feared
+have fear	're afraid	be afraid
 feast	banquet	holiday	party
 fed up from	fed up	fed up with
 feed	eat	nourish
@@ -1548,7 +1542,7 @@ fumigate	smoke
 fume	smoke
 smoke	fumigate
 fume	fumigate
-enjoy	have fun	enjoy myself	enjoy ourselves	enjoy yourself	enjoy yourselves	enjoy itself	enjoy herself	enjoy himself	enjoy themselves
+enjoy	have fun
 fun	enjoyment	pleasure
 enjoyment	fun	pleasure
 ["n't" "function"]	["n't" "work"]
@@ -1676,17 +1670,13 @@ hard	cruel	tough
 cruel	tough
 get hard	harden	["make" "hard"]
 hardly	harden
-["can't" "hardly"]	["can" "hardly"]
-["haven't" "hardly any"]	["" "hardly any"]
-hardly never	hardly ever
 ["make" "harm to"]	["do" "harm to"]
 ["do" "bad to"]	["do" "harm to"]
 it does no bad	it does no harm
 it doesn't do bad	it does no harm
 ["hate" "should"]	["hate" "to"]
-["don't" "have"]	["don't" "have one"]	["don't" "have any"]
 ["'ve gone"]	["'ve been"]
-mustn't	don't have to	needn't
+mustn't	don't have to
 ["have my" "head"]	["have" "headache"]	["'ve got" "headache"]
 ["have our" "head"]	["have" "headache"]	["'ve got" "headache"]
 ["have your" "head"]	["have" "headache"]	["'ve got" "headache"]
@@ -2031,8 +2021,6 @@ more good	better
 ["make" "lesson"]	["have" "lesson"]
 ["lesson" "make"]	["lesson" "have"]
 let's to	let's
-let's no	let's not
-let's don't	let's not
 let's	let us
 lexicon	dictionary
 ["liberate" "from"]	["discharge" "from"]
@@ -2152,8 +2140,8 @@ loud	aloud	loudly
 strong	aloud	loudly
 aloud	loud	loudly
 loud	strong
-I love	I do	I love it
-we love	we do	we love it
+I love	I do
+we love	we do
 I love	I do	I love to
 we love	we do	we love to
 I'd love	I would	I'd love to
@@ -2356,16 +2344,8 @@ very prefer	much prefer	far prefer
 much more	much	very much
 music	musician
 must to	must
-do I must	must I
-do we must	must we
-do you must	must you
-does it must	must it
-does she must	must she
-does he must	must he
-do they must	must they
 must	had to
 must to	had to
-should	must
 ought to	must
 ["will" "must"]	["will" "have to"]
 ["will" "must to"]	["will" "have to"]
@@ -2373,11 +2353,9 @@ ought to	must
 must have	ought to have
 shouldn't to	shouldn't
 oughtn't	oughtn't to
-shouldn't	mustn't
 oughtn't to	mustn't
 mustn't to	mustn't
 haven't to	mustn't
-mustn't be	can't be
 mustn't to be	can't be
 mutton	sheep
 sheep	lamb	mutton
@@ -2429,22 +2407,12 @@ at night	in the evening	tonight
 ["nightmare" "see"]	["nightmare" "have"]
 ["dream" "nightmare"]	["have" "nightmare"]
 ["nightmare" "dream"]	["nightmare" "have"]
-no me	not me
-me no	not me
-no I	not me
-I no	not me
-no	not	don't
-not	don't
-["n't" "no"]	["n't" "any"]
-any	no
 there's no	there isn't any
 there's not any	there isn't any
 there's no any	there isn't any
 there are no	there aren't any
 there are no any	there aren't any
 there are not any	there aren't any
-["n't" "no one"]	["" "no one"]
-["n't" "nobody"]	["" "nobody"]
 noble	polite
 noble from	noble of
 ["do" "noise"]	["make" "noise"]
@@ -2454,17 +2422,6 @@ nostalgic	homesick
 be nostalgic for	miss
 ["be nostalgic" "for"]	["long" "for"]
 be nostalgic to see	long to visit
-not	didn't
-no	didn't
-not no	not
-isn't no	isn't
-["n't" "no more"]	["n't" "any more"]
-["n't" "no longer"]	["n't" "any longer"]
-no many	not many
-no much	not much
-to don't	not to
-no	don't
-not	don't
 notable	remarkable
 mark	note down
 nothing	anything
@@ -2480,9 +2437,6 @@ notice	sign
 placard	sign
 cartel	sign
 novel	set book	short story
-["n't" "nowhere"]	["n't" "anywhere"]
-["cannot" "nowhere"]	["cannot" "anywhere"]
-["not" "nowhere"]	["not" "anywhere"]
 trouble	nuisance	pest
 pest	nuisance
 nurse	nanny
@@ -2506,11 +2460,6 @@ obliging	unofficial
 officious	obliging
 often	several times
 ["in" "old time"]	["in" "old days"]	["in" "olden times"]
-I like one	I like it
-I'd like	I'd like one
-I'd like it	I'd like one
-one	[""]
-only	only one
 out of doors	outside
 outside of	outside
 ["tap" "open"]	["tap" "on"]
@@ -2531,7 +2480,7 @@ system	constitution
 organism	constitution
 organization	organism
 organize to	arrange to
-other	next	another
+other	next
 out	out of
 ["out" "from"]	["out" "of"]
 out	out of
@@ -2802,14 +2751,14 @@ propose you to	propose you	propose that you
 propose it to	propose it	propose that it
 propose her to	propose she	propose that she
 propose him to	propose he	propose that he
-propose them to	propose she	propose that she
+propose them to	propose they	propose that they
 suggest me to	suggest I	suggest that I
 suggest us to	suggest we	suggest that we
 suggest you to	suggest you	suggest that you
 suggest it to	suggest it	suggest that it
 suggest her to	suggest she	suggest that she
 suggest him to	suggest he	suggest that he
-suggest them to	suggest she	suggest that she
+suggest them to	suggest they	suggest that they
 prospect	prospectus
 brochure	prospectus
 prospectus	brochure
@@ -3262,8 +3211,6 @@ from the other end	since
 ["since" "to"]	["from" "to"]
 ["since" "till"]	["from" "till"]
 since	from
-single	only
-only	single
 own	single
 only room	single room
 own room	single room	my own room	our own room	your own room	its own room	her own room	his own room	their own room
@@ -3283,7 +3230,7 @@ sit her	sit down	take a seat
 sit him	sit down	take a seat
 sit them	sit down	take a seat
 sit	sit down	take a seat
-sit down	sit down
+sit down	sit
 situation	condition
 position	condition
 state	condition
@@ -3338,22 +3285,12 @@ hard	tough
 tender	soften
 ["solution" "for"]	["solution" "to"]
 ["n't" "some"]	["n't" "any"]
-like	like some	like one
 sometime	sometimes	some times
 sometimes	some time	sometime
-["not" "somebody"]	["not" "anybody"]
-["n't" "somebody"]	["n't" "anybody"]
-anyone	someone
-anybody	somebody
-["not" "something"]	["not" "anything"]
-["n't" "something"]	["n't" "anything"]
-anything	something
 make something	do something
 ["something" "make"]	["something" "do"]
 do anything	make anything
 ["anything" "do"]	["anything" "make"]
-["not" "somewhere"]	["not" "anywhere"]
-["n't" "somewhere"]	["n't" "anywhere"]
 anywhere	somewhere
 sort	good	appliance
 type	sort
@@ -3505,8 +3442,6 @@ we surprised	it surprised us
 ["we" "surprise"]	["it's" "surprise to us"]	["it is" "surprising"]	["it's" "surprising"]
 ["we" "surprised"]	["it was" "surprising"]	["it was" "surprising"]
 ["do we" "surprise"]	["is it" "surprising"]
-["is" "surprising me"]	["it's" "surprise to me"]
-["is" "surprising us"]	["it's" "surprise to us"]
 do me surprise	be surprise	be surprising
 ["do me" "surprise"]	["'s" "surprise to me"]
 ["do us" "surprise"]	["'s" "surprise to us"]
@@ -3586,7 +3521,7 @@ tariff	price-list
 charge	fee
 tariff	fee
 pasta	cream cake
-["taste" "bad"]	["taste" "badly"]
+["taste" "badly"]	["taste" "bad"]
 taste	try
 probe	try	taste
 be tasty	have excellent taste
@@ -3604,8 +3539,8 @@ make his teeth	do his teeth
 ["his teeth" "make"]	["his teeth" "do"]
 make their teeth	do their teeth
 temper	mood
-keep my tempter	keep my tempter
-keep our tempter	keep our tempter
+keep my mood	keep my temter
+keep our mood	keep our temter
 keep your mood	keep your temper
 keep its mood	keep its temper
 keep her mood	keep her temper
@@ -3886,6 +3821,7 @@ wax	candle	polish
 way	manner
 weaken	get very weak	become very weak
 get weak	weaken
+rich	wealth
 the other week	next week
 the past week	last week
 by week	weekly	once a week
@@ -3924,7 +3860,6 @@ wish that it	wish it to
 wish that she	wish her to
 wish that he	wish him to
 wish that they	wish them to
-["without" "no"]	["without" "any"]	["with" "no"]
 with other words	in other words
 ["make" "work"]	["do" "work"]
 ["work" "make"]	["work" "do"]
@@ -3957,7 +3892,6 @@ on last night	last night
 in yesterday morning	yesterday morning
 in yesterday evening	yesterday evening
 in last night	last night
-one	someone	anyone
 youngest	latest
 newest	latest
 latest	youngest	newest
