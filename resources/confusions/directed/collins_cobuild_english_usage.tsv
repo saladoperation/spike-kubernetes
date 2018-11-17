@@ -25,12 +25,12 @@ agree to	accept
 alight	burning
 alike	similar
 alive	living	live
-alone	["" "on its own"]	["" "on her own"]	["" "on his own"]
+alone	["" "on its own"]	["" "on her own"]	["" "on his own"]	["" "on their own"]
 along	through	across
 too	either
 among	between
 amount	number
-another	more than	other
+another	more than
 ["answer" "for"]	["answer" "to"]
 any this	any of this
 any that	any of that
@@ -43,7 +43,6 @@ any them	any of them
 no more	any more
 apologize	apologize to
 I apologize	I'm sorry	sorry
-["appreciate" "if"]	["appreciate it" "if"]
 approach to	approach
 ["approve" "to"]	["approve" "of"]
 round	around	about	round about
@@ -94,11 +93,6 @@ educate	["bring" "up"]
 burst in tears	burst into tears
 by	near
 named	called
-could not	might not
-couldn't	might not
-cannot	may not
-can't	may not
-could not have	might not have	may not have
 ["take care" "about"]	["take care" "of"]
 ["in this" "respect"]	["in this" "case"]
 nearly certainly	almost certainly
@@ -134,7 +128,6 @@ cancel	["put" "off"]
 postpone	["put" "off"]
 ["put" "off"]	delay	cancel
 demand for	demand
-deny	deny it
 deny it	say no	refuse
 describe	describe to
 desert	dessert
@@ -152,8 +145,6 @@ dress	get dressed
 each	each of
 almost each	almost every
 each	none of
-each of	none of
-one another	each other
 east	eastern
 economies	savings
 ["do" "effort"]	["make" "effort"]
@@ -182,13 +173,6 @@ far	far away	a long way away	distant	faraway	far-off
 most favourite	favourite
 most favorite	favorite
 feel	can feel
-feel myself	feel
-feel ourselves	feel
-feel yourself	feel
-feel itself	feel
-feel herself	feel
-feel himself	feel
-feel themselves	feel
 ["find" "out"]	find
 ["can not" "discover"]	["can not" "find"]
 ["cannot" "discover"]	["cannot" "find"]
@@ -270,8 +254,6 @@ former	first
 latter	second
 learn	teach
 ["less" "than"]	["not as" "as"]
-["like" "when"]	["like it" "when"]
-["like" "if"]	["like it" "if"]
 ["do you" "like"]	["would you" "like"]
 listen	listen to
 little	slightly	somewhat
@@ -287,8 +269,6 @@ baggage	luggage
 magazine	shop	store
 majority of	most of
 make	doubt it
-man	person
-mankind	people
 manufacture	factory
 marmalade	jam	jelly
 marriage	wedding
@@ -299,9 +279,6 @@ matter	problem	trouble
 no matter	it doesn't matter	in spite of	despite
 mean	think
 meaning	intention	opinion
-might not	could not
-may not	cannot	can't
-["don't" "mind it"]	["don't" "mind"]
 error	mistake
 ["do" "mistake"]	["make" "mistake"]
 ["mistake" "do"]	["mistake" "make"]
@@ -318,29 +295,9 @@ nation	country
 nature	the country	the countryside
 neither	neither of
 nervous	anxious	irritated	annoyed
-do never	never
-never	ever
 next	nearest
-yes	no
-["none" "n't"]	none
-["none" "not"]	none
-["n't" "none"]	["n't" "any"]
-["not" "none"]	["not" "any"]
-["no one" "n't"]	no one
-["no one" "not"]	no one
-["n't" "no one"]	["n't" "anyone"]
-["not" "no one"]	["not" "anyone"]
-["nobody" "n't"]	nobody
-["nobody" "not"]	nobody
-["n't" "nobody"]	["n't" "anybody"]
-["not" "nobody"]	["not" "anybody"]
-no one of	none of
 north	northern
-["n't" "nothing"]	["n't" "anything"]
-["not" "nothing"]	["not" "anything"]
 right now	now
-["n't" "nowhere"]	["n't" "anywhere"]
-["not" "nowhere"]	["not" "anywhere"]
 obligation	duty
 obtain	get
 got	obtained
@@ -403,13 +360,6 @@ receipt	recipe
 be sorry	regret
 sorry for	sorry about
 relative	relation
-relax myself	relax
-relax ourselves	relax
-relax yourself	relax
-relax yourselves	relax
-relax itself	relax
-relax herself	relax
-relax themselves	relax
 remain	stay
 remove	move
 request for	request
@@ -438,13 +388,6 @@ a scissors	some scissors	a pair of scissors
 search	look for
 see	can see
 ["seem" "as"]	["seem" "like"]
-shave myself	shave
-shave ourselves	shave
-shave yourself	shave
-shave yourselves	shave
-shave itself	shave
-shave herself	shave
-shave himself	shave
 shortly	briefly
 ["shout" "to"]	["shout" "at"]
 be sick	throw up
@@ -453,8 +396,6 @@ since	for
 smell	smell of	can smell
 social	sociable
 some	any
-someone of	some of
-something	anything
 somewhere	anywhere
 south	southern
 souvenir	emory
@@ -487,8 +428,7 @@ surely	definitely	certainly	naturally
 ["make" "test"]	["take" "test"]
 ["test" "make"]	["test" "take"]
 ["not as" "than"]	["not as" "as"]
-thanks you	thank you	thanks a lot
-thanks you a lot	thanks a lot
+thanks you	thanks a lot
 ["there is" "since"]	["it's" "since"]
 ["is there" "since"]	["is it" "since"]
 ["there was" "since"]	["it was" "since"]
@@ -510,7 +450,6 @@ become true	come true
 understand	realize
 until	till	by
 usual	ordinary
-as usually	as usual
 very	well	very much	greatly
 very awake	wide awake
 very asleep	sound asleep
@@ -524,8 +463,6 @@ very	very much	greatly
 ["do" "visit"]	["make" "visit"]	["pay" "visit"]
 ["visit" "do"]	["visit" "make"]	["visit" "pay"]
 wait	wait for
-want to not	don't want to
-want not to	don't want to
 don't want it	don't want to
 don't want	don't want to
 ["be" "wanting to"]	["be" "about to"]
@@ -535,16 +472,13 @@ woman	lady
 ["old" "woman"]	["old" "lady"]	["elderly" "lady"]
 ["woman" "old"]	["lady" "old"]	["lady" "elderly"]
 worth	value
-would	used to
-no	yes
 yesterday night	last night
 ["have" "years"]	be	["be" "years old"]
 about	of
 be	["be" "years old"]
 in the night	at night
 by	in
-thank you a lot	thanks a lot
-thank you	no, thank you	no, thanks
+thank you	no, thanks
 high	tall
 tall	long
-pound heavy	pound in weight
+pound heavy	pound in weight													ꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣꎣ
