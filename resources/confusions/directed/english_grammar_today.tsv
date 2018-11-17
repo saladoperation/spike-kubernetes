@@ -179,7 +179,7 @@ in	at
 ["arrive" "to"]	["arrive" "at"]	["arrive" "in"]
 ["in" "end"]	["at" "end"]
 at	on
-["in" "weekend"]	["iat" "weekend"]
+["in" "weekend"]	["at" "weekend"]
 on	in
 below	under
 beneath	below
@@ -211,12 +211,14 @@ within	in
 without	apart from
 thick rain	heavy rain
 ["tall" "temperature"]	["high" "temperature"]
+["temperature" "tall"]	["temperature" "high"]
 scenic picture	scenic view
 ["do" "experience"]	["have" "experience"]
 ["experience" "do"]	["experience" "have"]
 ["make" "experience"]	["have" "experience"]
 ["experience" "make"]	["experience" "have"]
 ["beige" "hair"]	["blonde" "hair"]
+["hair" "beige"]	["hair" "blonde"]
 ["released from" "hospital"]	["discharged from" "hospital"]
 is	there's
 it's	there's
