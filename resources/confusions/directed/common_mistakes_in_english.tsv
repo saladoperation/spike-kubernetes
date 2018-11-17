@@ -83,16 +83,13 @@ one other	another
 home	at home
 one time	once
 two times	twice
-a day	one day
-a night	one night
-a morning	one morning
-an afternoon	one afternoon
-an evening	one evening
-other day	next day
-other day	following day
-as usually	as usual
+day	one day
+night	one night
+morning	one morning
+afternoon	one afternoon
+evening	one evening
+other day	next day	following day
 according to my opinion	in my opinion
-as I think	I think
 ["at" "end"]	["in" "end"]
 ["under" "rain"]	["in" "rain"]
 ["reason is" "because"]	["reason is" "that"]
@@ -101,11 +98,9 @@ too	either
 ["give" "exam"]	["take" "exam"]
 ["exam" "give"]	["exam" "take"]
 ["have" "right"]	["be" "right"]
-["'ve" "right"]	["'m" "right"]
 ["'ve" "right"]	["'re" "right"]
 ["have" "wrong"]	["be" "wrong"]
-["have" "wrong"]	["be" "wrong"]
-["'ve" "wrong"]	["'m" "wrong"]
+["'ve" "wrong"]	["'re" "wrong"]
 have much work	be very busy
 ["it has" "cold"]	["it's" "cold"]	["it is" "cold"]
 ["it" "has cold"]	["it" "is cold"]
@@ -299,7 +294,6 @@ scarcely	rarely
 lately	late
 one	[""]
 some	any
-less	fewer
 this	that
 latter	later
 last	latter	latest
@@ -316,6 +310,7 @@ foot	leg
 finger	toe
 poetry	poem
 theatre	play
+theater	play
 play	game
 dress	suit
 individual	person	people

@@ -1,6 +1,6 @@
 strangers	people from other countries
 usual	common
-strangers	foreign
+strange	foreign
 travel	trip
 journey	tour
 street	road
@@ -81,13 +81,13 @@ match	suit
 suit	fit
 cloth	clothes
 watch	see
-say me	say	tell me
-say us	say	tell us
-say you	say	tell you
-say it	say	tell it
-say her	say	tell her
-say him	say	tell him
-say them	say	tell them
+say me	tell me
+say us	tell us
+say you	tell you
+say it	tell it
+say her	tell her
+say him	tell him
+say them	tell them
 explain me	["explain" "to me"]
 explain us	["explain" "to us"]
 explain you	["explain" "to you"]
@@ -152,4 +152,3 @@ after all	in the end
 furthermore	what's more
 on the other side	on the other hand
 despite of	despite	in spite of
-so that	, so
