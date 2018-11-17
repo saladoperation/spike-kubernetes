@@ -849,11 +849,17 @@ damp	wet
 wet	fresh
 wet	damp
 ["do" "dance"]	["give" "dance"]
+["dance" "do"]	["dance" "give"]
 do a dance	hold a dance
+["dance" "do"]	["dance" "hold"]
 ["make" "dance"]	["give" "dance"]
+["dance" "make"]	["dance" "give"]
 make a dance	hold a dance
+["dance" "make"]	["dance" "hold"]
 ["do" "dance"]	["have" "dance"]
+["dance" "do"]	["dance" "have"]
 ["make" "dance"]	["have" "dance"]
+["dance" "make"]	["dance" "have"]
 go for dancing	go dancing
 go for a dance	go dancing
 dancing	dance hall
@@ -909,6 +915,7 @@ depot	dump
 ["deprived" "from"]	["deprived" "of"]
 descend	get down	get off
 ["make" "description"]	["give" "description"]
+["description" "make"]	["description" "give"]
 desire	look forward to	want	'd like
 desk	office
 bureau	office	desk
@@ -999,7 +1006,9 @@ share	part
 ["divide" "from"]	["divide" "by"]
 divine	guess
 ["do" "guess"]	["have" "guess"]	["make" "guess"]
+["guess" "do"]	["guess" "have"]	["guess" "make"]
 ["give" "guess"]	["have" "guess"]	["make" "guess"]
+["guess" "give"]	["guess" "have"]	["guess" "make"]
 divorce from	divorce
 Mr Dr	Dr
 Mr. Dr.	Dr.
@@ -1014,13 +1023,15 @@ port	doorway
 dossier	file
 double	duplicate	dub	line	fold
 ["doubt" "for"]	["doubt" "about"]
-I doubt	I doubt it
 be in doubt	doubt
 ["be" "in doubt"]	["do" "doubt"]
 not doubt	no doubt
 ["have" "douse"]	shower	["have" "shower"]	["take" "shower"]
+["douse" "have"]	["shower" "have"]	["shower" "take"]
 ["make" "shower"]	shower	["have" "shower"]	["take" "shower"]
+["shower" "make"]	["shower" "have"]	["shower" "take"]
 ["do" "shower"]	shower	["have" "shower"]	["take" "shower"]
+["shower" "do"]	["shower" "have"]	["shower" "take"]
 shower	douse
 down	downstairs
 up	upstairs
@@ -1032,6 +1043,7 @@ dramatic	tragic
 tragical	tragic
 dream	dream of	dream about
 ["see" "dream"]	["have" "dream"]
+["dream" "see"]	["dream" "have"]
 ["some" "dress"]	["some" "clothes"]
 ["some" "costume"]	["some" "clothes"]
 clothes	costume	dress
@@ -1044,7 +1056,9 @@ guide	drive
 lead	drive
 drop	fall
 ["make" "fall"]	["have" "fall"]
+["fall" "make"]	["fall" "have"]
 ["do" "fall"]	["have" "fall"]
+["fall" "do"]	["fall" "have"]
 let	["let" "to"]
 sink	drown	get drowned
 drug	medicine
@@ -1078,6 +1092,7 @@ cosmos	world
 ["in" "cosmos"]	["on" "earth"]	["in" "world"]
 ease	facility	convenience
 ["have" "ease"]	["have" "facility"]
+["ease" "have"]	["facility" "have"]
 ["take it" "easily"]	["take it" "easy"]
 easy	easily	light
 facile	light
@@ -1733,14 +1748,10 @@ to home	home
 ["leave from" "home"]	["leave" "home"]
 ["home" "leave from"]	["home" "leave"]
 stay to home	stay home
-["home" "stay to"]	["home" "stay"]
 ["stay" "to home"]	["stay" "at home"]
 arrive to home	arrive home
-["home" "arrive to"]	["home" "arrive"]
 arrive in home	arrive home
-["home" "arrive in"]	["home" "arrive"]
 arrive at home	arrive home
-["home" "arrive at"]	["home" "arrive"]
 house	at home
 ["at" "house"]	["at" "home"]
 ["to" "house"]	["at" "home"]
@@ -1908,10 +1919,10 @@ attack his heart	give him a heart attack	cause him a heart attack
 attack their heart	give them a heart attack
 injury	insult
 offence	insult
-["cause" "injury"]	["cause" "offence"]
-["injury" "cause"]	["offence" "cause"]
-["cause" "insult"]	["cause" "offence"]
-["insult" "cause"]	["offence" "cause"]
+["cause" "injury"]	["cause" "offence"]	["cause" "offense"]
+["injury" "cause"]	["offence" "cause"]	["offense" "cause"]
+["cause" "insult"]	["cause" "offence"]	["cause" "offense"]
+["insult" "cause"]	["offence" "cause"]	["offense" "cause"]
 intensive	intense
 ["interested" "for"]	["interested" "in"]
 ["interested" "with"]	["interested" "in"]
@@ -1929,12 +1940,17 @@ think it	think so
 jealous	jealous of
 jewellery	piece of jewellery
 ["make" "job"]	["do" "job"]
+["job" "make"]	["job" "do"]
 join with	join
 join to	join
 ["make" "joke"]	["play" "joke"]
+["joke" "make"]	["joke" "play"]
 ["make" "trick"]	["play" "trick"]
+["trick" "make"]	["trick" "play"]
 ["do" "joke"]	["play" "joke"]
+["joke" "do"]	["joke" "play"]
 ["do" "trick"]	["play" "trick"]
+["trick" "do"]	["trick" "play"]
 journal	newspaper	paper	diary
 journey	trip
 voyage	trip
@@ -2322,6 +2338,7 @@ morale	ethic
 most of	most	mostly
 most	most of
 ["do" "move"]	["make" "move"]
+["move" "do"]	["move" "make"]
 movement	traffic
 motion	traffic
 movement	business
@@ -2474,7 +2491,7 @@ opposed	opposed to
 oppose to	oppose
 opposite from	opposite
 opposite of	opposite
-organism	body	the system
+organism	body	system
 body	constitution
 system	constitution
 organism	constitution
@@ -2507,8 +2524,11 @@ calm	calm down
 pain	are in awful pain	're in awful pain
 don't pain	are out of pain	're out of pain
 ["make" "pain"]	["have" "pain"]
+["pain" "make"]	["pain" "have"]
 ["have" "ache"]	["have" "pain"]
+["ache" "have"]	["pain" "have"]
 ["have" "hurt"]	["have" "pain"]
+["hurt" "have"]	["pain" "have"]
 Papa	Pope
 paper	piece of paper	sheet of paper
 parent	relative	relation
@@ -2539,8 +2559,11 @@ take part	share
 take part in	share
 share	participate in	take part in
 ["particular" "lesson"]	["private" "lesson"]
+["lesson" "particular"]	["lesson" "private"]
 ["do" "party"]	["give" "party"]	["have" "party"]
+["party" "do"]	["party" "give"]	["party" "have"]
 ["make" "party"]	["give" "party"]	["have" "party"]
+["party" "make"]	["party" "give"]	["party" "have"]
 pass	cross	pass
 ["pass" "from"]	["pass" "by"]
 it's passed	it's
@@ -2549,6 +2572,7 @@ filter	sieve
 pass	filter
 sieve	filter
 ["pass" "time"]	["spend" "time"]
+["time" "pass"]	["time" "spend"]
 ["passion" "for"]	["affection" "for"]
 pathetic loss	operating loss
 passive loss	operating loss
@@ -2597,7 +2621,9 @@ pick	["pick" "out"]
 ["pick" "up"]	["pick" "out"]
 pick-up	record player
 ["do" "picnic"]	["have" "picnic"]
+["picnic" "do"]	["picnic" "have"]
 ["make" "picnic"]	["have" "picnic"]
+["picnic" "make"]	["picnic" "have"]
 piece	piece of
 bit	bit of
 piece	each	work of art
@@ -2664,7 +2690,9 @@ with the post	by post
 in the post	by post
 practicable	practical
 ["tell" "prayer"]	["say" "prayer"]
+["prayer" "tell"]	["prayer" "say"]
 ["make" "prayer"]	["say" "prayer"]
+["prayer" "make"]	["prayer" "say"]
 precise	accurate
 exact	accurate
 punctual	accurate
@@ -2994,9 +3022,13 @@ you have reason	you're right	you are right
 ["think" "rightly"]	["think" "right"]
 right	rightly
 ["do" "ring"]	["give" "ring"]
+["ring" "do"]	["ring" "give"]
 ["do" "call"]	["give" "call"]
+["call" "do"]	["call" "give"]
 ["give" "telephone"]	["give" "ring"]	["give" "call"]
+["telephone" "give"]	["ring" "give"]	["call" "give"]
 ["give" "phone"]	["give" "ring"]	["give" "call"]
+["phone" "give"]	["ring" "give"]	["call" "give"]
 rob	steal
 ["steal" "of"]	["rob" "of"]
 steal	rob
@@ -3262,7 +3294,7 @@ be smelling	smell bad	smell badly
 ["smell" "from"]	["smell" "of"]
 ["smell" "with"]	["smell" "of"]
 ["smell" "to"]	smell
-smoking	dinner jacket
+smoking jacket	dinner jacket
 snob	elegant	smart	chic
 like so	like this	like that
 so	such
@@ -3391,9 +3423,13 @@ make strike	strike
 ["do" "strike"]	["be" "on strike"]	["be on" "strike"]
 ["make" "strike"]	["be" "on strike"]	["be on" "strike"]
 strong smoking	heavy smoking
+smoking strong	smoking heavy
 strong drinking	hard drinking	heavy drinking
+["drinking" "strong"]	["drinking" "hard"]	["drinking" "heavy"]
 ["heavy" "winter"]	["hard" "winter"]
+["winter" "heavy"]	["winter" "hard"]
 ["strong" "winter"]	["hard" "winter"]
+["winter" "strong"]	["winter" "hard"]
 going strongly	going strong
 strophe	verse
 stuff	fabric	material

@@ -21,6 +21,7 @@ assurance	insurance
 in	on	at
 at	to
 avenue	alley
+bad	badly
 bake	cook
 band	gang
 barrier	fence
@@ -58,6 +59,7 @@ creep	crawl
 cure	heal
 damp	fresh
 ["have" "date"]	["have" "appointment"]
+["date" "have"]	["appointment" "have"]
 decoration	décor
 defeat	conquer
 design	drawing
@@ -145,11 +147,9 @@ molten	melted
 must have	had to
 nation	country
 need	emergency
-no one	none
 nominate	name
 note	mark
 once	one time
-one	it
 original	model
 overhear	misunderstand
 overtake	take over
@@ -207,6 +207,7 @@ sickly	poorly
 signal	sign
 plain	simple
 ordinary	simple
+single	only
 social	sociable
 solid	massive
 alcohol	spirit
@@ -229,7 +230,6 @@ value	valuable
 very	very much
 waste	waist
 what	how
-["I wish" "would"]	["I wish" "could"]
 in	with
 wonder	wander
 work	job
