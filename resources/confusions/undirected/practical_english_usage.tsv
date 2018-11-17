@@ -19,7 +19,10 @@ at	to
 in	to
 at	on	in
 at first	first
-awake	wake	awaken	waken
+wake	awake
+wake	awaken
+waken	awake
+waken	awaken
 back	again
 bath	bathe
 beat	win
@@ -54,7 +57,6 @@ clothe	clothes
 come	go
 comic	comical
 on the contrary	on the other hand
-dead	died	death
 do	make
 during	for
 north	northern
@@ -71,7 +73,6 @@ expect	hope	wait	look forward
 experiment	experience
 fairly	quite	rather	pretty
 far	a long way
-farther	further
 female	feminine
 male	masculine
 finally	at last	in the end	at the end
@@ -107,13 +108,10 @@ long	a long time
 lose	loose
 loudly	aloud
 magic	magical
-marry	get married
-divorce	get divorced
 need not	must not
 next	nearest
 no doubt	doubtless
 not	no
-open	opened
 opportunity	possibility
 opposite	in front of
 facing	in front of
@@ -160,4 +158,3 @@ why	why not
 will you	do you want to
 won't	don't want to
 will not	do not want to
-yes	no
