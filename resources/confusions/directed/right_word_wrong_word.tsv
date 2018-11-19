@@ -2981,8 +2981,8 @@ reminder	leftover
 ["rests" "of"]	["remains" "of"]
 ["remainders" "of"]	["remains" "of"]
 ["leftovers" "of"]	["remains" "of"]
-rest	remain	stay	stay	remain
-remain	restore
+rest	remain	stay
+remain	stay	rest
 stay	rest
 rest	change
 resume	summarize
