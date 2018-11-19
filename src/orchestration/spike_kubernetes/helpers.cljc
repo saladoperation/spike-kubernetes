@@ -1391,9 +1391,7 @@
      (def venv-commands
        [["cd" python-name]
         [python-name "-m" "venv" environment-name]
-        ["." (get-path environment-name
-                       "bin"
-                       "activate")]
+        ["." (get-path environment-name "bin" "activate")]
         ["pip"
          "install"
          "-r"
