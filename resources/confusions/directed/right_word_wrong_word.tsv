@@ -2069,7 +2069,6 @@ aim of their life	aim in life
 lighten	get lighter
 lighten itself	get lighter
 lighten themselves	get lighter
-like	lie it
 I like	I would	I'd like it	I'd like that
 we like	we would	we'd like it	we'd like that
 like	'd like
@@ -3096,7 +3095,7 @@ salon	hall
 saloon	hall	salon
 salute	greet	welcome
 ["salute" "to"]	["wave" "to"]
-["same" "with"]	["same" "ike"]	["same" "as"]
+["same" "with"]	["same" "like"]	["same" "as"]
 sane	healthy
 ["satisfied" "from"]	["satisfied" "with"]
 ["satisfied" "of"]	["satisfied" "with"]
@@ -3182,11 +3181,16 @@ shock herself	get a real shock
 shock himself	get a real shock
 shock themselves	get a real shock
 ["do" "shock"]	["give" "shock"]
+["shock" "do"]	["shock" "give"]
 ["make" "shock"]	["give" "shock"]
+["shock" "make"]	["shock" "give"]
 shocking	dirty story
 ["go for" "shopping"]	["go" "shopping"]
+["shopping" "go for"]	["shopping" "go"]
 ["go for" "shop"]	["go" "shopping"]
+["shop" "go for"]	["shopping" "go"]
 ["make" "shopping"]	["do" "shopping"]
+["shopping" "make"]	["shopping" "go"]
 short	brief	shortly
 shortly	in brief
 ["in" "short"]	["in" "brief"]
@@ -3285,7 +3289,9 @@ peeling	shelling
 ["fall" "to sleep"]	["go" "to bed"]
 ["go" "asleep"]	["go" "to sleep"]
 ["do" "sleep"]	["have" "sleep"]
+["sleep" "do"]	["sleep" "have"]
 ["make" "sleep"]	["have" "sleep"]
+["sleep" "make"]	["sleep" "have"]
 ["go" "slow"]	["am" "slow"]	["are" "slow"]
 ["go" "fast"]	["am" "fast"]	["are" "fast"]
 slow	slowly
