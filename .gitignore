@@ -119,7 +119,7 @@ typings/
 */public
 dev-resources
 figwheel_server.log
-kubernetes.txt
+resources/kubernetes/kubernetes.txt
 resources/*/selection.json
 resources/*/runs
 resources/*/datasets

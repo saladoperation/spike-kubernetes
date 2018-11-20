@@ -1392,14 +1392,7 @@
        [["cd" python-name]
         [python-name "-m" "venv" environment-name]
         ["." (get-path environment-name "bin" "activate")]
-        ["pip"
-         "install"
-         "-r"
-         (->> "pu.txt"
-              (str (aid/casep (command/hash "nvidia-smi")
-                              either/right? "g"
-                              "c"))
-              (get-path "requirements"))]
+        ["pip" "install" "-r" "requirements.txt"]
         [python-name "-m" "spacy" "download" "en"]])
 
      (def install-venv

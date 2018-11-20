@@ -1,5 +1,6 @@
 (ns spike-kubernetes.kubernetes
   (:require [clojure.string :as str]
+            [aid.core :as aid]
             [cheshire.core :refer :all]
             [spike-kubernetes.command :as command]
             [spike-kubernetes.helpers :as helpers]))
@@ -9,8 +10,11 @@
 
 (defn get-container
   [image-name]
-  {:image (helpers/get-image image-name)
-   :name  image-name})
+  {:image     (helpers/get-image image-name)
+   :name      image-name
+   :resources {:limits {"nvidia.com/gpu" (aid/case-eval image-name
+                                                        helpers/lm-name 1
+                                                        0)}}})
 
 (def deployment
   {:apiVersion "apps/v1"
@@ -51,7 +55,10 @@
         (partial map generate-string)))
 
 (def spit-kubernetes
-  #(->> resources*
-        get-json-lines
-        (spit (helpers/append-extension helpers/kubernetes-name
-                                        "txt"))))
+  #(->>
+     resources*
+     get-json-lines
+     (spit (helpers/get-resources-path
+             helpers/kubernetes-name
+             (helpers/append-extension helpers/kubernetes-name
+                                       "txt")))))
