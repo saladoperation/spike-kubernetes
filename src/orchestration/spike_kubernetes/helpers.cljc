@@ -1388,15 +1388,16 @@
      (def environment-name
        "environment")
 
-     (def venv-commands
+     (defn get-venv-commands
+       [version]
        [["cd" python-name]
         [python-name "-m" "venv" environment-name]
         ["." (get-path environment-name "bin" "activate")]
-        ["pip" "install" "-r" "requirements.txt"]
+        ["pip"
+         "install"
+         "-r"
+         (get-path "requirements" (append-extension version "txt"))]
         [python-name "-m" "spacy" "download" "en"]])
-
-     (def install-venv
-       #(run-commands venv-commands))
 
      (def get-forwarding
        (comp (partial str/join ":")

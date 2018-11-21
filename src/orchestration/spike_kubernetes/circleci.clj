@@ -84,9 +84,10 @@
   "script")
 
 (def python-image
-  (str
-    helpers/python-name
-    ":3.7.0-stretch@sha256:f992a6c05c53365ff4c55ad38717dd571247c450cfacf6291e81b4a70a7c8592"))
+  "pytorch/pytorch:0.4.1-cuda9-cudnn7-runtime@sha256:320587fdb076e7a2dfc230ad2aab5933fdc4fdbc9490175e5081cef51dc1826a")
+
+(def prod-version
+  9.0)
 
 (def get-python-dockerfile
   #(get-dockerfile
@@ -94,7 +95,9 @@
       :from-tos (get-from-tos #{(helpers/get-resources-path)
                                 helpers/python-name
                                 script-name})
-      :run      (helpers/get-shell-command helpers/venv-commands)
+      :run      (-> prod-version
+                    helpers/get-venv-commands
+                    helpers/get-shell-command)
       :port     %
       :cmd      [(helpers/get-path script-name
                                    helpers/python-name

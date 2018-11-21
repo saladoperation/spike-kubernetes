@@ -35,6 +35,14 @@
                              "-")
                (helpers/run-commands apt-commands)))
 
+(def dev-version
+  8.0)
+
+(def install-venv
+  #(-> dev-version
+       helpers/get-venv-commands
+       helpers/run-commands))
+
 (def container-name
   "rabbitmq")
 
@@ -63,6 +71,6 @@
 (def install
   (juxt->> install-apt
            helpers/install-word2vecf
-           helpers/install-venv
+           install-venv
            helpers/install-npm
            install-docker))
