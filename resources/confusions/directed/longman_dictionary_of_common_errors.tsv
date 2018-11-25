@@ -185,7 +185,7 @@ appear	occur
 apply	apply for
 ["apply" "to"]	["apply" "for"]
 appointment	interview
-appreciate	like	appreciate it
+appreciate	like
 ["approach" "to"]	approach
 appropriate	relevant	suitable
 approve	approve of
@@ -597,7 +597,7 @@ by itself	in itself
 call to	call
 ring to	ring
 telephone to	telephone
-phone call	call	ring	["give" "a call"]
+phone call	call	ring	["give" "call"]
 ["call" "with"]	["call" "on"]
 ["call" "as"]	call
 calm	peaceful	quiet	quiet and relaxing	easygoing
@@ -1705,6 +1705,7 @@ close	["turn" "off"]	["switch" "off"]
 ["argument" "open"]	["argument" "introduce"]
 operate	operate on
 ["take" "operation"]	["have" "operation"]
+["operation" "take"]	["operation" "have"]
 ["according to" "opinion"]	["in" "opinion"]
 ["according to" "'s opinion"]	according to
 ["say" "opinion"]	["express" "opinion"]
