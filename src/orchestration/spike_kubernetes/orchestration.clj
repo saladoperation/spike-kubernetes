@@ -28,6 +28,7 @@
            helpers/generate-document-inference))))
 
 (def start
+  ;TODO extract public
   (partial web/run (wrap-resource handler "public") helpers/option))
 
 (defstate server
