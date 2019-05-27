@@ -1390,6 +1390,7 @@
 
      (defn get-venv-commands
        [version]
+       ;TODO delete the following workaround
        ;conda config works around the following error
        ;ssl.SSLError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed
        [["conda" "config" "--set" "ssl_verify" "false"]
