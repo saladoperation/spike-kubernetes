@@ -2,25 +2,25 @@
   (:require [clojure.string :as str]
             [aid.core :as aid]
             [com.rpl.specter :as s]
-    #?@(:clj [
-            [clojure.java.io :as io]
-            [clojure.java.shell :as sh]
-            [clojure.set :as set]
-            [clojure.tools.reader.edn :as edn]
-            [buddy.core.hash :as hash]
-            [buddy.core.codecs :refer :all]
-            [cats.builtin]
-            [cats.core :as m]
-            [cats.monad.either :as either]
-            [cheshire.core :refer :all]
-            [clj-http.client :as client]
-            [compliment.utils :as utils]
-            [environ.core :refer [env]]
-            [incanter.core :as incanter]
-            [me.raynes.fs :as fs]
-            [superstring.core :as superstring]
-            [spike-kubernetes.command :as command]
-            [spike-kubernetes.parse.core :as parse]])))
+            #?@(:clj [
+                      [clojure.java.io :as io]
+                      [clojure.java.shell :as sh]
+                      [clojure.set :as set]
+                      [clojure.tools.reader.edn :as edn]
+                      [buddy.core.hash :as hash]
+                      [buddy.core.codecs :refer :all]
+                      [cats.builtin]
+                      [cats.core :as m]
+                      [cats.monad.either :as either]
+                      [cheshire.core :refer :all]
+                      [clj-http.client :as client]
+                      [compliment.utils :as utils]
+                      [environ.core :refer [env]]
+                      [incanter.core :as incanter]
+                      [me.raynes.fs :as fs]
+                      [superstring.core :as superstring]
+                      [spike-kubernetes.command :as command]
+                      [spike-kubernetes.parse.core :as parse]])))
 
 (def alteration-port
   3000)
@@ -52,8 +52,8 @@
   (partial (aid/flip str/starts-with?) noun-prefix))
 
 (aid/defcurried transfer*
-                [apath f m]
-                (s/setval apath (f m) m))
+  [apath f m]
+  (s/setval apath (f m) m))
 
 (def subject?
   (comp (partial (aid/flip str/starts-with?) "ns")
@@ -71,11 +71,11 @@
        "relationship")
 
      (aid/defcurried if-else
-                     [if-function else-function then]
-                     (command/if-then-else if-function
-                                           identity
-                                           else-function
-                                           then))
+       [if-function else-function then]
+       (command/if-then-else if-function
+                             identity
+                             else-function
+                             then))
 
      (def singleton?
        (comp (partial = 1)
@@ -90,8 +90,8 @@
                       (get env
                            :circle-tag
                            (aid/casep *command-line-args*
-                                      singleton? ""
-                                      (last *command-line-args*))))))
+                             singleton? ""
+                             (last *command-line-args*))))))
 
      (defn deep-merge-with
        [f & more]
@@ -336,9 +336,9 @@
              (get (merge bijection
                          surjection
                          {"'s" (aid/case-eval (:lemma_ %)
-                                              "'s" "'s"
-                                              "be" "'re"
-                                              "'ve")})
+                                 "'s" "'s"
+                                 "be" "'re"
+                                 "'ve")})
                   (:lower_ %))))
 
      (def set-source
@@ -472,10 +472,10 @@
        #{"D" "N"})
 
      (aid/defcurried ends-with-one-of?
-                     [s substrs]
-                     (->> substrs
-                          (map (partial str/ends-with? s))
-                          (some true?)))
+       [s substrs]
+       (->> substrs
+            (map (partial str/ends-with? s))
+            (some true?)))
 
      (def make-verb-ending?
        #(aid/build and
@@ -523,16 +523,16 @@
              vector))
 
      (aid/defcurried get-replaceable
-                     [ks m]
-                     (parse/satisfy
-                       (aid/build and
-                                  (comp (partial some true?)
-                                        (apply juxt
-                                               (map #(comp (partial = (% m))
-                                                           %)
-                                                    ks)))
-                                  removable?
-                                  :original)))
+       [ks m]
+       (parse/satisfy
+         (aid/build and
+                    (comp (partial some true?)
+                          (apply juxt
+                                 (map #(comp (partial = (% m))
+                                             %)
+                                      ks)))
+                    removable?
+                    :original)))
 
      (def replaceable-lower
        (get-replaceable [:lower_]))
@@ -546,29 +546,29 @@
                                           replaceable-lower)))
 
      (aid/defcurried make-parse-original
-                     [f originals replacements]
-                     (let [starts-with-verb (-> originals
-                                                f
-                                                starts-with-verb?)]
-                       (->>
-                         originals
-                         f
-                         ((aid/build (partial s/setval* (if starts-with-verb
-                                                          s/BEFORE-ELEM
-                                                          s/AFTER-ELEM))
-                                     (comp (if (->> [originals replacements]
-                                                    (map first)
-                                                    (apply unalterable-tags?))
-                                             replaceable-lower
-                                             replaceable-lower-lemma)
-                                           (if starts-with-verb
-                                             first
-                                             last))
-                                     (comp replaceable-tokens
-                                           (if starts-with-verb
-                                             rest
-                                             drop-last))))
-                         (apply (aid/lift-a vector)))))
+       [f originals replacements]
+       (let [starts-with-verb (-> originals
+                                  f
+                                  starts-with-verb?)]
+         (->>
+           originals
+           f
+           ((aid/build (partial s/setval* (if starts-with-verb
+                                            s/BEFORE-ELEM
+                                            s/AFTER-ELEM))
+                       (comp (if (->> [originals replacements]
+                                      (map first)
+                                      (apply unalterable-tags?))
+                               replaceable-lower
+                               replaceable-lower-lemma)
+                             (if starts-with-verb
+                               first
+                               last))
+                       (comp replaceable-tokens
+                             (if starts-with-verb
+                               rest
+                               drop-last))))
+           (apply (aid/lift-a vector)))))
 
      (def make-parse-b
        (make-parse-original first))
@@ -579,11 +579,11 @@
              :tag_))
 
      (aid/defcurried if-else
-                     [if-function else-function then]
-                     (command/if-then-else if-function
-                                           identity
-                                           else-function
-                                           then))
+       [if-function else-function then]
+       (command/if-then-else if-function
+                             identity
+                             else-function
+                             then))
 
      (def trim-starts
        #{"!" "%" "'" ")" "," "-" "." ":" ";" "?" "n't"})
@@ -619,8 +619,8 @@
      (defn concatenate-blocks*
        [reduction element]
        (concat ((aid/casep reduction
-                           trim? trim-last
-                           ensure-whitespace)
+                  trim? trim-last
+                  ensure-whitespace)
                  element)
                reduction))
 
@@ -707,22 +707,22 @@
         "'re" "'m"})
 
      (aid/defcurried get-variant-source
-                     [original replacement-source]
-                     (if (and (first-person? original)
-                              (be replacement-source))
-                       (be replacement-source)
-                       (get
-                         ((:alternative (get-preparation)) replacement-source)
-                         (-> original
-                             :tag_
-                             condense-tag)
-                         replacement-source)))
+       [original replacement-source]
+       (if (and (first-person? original)
+                (be replacement-source))
+         (be replacement-source)
+         (get
+           ((:alternative (get-preparation)) replacement-source)
+           (-> original
+               :tag_
+               condense-tag)
+           replacement-source)))
 
      (def make-set-variant-source
        #(partial s/transform*
                  [(aid/casep %
-                             starts-with-verb? s/FIRST
-                             s/LAST)
+                    starts-with-verb? s/FIRST
+                    s/LAST)
                   :forth
                   :source]
                  (-> %
@@ -736,16 +736,16 @@
                                                         :whitespace_))))
 
      (aid/defcurried set-b-text-with-wss
-                     [original replacement]
-                     (->> replacement
-                          set-lower-text-with-wss
-                          ((if (-> original
-                                   first
-                                   :start)
-                             (partial s/transform*
-                                      [s/FIRST :text_with_ws]
-                                      str/capitalize)
-                             identity))))
+       [original replacement]
+       (->> replacement
+            set-lower-text-with-wss
+            ((if (-> original
+                     first
+                     :start)
+               (partial s/transform*
+                        [s/FIRST :text_with_ws]
+                        str/capitalize)
+               identity))))
 
      (defn make-parse-multiton-c
        [originals replacements]
@@ -754,22 +754,22 @@
          (->>
            (make-parse-original last originals replacements)
            ((aid/lift-a #(aid/casep replacements
-                                    singleton? []
-                                    (->> replacements
-                                         last
-                                         ((if-else (partial unalterable-tags?
-                                                            (last originals))
-                                                   (make-set-variant-source %)))
-                                         set-lower-text-with-wss)))))))
+                           singleton? []
+                           (->> replacements
+                                last
+                                ((if-else (partial unalterable-tags?
+                                                   (last originals))
+                                          (make-set-variant-source %)))
+                                set-lower-text-with-wss)))))))
 
      (defn make-parse-c
        [child? originals replacements]
        (aid/casep originals
-                  singleton? (aid/casep replacements
-                                        singleton? (m/pure [])
-                                        (make-parse-singleton-c child?
-                                                                replacements))
-                  (make-parse-multiton-c originals replacements)))
+         singleton? (aid/casep replacements
+                      singleton? (m/pure [])
+                      (make-parse-singleton-c child?
+                                              replacements))
+         (make-parse-multiton-c originals replacements)))
 
      (defn get-variant-parser
        [originals replacements]
@@ -808,10 +808,10 @@
                                          replacements))
                         set)]
          (aid/casep after
-                    empty? accumulation
-                    (->> (concat accumulation after)
-                         set
-                         (recur originals replacements after)))))
+           empty? accumulation
+           (->> (concat accumulation after)
+                set
+                (recur originals replacements after)))))
 
      (def get-variants
        (aid/build mapcat
@@ -842,10 +842,10 @@
                         reverse)))
 
      (aid/defcurried flip-keys
-                     [m ks]
-                     (->> ks
-                          get-key-map
-                          (set/rename-keys m)))
+       [m ks]
+       (->> ks
+            get-key-map
+            (set/rename-keys m)))
 
      (def set-character
        (transfer* :character :source))
@@ -918,10 +918,10 @@
        (apply get-resources-path model-name "runs" more))
 
      (aid/defcurried get-tuned-path
-                     [model-name* timestamp extension]
-                     (->> extension
-                          (append-extension "tuned")
-                          (get-runs-path model-name* timestamp)))
+       [model-name* timestamp extension]
+       (->> extension
+            (append-extension "tuned")
+            (get-runs-path model-name* timestamp)))
 
      (def slurp-read-string
        (comp read-string
@@ -969,12 +969,12 @@
      (defn get-mask
        [reference minimum supremum]
        (aid/case-eval minimum
-                      lm-unk-index (-> true
-                                       integer
-                                       (<$ reference))
-                      (map (comp integer
-                                 (make-within minimum supremum))
-                           reference)))
+         lm-unk-index (-> true
+                          integer
+                          (<$ reference))
+         (map (comp integer
+                    (make-within minimum supremum))
+              reference)))
 
      (utils/defmemoized get-index-suprema
                         []
@@ -1027,26 +1027,26 @@
           %))
 
      (aid/defcurried get-cluster
-                     [reference minimum supremum]
-                     {:index     (->> (map *
-                                           (get-mask reference
-                                                     minimum
-                                                     supremum)
-                                           positive-integers)
-                                      (filter pos?)
-                                      (map dec))
-                      :minimum   minimum
-                      :length    (- supremum minimum)
-                      :mask      (get-mask reference minimum supremum)
-                      :reference (->> reference
-                                      ((aid/case-eval
-                                         minimum
-                                         lm-unk-index (partial map
-                                                               cut-off)
-                                         (partial filter
-                                                  (make-within minimum
-                                                               supremum))))
-                                      (map (partial (aid/flip -) minimum)))})
+       [reference minimum supremum]
+       {:index     (->> (map *
+                             (get-mask reference
+                                       minimum
+                                       supremum)
+                             positive-integers)
+                        (filter pos?)
+                        (map dec))
+        :minimum   minimum
+        :length    (- supremum minimum)
+        :mask      (get-mask reference minimum supremum)
+        :reference (->> reference
+                        ((aid/case-eval
+                           minimum
+                           lm-unk-index (partial map
+                                                 cut-off)
+                           (partial filter
+                                    (make-within minimum
+                                                 supremum))))
+                        (map (partial (aid/flip -) minimum)))})
 
      (def get-clusters
        #(-> %
@@ -1268,8 +1268,8 @@
                                   io/input-stream
                                   hash/sha256
                                   bytes->hex)
-                             word2vecf-sha (either/right "")
-                             (either/left "Checksums don't match."))
+                word2vecf-sha (either/right "")
+                (either/left "Checksums don't match."))
               (command/bzip2 "-df" word2vecf-filename))))
 
      (def get-document-evaluation-steps
@@ -1316,8 +1316,8 @@
                     :is_lower
                     :is_title)
          ((aid/casep token
-                     title? str/capitalize
-                     identity)
+            title? str/capitalize
+            identity)
            s)
          (str (subs (:text_with_ws token)
                     0
@@ -1334,14 +1334,14 @@
           :mask (:text_with_ws %)
           (str
             ((aid/casep %
-                        :start str/capitalize
-                        identity)
+               :start str/capitalize
+               identity)
               (get-article %))
             (case (get-article %)
               "" ""
               (aid/casep %
-                         :hyphen "-"
-                         " "))
+                :hyphen "-"
+                " "))
             (aid/casep
               %
               :proper
@@ -1390,7 +1390,12 @@
 
      (defn get-venv-commands
        [version]
-       [["cd" python-name]
+       ;ca-certificate works around the following error
+       ;ssl.SSLError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed
+       ;https://superuser.com/a/1185350
+       [["apt-get" "update"]
+        ["apt-get" "install" "ca-certificates"]
+        ["cd" python-name]
         [python-name "-m" "venv" environment-name]
         ["." (get-path environment-name "bin" "activate")]
         ["pip"
@@ -1412,7 +1417,7 @@
 
      (def get-cloud-storage-path
        (comp (partial get-path
-                      "https://storage.googleapis.com/wikipediadataset")
+                      "https://storage.googleapis.com/residence-rim")
              (partial (aid/flip append-extension) "tar.gz")))
 
      (def map->>
