@@ -1,4 +1,5 @@
 from flask import Flask
+import ssl
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -9,6 +10,10 @@ import spike_kubernetes.aid as aid
 import spike_kubernetes.helpers as helpers
 import spike_kubernetes.specter as s
 
+# ssl._create_unverified_context works around the following error
+# ssl.SSLError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed
+# TODO delete the following line
+ssl._create_default_https_context = ssl._create_unverified_context
 app = Flask(__name__)
 pretrained = vocab.pretrained_aliases["glove.6B.300d"]()
 special_tokens = ("<unk>", "<sos>", "<eos>")
